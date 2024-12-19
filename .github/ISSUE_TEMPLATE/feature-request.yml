@@ -13,7 +13,7 @@ body:
       label: 提案の背景
       description: なぜその新機能・機能改善が必要なのか背景を教えてください。
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: criteria-for-success
