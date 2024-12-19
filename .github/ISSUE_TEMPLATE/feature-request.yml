@@ -1,13 +1,11 @@
 name: 機能リクエスト
 title: "feat/[ユーザーストーリー]"
 description: File a improvement report.
-projects: ["truss-company/3"]
 body:
   - type: markdown
     attributes:
       value: |
-        trussサービスの新機能や機能改善を提案しよう！
-        ※このissueはデフォルトでtrussプロジェクトに追加されます。
+        サービスの新機能や機能改善を提案しよう！
 
   - type: textarea
     id: context
