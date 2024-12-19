@@ -1,0 +1,42 @@
+name: バグ報告
+description: File a bug report.
+title: "Bug/ "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        バグ報告への協力ありがとうございます！
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 概要
+      description: 発生手順をできるだけ詳しく記入いただけると助かります。画像や動画があればそちらも添付してください。
+      value: |
+        1. 
+        2. 
+        3.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: 環境
+      description: バグが発生した環境を選択してください。
+      options:
+        - 本番
+        - stg
+        - dev
+        - demo
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: エラーメッセージ
+      description: エラー内容がわかる場合は記入してください。
+      render: shell
