@@ -1,0 +1,12 @@
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: "**/*.md"
+
+enhancement:
+  - head-branch: ["^feature", "^Feature"]
+
+refactor:
+  - head-branch: ["^refactor", "^Refactor"]
+
+fix:
+  - head-branch: ["^fix", "^Fix"]
