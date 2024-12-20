@@ -22,11 +22,16 @@
 			"recommended": true,
 			"correctness": {
 				"noUnusedImports": "warn",
-				"noUnusedPrivateClassMembers": "warn"
+				"noUnusedPrivateClassMembers": "warn",
+				"useExhaustiveDependencies": "warn"
+			},
+			"nursery": {
+				"useExplicitType": "warn"
 			},
 			"style": {
 				"useDefaultSwitchClause": "warn",
-				"useThrowNewError": "warn"
+				"useThrowNewError": "warn",
+				"useImportType": "off"
 			},
 			"suspicious": {
 				"noConsoleLog": "warn",
