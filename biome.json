@@ -25,9 +25,6 @@
 				"noUnusedPrivateClassMembers": "warn",
 				"useExhaustiveDependencies": "warn"
 			},
-			"nursery": {
-				"useExplicitType": "warn"
-			},
 			"style": {
 				"useDefaultSwitchClause": "warn",
 				"useThrowNewError": "warn",
