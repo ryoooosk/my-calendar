@@ -65,8 +65,6 @@
   },
   "private": true,
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,json}": [
-      "biome check --write"
-    ]
+    "*.{js,jsx,ts,tsx,json}": ["biome check --write"]
   }
 }
