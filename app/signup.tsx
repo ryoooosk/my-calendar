@@ -1,36 +1,43 @@
-import { supabase } from '@/lib/supabase';
-import { useState } from 'react';
-import { Alert, View } from 'react-native';
-import { Button, ButtonText } from './ui/button';
+import { Button, ButtonText } from '@/components/ui/button';
 import {
   FormControl,
   FormControlLabel,
   FormControlLabelText,
-} from './ui/form-control';
-import { Input, InputField } from './ui/input';
+} from '@/components/ui/form-control';
+import { Heading } from '@/components/ui/heading';
+import { Input, InputField } from '@/components/ui/input';
+import { supabase } from '@/lib/supabase';
+import { useState } from 'react';
+import { Alert, View } from 'react-native';
 
-export default function LoginForm({
-  setIsShow,
-}: { setIsShow: (value: boolean) => void }) {
+export default function Signup() {
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
-  async function signInWithEmail() {
-    const { error } = await supabase.auth.signInWithPassword({
+  async function signUpWithEmail() {
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signUp({
       email: emailValue,
       password: passwordValue,
     });
 
     if (error) Alert.alert(error.message);
-    else setIsShow(false);
+    if (!session)
+      Alert.alert('Please check your inbox for email verification!');
   }
 
   return (
-    <View className="flex gap-3">
+    <View className="flex gap-4 px-6 py-2 mt-4">
+      <Heading size="xl" className="pb-2">
+        Emailで登録する
+      </Heading>
+
       <FormControl size="lg" isRequired={true}>
         <FormControlLabel>
           <FormControlLabelText>メールアドレス</FormControlLabelText>
         </FormControlLabel>
-        <Input className="my-1">
+        <Input size="lg" className="my-1">
           <InputField
             type="text"
             placeholder="email"
@@ -44,7 +51,7 @@ export default function LoginForm({
         <FormControlLabel>
           <FormControlLabelText>パスワード</FormControlLabelText>
         </FormControlLabel>
-        <Input className="my-1">
+        <Input size="lg" className="my-1">
           <InputField
             type="password"
             placeholder="password"
@@ -54,12 +61,8 @@ export default function LoginForm({
         </Input>
       </FormControl>
 
-      <Button
-        action="secondary"
-        className="mt-2 h-11"
-        onPress={() => signInWithEmail()}
-      >
-        <ButtonText>ログイン</ButtonText>
+      <Button size="xl" className="mt-4" onPress={() => signUpWithEmail()}>
+        <ButtonText>登録する</ButtonText>
       </Button>
     </View>
   );
