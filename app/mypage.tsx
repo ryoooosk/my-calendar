@@ -53,15 +53,13 @@ export default function MyPage() {
   return (
     <VStack space="xl" className="mt-6 px-3">
       <HStack space="lg" className="">
-        {avatarUrl ? (
-          <Avatar size="xl" className="bg-slate-500">
+        <Avatar size="xl" className="bg-slate-600">
+          {avatarUrl ? (
             <AvatarImage source={{ uri: avatarUrl }} />
-          </Avatar>
-        ) : (
-          <Avatar size="xl" className="bg-slate-600">
+          ) : (
             <Icon as={User} size="xl" className="stroke-white" />
-          </Avatar>
-        )}
+          )}
+        </Avatar>
 
         <VStack className="flex gap-1">
           <Heading size="xl">{user?.display_name}</Heading>
@@ -78,7 +76,7 @@ export default function MyPage() {
       <View className="flex flex-row gap-3">
         <Button variant="solid" size="md" className="rounded-full w-1/2">
           <ButtonIcon as={Pencil} />
-          <ButtonText>編集</ButtonText>
+          <ButtonText>編集する</ButtonText>
         </Button>
 
         <Button
@@ -94,7 +92,7 @@ export default function MyPage() {
 
       <Button variant="outline" size="md" className="rounded-full flex-grow">
         <ButtonIcon as={Share} />
-        <ButtonText>共有</ButtonText>
+        <ButtonText>共有する</ButtonText>
       </Button>
     </VStack>
   );

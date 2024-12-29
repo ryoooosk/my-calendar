@@ -36,7 +36,6 @@ export default function Header() {
         .from('avatars')
         .getPublicUrl(profile.avatar_url);
       if (avatarData) setAvatarUrl(avatarData.publicUrl);
-      console.log(avatarData.publicUrl);
     };
 
     fetchUser();
