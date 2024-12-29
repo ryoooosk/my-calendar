@@ -1,21 +1,44 @@
 import { supabase } from '@/lib/supabase';
 import { Session } from '@supabase/supabase-js';
-import { Settings2 } from 'lucide-react-native';
+import { useNavigation } from 'expo-router';
+import { Settings2, User } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import LoginDialog from './LoginDialog';
 import { Avatar, AvatarImage } from './ui/avatar';
 import { Button, ButtonIcon } from './ui/button';
+import { Icon } from './ui/icon';
 
 export default function Header() {
+  const navigation = useNavigation();
   const [showAlertDialog, setShowAlertDialog] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const fetchUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       setSession(session);
-    });
 
+      const user = session?.user;
+      if (!user) return;
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      if (!profile?.avatar_url) return;
+
+      const { data: avatarData } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(profile.avatar_url);
+      if (avatarData) setAvatarUrl(avatarData.publicUrl);
+    };
+
+    fetchUser();
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
@@ -28,15 +51,19 @@ export default function Header() {
         variant="link"
         className="rounded-full w-12 h-12"
         onPress={() => {
-          console.log(session?.user);
-          if (!session?.user) {
-            setShowAlertDialog(true);
-          }
+          if (!session?.user) setShowAlertDialog(true);
+          else navigation.navigate('mypage');
         }}
       >
-        <Avatar size="md" className="bg-slate-500">
-          <AvatarImage />
-        </Avatar>
+        {avatarUrl ? (
+          <Avatar size="md" className="bg-slate-500">
+            <AvatarImage source={{ uri: avatarUrl }} />
+          </Avatar>
+        ) : (
+          <Avatar size="md" className="bg-slate-600">
+            <Icon as={User} size="md" className="stroke-white" />
+          </Avatar>
+        )}
       </Button>
       <LoginDialog isShow={showAlertDialog} setIsShow={setShowAlertDialog} />
 
