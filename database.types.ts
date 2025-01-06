@@ -151,3 +151,9 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema['CompositeTypes']
     ? PublicSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
     : never;
+
+// Schema: public
+// Tables
+export type Profiles = Database['public']['Tables']['profiles']['Row'];
+export type InsertProfiles = Database['public']['Tables']['profiles']['Insert'];
+export type UpdateProfiles = Database['public']['Tables']['profiles']['Update'];

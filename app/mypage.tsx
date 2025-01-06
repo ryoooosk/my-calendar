@@ -5,7 +5,7 @@ import { HStack } from '@/components/ui/hstack';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
-import { Database } from '@/database.types';
+import { Profiles } from '@/database.types';
 import { supabase } from '@/lib/supabase';
 import { useNavigation } from 'expo-router';
 import { LogOut, Pencil, Share, User } from 'lucide-react-native';
@@ -14,9 +14,7 @@ import { View } from 'react-native';
 
 export default function MyPage() {
   const navigation = useNavigation();
-  const [user, setUser] = useState<
-    Database['public']['Tables']['profiles']['Row'] | null
-  >(null);
+  const [user, setUser] = useState<Profiles | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
 
   useEffect(() => {
