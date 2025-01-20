@@ -84,7 +84,6 @@ const appleSignIn = async () => {
       provider: 'apple',
       token: credential.identityToken,
     });
-    console.log('Supabase Response:', { error, user });
 
     if (!error) {
       // User is signed in.)
@@ -110,7 +109,6 @@ const googleSignIn = async () => {
         provider: 'google',
         token: userInfo.data.idToken,
       });
-      console.log(error, data);
     } else throw new Error('no ID token present!');
   } catch (error: any) {
     console.error(error);

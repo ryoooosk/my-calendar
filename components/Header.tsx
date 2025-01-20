@@ -21,20 +21,18 @@ export default function Header() {
         data: { session },
       } = await supabase.auth.getSession();
       setSession(session);
+      if (!session?.user) return;
 
-      const user = session?.user;
-      if (!user) return;
-
-      const { data: profile } = await supabase
-        .from('profiles')
+      const { data: user } = await supabase
+        .from('users')
         .select('*')
-        .eq('id', user.id)
+        .eq('id', session.user.id)
         .single();
-      if (!profile?.avatar_url) return;
+      if (!user?.avatar_url) return;
 
       const { data: avatarData } = supabase.storage
         .from('avatars')
-        .getPublicUrl(profile.avatar_url);
+        .getPublicUrl(user.avatar_url);
       if (avatarData) setAvatarUrl(avatarData.publicUrl);
     };
 
