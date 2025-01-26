@@ -42,6 +42,13 @@ export default function RootLayout() {
           />
           <Stack.Screen name="signup" options={{ title: 'アカウント作成' }} />
           <Stack.Screen name="mypage" options={{ title: 'マイページ' }} />
+          <Stack.Screen
+            name="create-schedule"
+            options={{
+              title: '新しい予定',
+              presentation: 'modal',
+            }}
+          />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />
