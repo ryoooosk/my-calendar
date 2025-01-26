@@ -1,39 +1,32 @@
-name: 機能リクエスト
-title: "feat/[ユーザーストーリー]"
+name: 機能/改善リクエスト
+title: "[ユーザーストーリー]"
 description: File a improvement report.
 body:
   - type: markdown
     attributes:
       value: |
-        サービスの新機能や機能改善を提案しよう！
+        trussサービスの新機能や機能改善を提案しよう！
 
   - type: textarea
     id: context
     attributes:
       label: 提案の背景
-      description: なぜその新機能・機能改善が必要なのか背景を教えてください。
+      description: Why なぜその新機能・機能改善が必要なのか背景を教えてください。
     validations:
-      required: false
+      required: true
 
   - type: textarea
     id: criteria-for-success
     attributes:
       label: 完了要件
       description: |
-        その機能はなにが達成されれば完了となりますか？イメージがある場合は具体的に教えてください。
+        What なにが達成されればこの機能は完了となりますか？
         もし完了要件が多くなる場合はissueの分割を検討してください。
+      value: |
+        - [ ] 
+        - [ ]
     validations:
       required: true
-
-  - type: textarea
-    id: constraints
-    attributes:
-      label: 制約条件
-      description: |
-        その機能の実装にあたっての制約条件や考慮すべき事項があれば教えてください。
-        例: 予算、期限、技術的制約、その他の制約条件
-    validations:
-      required: false
 
   - type: textarea
     id: additional-information
