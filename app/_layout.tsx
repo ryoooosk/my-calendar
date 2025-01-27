@@ -46,7 +46,7 @@ export default function RootLayout() {
             name="create-schedule"
             options={{
               title: '新しい予定',
-              presentation: 'modal',
+              headerBackTitle: 'キャンセル',
             }}
           />
           <Stack.Screen name="+not-found" />
