@@ -9,18 +9,31 @@ import { Input, InputField } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Textarea, TextareaInput } from '@/components/ui/textarea';
 import dayjs from 'dayjs';
-import { Link, useNavigation } from 'expo-router';
+import { Link, useNavigation, useRouter } from 'expo-router';
 import { Clock2, History, LetterText } from 'lucide-react-native';
 import { useCallback, useEffect, useState } from 'react';
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import 'dayjs/locale/ja';
+import { supabase } from '@/lib/supabase';
 import { roundedDateInFiveMinute } from '@/utils/date.logic';
 import DatePicker from 'react-native-date-picker';
 import DateTimePicker, { DateType } from 'react-native-ui-datepicker';
 import colors from 'tailwindcss/colors';
 
 export default function CreateSchedulePage() {
+  const router = useRouter();
   const navigation = useNavigation();
+
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchSession = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) throw new Error(error.message);
+      setUserId(data.user.id);
+    };
+
+    fetchSession();
+  }, []);
 
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(roundedDateInFiveMinute(dayjs()));
@@ -30,17 +43,25 @@ export default function CreateSchedulePage() {
   const [isAllDay, setIsAllDay] = useState(false);
   const [description, setDescription] = useState('');
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
+    if (!userId) throw new Error('User ID is not found');
+
     const data = {
+      user_id: userId,
       title,
-      startDate: startDate.toDate(),
-      endDate: endDate.toDate(),
-      isAllDay,
+      start_at: !isAllDay
+        ? startDate.toDate().toISOString()
+        : startDate.startOf('day').toDate().toISOString(),
+      end_at: !isAllDay
+        ? endDate.toDate().toISOString()
+        : endDate.endOf('day').toDate().toISOString(),
+      is_all_day: isAllDay,
       description,
     };
 
-    Alert.alert(JSON.stringify(data));
-  }, [title, startDate, endDate, isAllDay, description]);
+    await supabase.from('schedules').insert(data);
+    router.replace('/');
+  }, [userId, title, startDate, endDate, isAllDay, description]);
 
   useEffect(() => {
     navigation.setOptions({
