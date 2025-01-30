@@ -9,10 +9,10 @@ import { Input, InputField } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Textarea, TextareaInput } from '@/components/ui/textarea';
 import dayjs from 'dayjs';
-import { Link } from 'expo-router';
+import { Link, useNavigation } from 'expo-router';
 import { Clock2, History, LetterText } from 'lucide-react-native';
-import { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import 'dayjs/locale/ja';
 import { roundedDateInFiveMinute } from '@/utils/date.logic';
 import DatePicker from 'react-native-date-picker';
@@ -20,11 +20,39 @@ import DateTimePicker, { DateType } from 'react-native-ui-datepicker';
 import colors from 'tailwindcss/colors';
 
 export default function CreateSchedulePage() {
+  const navigation = useNavigation();
+
+  const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(roundedDateInFiveMinute(dayjs()));
   const [endDate, setEndDate] = useState(
     roundedDateInFiveMinute(dayjs().add(1, 'hour')),
   );
   const [isAllDay, setIsAllDay] = useState(false);
+  const [description, setDescription] = useState('');
+
+  const handleSubmit = useCallback(() => {
+    const data = {
+      title,
+      startDate: startDate.toDate(),
+      endDate: endDate.toDate(),
+      isAllDay,
+      description,
+    };
+
+    Alert.alert(JSON.stringify(data));
+  }, [title, startDate, endDate, isAllDay, description]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={handleSubmit}>
+          <Text className="text-xl font-medium text-sky-600 tracking-wide">
+            作成
+          </Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, handleSubmit]);
 
   const [isOpenStartDay, setIsOpenStartDay] = useState(false);
   const [isOpenEndDay, setIsOpenEndDay] = useState(false);
@@ -103,7 +131,12 @@ export default function CreateSchedulePage() {
           </FormControlLabel>
 
           <Input size="xl" variant="plane" className="">
-            <InputField placeholder="タイトルを入力" />
+            <InputField
+              type="text"
+              value={title}
+              onChangeText={(text: string) => setTitle(text)}
+              placeholder="タイトルを入力"
+            />
           </Input>
         </FormControl>
 
@@ -242,7 +275,10 @@ export default function CreateSchedulePage() {
           </FormControlLabel>
 
           <Textarea className="border-0">
-            <TextareaInput placeholder="コメントを入力" />
+            <TextareaInput
+              onChangeText={(text: string) => setDescription(text)}
+              placeholder="コメントを入力"
+            />
           </Textarea>
         </FormControl>
       </View>
