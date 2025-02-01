@@ -14,6 +14,7 @@ export default function CreateSchedulePage() {
   const router = useRouter();
   const navigation = useNavigation();
 
+  // TODO: アプリケーション全体で管理したい
   const [userId, setUserId] = useState<string | null>(null);
   useEffect(() => {
     const fetchSession = async () => {
