@@ -1,13 +1,13 @@
 import { supabase } from '@/lib/supabase';
 import { useState } from 'react';
 import { Alert, View } from 'react-native';
-import { Button, ButtonText } from './ui/button';
+import { Button, ButtonText } from '../../ui/button';
 import {
   FormControl,
   FormControlLabel,
   FormControlLabelText,
-} from './ui/form-control';
-import { Input, InputField } from './ui/input';
+} from '../../ui/form-control';
+import { Input, InputField } from '../../ui/input';
 
 export default function LoginForm({
   setIsShow,

@@ -4,10 +4,10 @@ import { useNavigation } from 'expo-router';
 import { Settings2, User } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import LoginDialog from './LoginDialog';
 import { Avatar, AvatarImage } from './ui/avatar';
 import { Button, ButtonIcon } from './ui/button';
 import { Icon } from './ui/icon';
+import LoginDialog from './pages/signin/LoginDialog';
 
 export default function Header() {
   const navigation = useNavigation();

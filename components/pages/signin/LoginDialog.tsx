@@ -3,7 +3,6 @@ import * as AppleAuthentication from 'expo-apple-authentication';
 import { Link } from 'expo-router';
 import { Platform } from 'react-native';
 import AppleSignInButton from './AppleSignInButton';
-import LoginForm from './LoginForm';
 import {
   AlertDialog,
   AlertDialogBackdrop,
@@ -11,13 +10,15 @@ import {
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
-} from './ui/alert-dialog';
-import { Heading } from './ui/heading';
-import GoogleSignInButton from './GoogleSignInButton';
+} from '@/components/ui/alert-dialog';
+
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import GoogleSignInButton from './GoogleSignInButton';
+import { Heading } from '@/components/ui/heading';
+import LoginForm from './LoginForm';
 
 type LoginDialogProps = {
   isShow: boolean;
