@@ -17,10 +17,10 @@ export default function HomePage() {
       <Calendars />
 
       <Button
-        className="absolute right-8 bottom-16 w-20 h-20 rounded-full"
+        className="absolute right-8 bottom-16 w-16 h-16 rounded-full"
         onPress={handleClick}
       >
-        <ButtonIcon className="w-14 h-14" as={PlusIcon} />
+        <ButtonIcon className="w-10 h-10" as={PlusIcon} />
       </Button>
     </SafeAreaView>
   );
