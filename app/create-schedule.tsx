@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
 import { Link, useNavigation, useRouter } from 'expo-router';
 import { Clock2, History, LetterText } from 'lucide-react-native';
 import { useCallback, useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import 'dayjs/locale/ja';
 import { supabase } from '@/lib/supabase';
 import { roundedDateInFiveMinute } from '@/utils/date.logic';
@@ -45,6 +45,10 @@ export default function CreateSchedulePage() {
 
   const handleSubmit = useCallback(async () => {
     if (!userId) throw new Error('User ID is not found');
+
+    if (endDate.isBefore(startDate)) {
+      return Alert.alert('終了日時は開始日時より後に設定してください');
+    }
 
     const data = {
       user_id: userId,
