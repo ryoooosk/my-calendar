@@ -87,10 +87,7 @@ export default function CreateSchedulePage() {
   const handlePressDatePicker = (
     type: 'StartDay' | 'StartTime' | 'EndDay' | 'EndTine',
   ) => {
-    setIsOpenStartDay(false);
-    setIsOpenEndDay(false);
-    setIsOpenStartTime(false);
-    setIsOpenEndTime(false);
+    closeAllDatePicker();
 
     switch (type) {
       case 'StartDay':
@@ -109,6 +106,13 @@ export default function CreateSchedulePage() {
       default:
         throw new Error('Invalid type');
     }
+  };
+
+  const closeAllDatePicker = () => {
+    setIsOpenStartDay(false);
+    setIsOpenEndDay(false);
+    setIsOpenStartTime(false);
+    setIsOpenEndTime(false);
   };
 
   const handleChangeDay = (params: { date: DateType }) => {
@@ -233,7 +237,10 @@ export default function CreateSchedulePage() {
           <Switch
             trackColor={{ false: colors.gray[300], true: colors.amber[400] }}
             value={isAllDay}
-            onToggle={() => setIsAllDay(!isAllDay)}
+            onToggle={() => {
+              setIsAllDay(!isAllDay);
+              closeAllDatePicker();
+            }}
           />
         </FormControl>
       </View>
