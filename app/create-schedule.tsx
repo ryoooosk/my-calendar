@@ -25,7 +25,7 @@ export default function CreateSchedulePage() {
   const [description, setDescription] = useState('');
 
   const handleSubmit = useCallback(async () => {
-    if (!user) throw new Error('User ID is not found');
+    if (!user) throw new Error('User is not found');
 
     if (endDate.isBefore(startDate)) {
       return Alert.alert('終了日時は開始日時より後に設定してください');
