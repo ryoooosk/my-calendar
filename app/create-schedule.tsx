@@ -1,30 +1,20 @@
 import { Divider } from '@/components/ui/divider/divider';
 import dayjs from 'dayjs';
 import { useNavigation, useRouter } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import 'dayjs/locale/ja';
 import DateTimeSelect from '@/components/pages/create-schedule/date-time-select';
 import ScheduleDescriptionInput from '@/components/pages/create-schedule/schedule-description-input';
 import ScheduleTitleInput from '@/components/pages/create-schedule/schedule-title-input';
+import { AuthContext } from '@/hooks/auth';
 import { supabase } from '@/lib/supabase';
 import { roundedDateInFiveMinute } from '@/utils/date.logic';
 
 export default function CreateSchedulePage() {
   const router = useRouter();
   const navigation = useNavigation();
-
-  // TODO: アプリケーション全体で管理したい
-  const [userId, setUserId] = useState<string | null>(null);
-  useEffect(() => {
-    const fetchSession = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (error) throw new Error(error.message);
-      setUserId(data.user.id);
-    };
-
-    fetchSession();
-  }, []);
+  const user = useContext(AuthContext);
 
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(roundedDateInFiveMinute(dayjs()));
@@ -35,14 +25,14 @@ export default function CreateSchedulePage() {
   const [description, setDescription] = useState('');
 
   const handleSubmit = useCallback(async () => {
-    if (!userId) throw new Error('User ID is not found');
+    if (!user) throw new Error('User is not found');
 
     if (endDate.isBefore(startDate)) {
       return Alert.alert('終了日時は開始日時より後に設定してください');
     }
 
     const data = {
-      user_id: userId,
+      user_id: user.id,
       title,
       start_at: !isAllDay
         ? startDate.toDate().toISOString()
@@ -56,7 +46,7 @@ export default function CreateSchedulePage() {
 
     await supabase.from('schedules').insert(data);
     router.replace('/');
-  }, [userId, title, startDate, endDate, isAllDay, description]);
+  }, [user, title, startDate, endDate, isAllDay, description]);
 
   useEffect(() => {
     navigation.setOptions({
