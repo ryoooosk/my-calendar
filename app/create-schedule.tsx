@@ -1,20 +1,20 @@
 import { Divider } from '@/components/ui/divider/divider';
 import dayjs from 'dayjs';
 import { useNavigation, useRouter } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import 'dayjs/locale/ja';
 import DateTimeSelect from '@/components/pages/create-schedule/date-time-select';
 import ScheduleDescriptionInput from '@/components/pages/create-schedule/schedule-description-input';
 import ScheduleTitleInput from '@/components/pages/create-schedule/schedule-title-input';
-import { useAuth } from '@/hooks/useAuth';
+import { AuthContext } from '@/hooks/auth';
 import { supabase } from '@/lib/supabase';
 import { roundedDateInFiveMinute } from '@/utils/date.logic';
 
 export default function CreateSchedulePage() {
   const router = useRouter();
   const navigation = useNavigation();
-  const { user } = useAuth();
+  const user = useContext(AuthContext);
 
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(roundedDateInFiveMinute(dayjs()));

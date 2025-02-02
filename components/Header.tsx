@@ -1,7 +1,7 @@
-import { useAuth } from '@/hooks/useAuth';
+import { AuthContext } from '@/hooks/auth';
 import { useRouter } from 'expo-router';
 import { Settings2, User } from 'lucide-react-native';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { View } from 'react-native';
 import LoginDialog from './pages/signin/LoginDialog';
 import { Avatar } from './ui/avatar';
@@ -11,7 +11,7 @@ import { Icon } from './ui/icon';
 export default function Header() {
   const router = useRouter();
   const [showAlertDialog, setShowAlertDialog] = useState(false);
-  const { user } = useAuth();
+  const user = useContext(AuthContext);
 
   return (
     <View className="px-4 py-3 flex-row justify-between items-center">

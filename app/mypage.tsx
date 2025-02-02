@@ -5,15 +5,16 @@ import { HStack } from '@/components/ui/hstack';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
-import { useAuth } from '@/hooks/useAuth';
+import { AuthContext } from '@/hooks/auth';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'expo-router';
 import { LogOut, Pencil, Share, User as UserIcon } from 'lucide-react-native';
+import { useContext } from 'react';
 import { View } from 'react-native';
 
 export default function MyPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const user = useContext(AuthContext);
 
   const logOutHandle = () => {
     supabase.auth.signOut();
