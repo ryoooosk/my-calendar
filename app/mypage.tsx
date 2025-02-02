@@ -17,8 +17,9 @@ export default function MyPage() {
   const user = useContext(AuthContext);
 
   const logOutHandle = () => {
-    supabase.auth.signOut();
-    router.replace('/');
+    supabase.auth.signOut().then(() => {
+      router.replace('/login');
+    });
   };
 
   return (

@@ -43,6 +43,10 @@ export default function RootLayout() {
               options={{ headerShown: false, title: 'ホーム' }}
             />
             <Stack.Screen name="signup" options={{ title: 'アカウント作成' }} />
+            <Stack.Screen
+              name="login"
+              options={{ headerShown: false, title: 'ログイン' }}
+            />
             <Stack.Screen name="mypage" options={{ title: 'マイページ' }} />
             <Stack.Screen
               name="create-schedule"
