@@ -1,14 +1,19 @@
 import { Users } from '@/database.types';
 import { supabase } from '@/lib/supabase';
-import { useRouter } from 'expo-router';
+import { Session } from '@supabase/supabase-js';
 import { ReactNode, createContext, useEffect, useState } from 'react';
 
-export const AuthContext = createContext<Users | null>(null);
+export const AuthContext = createContext<{
+  session: Session | null;
+  user: Users | null;
+  isLoading: boolean;
+}>({ session: null, user: null, isLoading: false });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const router = useRouter();
-
   const [user, setUser] = useState<Users | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setLoading] = useState(true);
+
   const fetchUser = async (userId: string) => {
     const { data: user } = await supabase
       .from('users')
@@ -20,16 +25,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // TODO: useEffectの依存配列の見直し
   useEffect(() => {
-    // TODO: routerの遷移は_layoutでできないか？
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        if (!session) {
-          setUser(null);
-          return router.replace('/login');
-        }
+        setSession(session);
 
-        fetchUser(session.user.id);
-        if (user) router.replace('/');
+        if (!session) setUser(null);
+        else fetchUser(session.user.id);
+
+        setLoading(false);
       },
     );
 
@@ -38,5 +41,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ session, user, isLoading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

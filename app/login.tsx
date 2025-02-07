@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import * as AppleAuthentication from 'expo-apple-authentication';
-import { Link, useRouter } from 'expo-router';
+import { Link, router, useRouter } from 'expo-router';
 import { Platform, SafeAreaView } from 'react-native';
 import AppleSignInButton from '../components/pages/signin/AppleSignInButton';
 
@@ -13,15 +13,9 @@ import { Heading } from '@/components/ui/heading';
 import LoginForm from '../components/pages/signin/LoginForm';
 import { View } from 'react-native';
 import { Divider } from '@/components/ui/divider/divider';
-import { useContext, useEffect } from 'react';
-import { AuthContext } from '@/hooks/auth';
 
 export default function LoginPage() {
   const router = useRouter();
-  const user = useContext(AuthContext);
-  useEffect(() => {
-    if (user) router.replace('/');
-  }, [user]);
 
   const appleSignInHandle = () => {
     appleSignIn();
@@ -79,7 +73,7 @@ const appleSignIn = async () => {
     });
 
     if (!error) {
-      // User is signed in.)
+      router.push('/');
     }
   } catch (e) {
     if (e.code === 'ERR_REQUEST_CANCELED') {
@@ -102,6 +96,10 @@ const googleSignIn = async () => {
         provider: 'google',
         token: userInfo.data.idToken,
       });
+
+      if (!error) {
+        router.push('/');
+      }
     } else throw new Error('no ID token present!');
   } catch (error: any) {
     console.error(error);
