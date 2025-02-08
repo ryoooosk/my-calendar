@@ -73,7 +73,7 @@ const appleSignIn = async () => {
     });
 
     if (!error) {
-      router.push('/');
+      router.replace('/');
     }
   } catch (e) {
     if (e.code === 'ERR_REQUEST_CANCELED') {
@@ -98,7 +98,7 @@ const googleSignIn = async () => {
       });
 
       if (!error) {
-        router.push('/');
+        router.replace('/');
       }
     } else throw new Error('no ID token present!');
   } catch (error: any) {
