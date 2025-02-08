@@ -9,9 +9,7 @@ import {
 } from '../../ui/form-control';
 import { Input, InputField } from '../../ui/input';
 
-export default function LoginForm({
-  setIsShow,
-}: { setIsShow: (value: boolean) => void }) {
+export default function LoginForm() {
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   async function signInWithEmail() {
@@ -21,7 +19,6 @@ export default function LoginForm({
     });
 
     if (error) Alert.alert(error.message);
-    else setIsShow(false);
   }
 
   return (

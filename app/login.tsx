@@ -1,69 +1,55 @@
 import { supabase } from '@/lib/supabase';
 import * as AppleAuthentication from 'expo-apple-authentication';
-import { Link } from 'expo-router';
-import { Platform } from 'react-native';
-import AppleSignInButton from './AppleSignInButton';
-import {
-  AlertDialog,
-  AlertDialogBackdrop,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-} from '@/components/ui/alert-dialog';
+import { Link, router, useRouter } from 'expo-router';
+import { Platform, SafeAreaView } from 'react-native';
+import AppleSignInButton from '../components/pages/signin/AppleSignInButton';
 
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import GoogleSignInButton from './GoogleSignInButton';
+import GoogleSignInButton from '../components/pages/signin/GoogleSignInButton';
 import { Heading } from '@/components/ui/heading';
-import LoginForm from './LoginForm';
+import LoginForm from '../components/pages/signin/LoginForm';
+import { View } from 'react-native';
+import { Divider } from '@/components/ui/divider/divider';
 
-type LoginDialogProps = {
-  isShow: boolean;
-  setIsShow: (value: boolean) => void;
-};
+export default function LoginPage() {
+  const router = useRouter();
 
-export default function LoginDialog({ isShow, setIsShow }: LoginDialogProps) {
   const appleSignInHandle = () => {
-    setIsShow(false);
     appleSignIn();
   };
   const googleSignInHandle = () => {
-    setIsShow(false);
     googleSignIn();
   };
 
   return (
-    <AlertDialog isOpen={isShow} onClose={() => setIsShow(false)} size="md">
-      <AlertDialogBackdrop />
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <Heading className="text-typography-950 font-semibold" size="lg">
-            ログインする
-          </Heading>
-        </AlertDialogHeader>
+    <SafeAreaView className="flex-1 flex justify-center bg-sky-600">
+      <View className="flex gap-4 p-5 mx-7 rounded-xl bg-slate-50">
+        <Heading className="font-semibold mb-3" size="xl">
+          MyCalenderにようこそ
+        </Heading>
 
-        <AlertDialogBody className="flex flex-col mt-3 mb-4">
-          <LoginForm setIsShow={setIsShow} />
-        </AlertDialogBody>
+        <LoginForm />
 
-        <AlertDialogFooter className="flex flex-col gap-3 justify-center mt-4">
+        <Divider className="my-3" />
+
+        <View className="flex gap-4">
           {Platform.OS === 'ios' && (
             <AppleSignInButton signInHandle={appleSignInHandle} />
           )}
           <GoogleSignInButton signInHandle={googleSignInHandle} />
           <Link
-            className="mt-2"
+            className="mt-2 mx-1 text-base font-medium tracking-wide"
             href="/signup"
-            onPress={() => setIsShow(false)}
+            onPress={() => router.push('/signup')}
           >
-            Emailでアカウント作成する
+            Emailアカウントを作成する
           </Link>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -87,7 +73,7 @@ const appleSignIn = async () => {
     });
 
     if (!error) {
-      // User is signed in.)
+      router.replace('/');
     }
   } catch (e) {
     if (e.code === 'ERR_REQUEST_CANCELED') {
@@ -110,6 +96,10 @@ const googleSignIn = async () => {
         provider: 'google',
         token: userInfo.data.idToken,
       });
+
+      if (!error) {
+        router.replace('/');
+      }
     } else throw new Error('no ID token present!');
   } catch (error: any) {
     console.error(error);

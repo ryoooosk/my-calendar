@@ -14,7 +14,7 @@ import { roundedDateInFiveMinute } from '@/utils/date.logic';
 export default function CreateSchedulePage() {
   const router = useRouter();
   const navigation = useNavigation();
-  const user = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(roundedDateInFiveMinute(dayjs()));

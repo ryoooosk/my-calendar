@@ -14,11 +14,12 @@ import { View } from 'react-native';
 
 export default function MyPage() {
   const router = useRouter();
-  const user = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const logOutHandle = () => {
-    supabase.auth.signOut();
-    router.replace('/');
+    supabase.auth.signOut().then(() => {
+      router.replace('/login');
+    });
   };
 
   return (
