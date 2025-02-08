@@ -1,9 +1,10 @@
-import Calendars from '@/components/Calendar';
-import Header from '@/components/Header';
 import { Button, ButtonIcon } from '@/components/ui/button';
 import { router } from 'expo-router';
 import { PlusIcon } from 'lucide-react-native';
 
+import MyCalendarList from '@/components/my-calendar-list';
+import dayjs from 'dayjs';
+import { CalendarProvider } from 'react-native-calendars';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomePage() {
@@ -12,16 +13,17 @@ export default function HomePage() {
   };
 
   return (
-    <SafeAreaView className="flex-1 relative">
-      <Header />
-      <Calendars />
+    <SafeAreaView className="flex-1 relative bg-white">
+      <CalendarProvider date={dayjs().format('YYYY-MM-DD')}>
+        <MyCalendarList />
 
-      <Button
-        className="absolute right-8 bottom-16 w-16 h-16 rounded-full"
-        onPress={handleClick}
-      >
-        <ButtonIcon className="w-10 h-10" as={PlusIcon} />
-      </Button>
+        <Button
+          className="absolute right-8 bottom-16 w-16 h-16 rounded-full"
+          onPress={handleClick}
+        >
+          <ButtonIcon className="w-10 h-10" as={PlusIcon} />
+        </Button>
+      </CalendarProvider>
     </SafeAreaView>
   );
 }
