@@ -18,9 +18,9 @@ export const useCalendarSchedules = () => {
   const schedules = useFetchSchedules();
   const DAY_KEY_FORMAT = 'YYYY-MM-DD';
 
-  const viewModels = useMemo(() => {
-    const newViewModels = new Map<string, ScheduleViewModel[]>();
-    if (!schedules) return newViewModels;
+  const viewModel = useMemo(() => {
+    const viewModelMap = new Map<string, ScheduleViewModel[]>();
+    if (!schedules) return viewModelMap;
 
     schedules.map((schedule: Schedules) => {
       const diff = dayjs(schedule.end_at).diff(dayjs(schedule.start_at), 'day');
@@ -37,10 +37,12 @@ export const useCalendarSchedules = () => {
       };
 
       if (diff === 0) {
-        newViewModels.set(dayKey, [
-          ...(newViewModels.get(dayKey) ?? []),
-          viewModel,
-        ]);
+        const existingSchedules = viewModelMap.get(dayKey) ?? [];
+        existingSchedules.push(viewModel);
+        existingSchedules.sort((a, b) =>
+          dayjs(a.startAt).diff(dayjs(b.startAt)),
+        );
+        viewModelMap.set(dayKey, existingSchedules);
       } else {
         Array(diff)
           .fill(undefined)
@@ -48,16 +50,18 @@ export const useCalendarSchedules = () => {
             const targetDayKey = dayjs(schedule.start_at)
               .add(index, 'day')
               .format(DAY_KEY_FORMAT);
-            newViewModels.set(targetDayKey, [
-              ...(newViewModels.get(targetDayKey) ?? []),
-              viewModel,
-            ]);
+            const existingSchedules = viewModelMap.get(targetDayKey) ?? [];
+            existingSchedules.push(viewModel);
+            existingSchedules.sort((a, b) =>
+              dayjs(a.startAt).diff(dayjs(b.startAt)),
+            );
+            viewModelMap.set(targetDayKey, existingSchedules);
           });
       }
     });
 
-    return newViewModels;
+    return viewModelMap;
   }, [schedules]);
 
-  return viewModels;
+  return viewModel;
 };
