@@ -3,11 +3,11 @@ import { useRouter } from 'expo-router';
 import { Settings2, User } from 'lucide-react-native';
 import { useContext } from 'react';
 import { Text, View } from 'react-native';
-import { Avatar } from './ui/avatar';
-import { Button, ButtonIcon } from './ui/button';
-import { Icon } from './ui/icon';
+import { Avatar } from '../../ui/avatar';
+import { Button, ButtonIcon } from '../../ui/button';
+import { Icon } from '../../ui/icon';
 
-export default function MyCalendarHeader({ date }: { date?: string }) {
+export default function CalendarHeaderPresenter({ date }: { date?: string }) {
   const router = useRouter();
   const user = useContext(AuthContext);
 

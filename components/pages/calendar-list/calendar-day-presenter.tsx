@@ -6,7 +6,7 @@ type CalendarDayProps = DayProps & {
   date?: DateData | undefined;
 };
 
-export default function MyCalendarDay(props: CalendarDayProps) {
+export default function CalendarDayPresenter(props: CalendarDayProps) {
   const { date, children, state } = props;
 
   return (

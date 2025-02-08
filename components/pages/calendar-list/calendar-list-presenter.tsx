@@ -2,10 +2,10 @@ import dayjs from 'dayjs';
 import { CalendarList, DateData, LocaleConfig } from 'react-native-calendars';
 import { DayProps } from 'react-native-calendars/src/calendar/day';
 import colors from 'tailwindcss/colors';
-import MyCalendarDay from './my-calendar-day';
-import MyCalendarHeader from './my-calendar-header';
+import CalendarDayPresenter from './calendar-day-presenter';
+import CalendarHeaderPresenter from './calendar-header-presenter';
 
-export default function MyCalendarList() {
+export default function CalendarListPresenter() {
   const FUTURE_MONTH_RANGE = 24;
   const PAST_MONTH_RANGE = 24;
 
@@ -26,13 +26,15 @@ export default function MyCalendarList() {
       futureScrollRange={FUTURE_MONTH_RANGE}
       pastScrollRange={PAST_MONTH_RANGE}
       renderHeader={(date: string) => {
-        return <MyCalendarHeader date={dayjs(date).format('YYYY年M月')} />;
+        return (
+          <CalendarHeaderPresenter date={dayjs(date).format('YYYY年M月')} />
+        );
       }}
       dayComponent={(
         day: DayProps & {
           date?: DateData;
         },
-      ) => <MyCalendarDay {...day} />}
+      ) => <CalendarDayPresenter {...day} />}
       theme={{
         calendarBackground: 'transparent',
         textMonthFontSize: 18,
