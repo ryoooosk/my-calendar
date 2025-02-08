@@ -1,4 +1,4 @@
-import CalendarListPresenter from '@/components/pages/calendar-list/calendar-list-presenter';
+import CalendarListContainer from '@/components/pages/calendar-list/calendar-list-container';
 import { Button, ButtonIcon } from '@/components/ui/button';
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
@@ -14,7 +14,7 @@ export default function CalendarListPage() {
   return (
     <SafeAreaView className="flex-1 relative bg-white">
       <CalendarProvider date={dayjs().format('YYYY-MM-DD')}>
-        <CalendarListPresenter />
+        <CalendarListContainer />
 
         <Button
           className="absolute right-5 bottom-5 w-16 h-16 rounded-full"
