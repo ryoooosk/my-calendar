@@ -1,3 +1,7 @@
+import {
+  ScheduleViewModel,
+  useSchedulesViewModel,
+} from '@/hooks/useScheduleViewModel';
 import dayjs from 'dayjs';
 import { CalendarList, DateData, LocaleConfig } from 'react-native-calendars';
 import { DayProps } from 'react-native-calendars/src/calendar/day';
@@ -5,9 +9,16 @@ import colors from 'tailwindcss/colors';
 import CalendarDayPresenter from './calendar-day-presenter';
 import CalendarHeaderPresenter from './calendar-header-presenter';
 
-export default function CalendarListPresenter() {
+export default function CalendarListContainer() {
   const FUTURE_MONTH_RANGE = 24;
   const PAST_MONTH_RANGE = 24;
+
+  const scheduleMap: Map<string, ScheduleViewModel[]> = useSchedulesViewModel();
+
+  const handleGetTargetSchedules = (dateString: string | undefined) => {
+    if (!dateString) return [];
+    return scheduleMap.get(dateString) ?? [];
+  };
 
   return (
     <CalendarList
@@ -34,7 +45,10 @@ export default function CalendarListPresenter() {
         day: DayProps & {
           date?: DateData;
         },
-      ) => <CalendarDayPresenter {...day} />}
+      ) => {
+        const targetSchedules = handleGetTargetSchedules(day.date?.dateString);
+        return <CalendarDayPresenter {...day} schedules={targetSchedules} />;
+      }}
       theme={{
         calendarBackground: 'transparent',
         textMonthFontSize: 18,
