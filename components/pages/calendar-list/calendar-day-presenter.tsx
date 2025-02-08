@@ -23,20 +23,20 @@ export default function CalendarDayPresenter(props: CalendarDayProps) {
       </Text>
 
       {/* TODO: 連日の予定の場合は日をまたいで表示する */}
-      {schedules.length > 0 && (
-        <View className="flex flex-col gap-1">
-          {schedules.map((schedule) => (
-            <Text
-              key={schedule.id}
-              className="w-full px-1 py-[0.15rem] text-xs font-semibold bg-sky-200 rounded-sm"
-              numberOfLines={1}
-              ellipsizeMode="clip"
-            >
-              {schedule.title}
-            </Text>
-          ))}
+      {schedules.map((schedule) => (
+        <View
+          key={schedule.id}
+          className="w-full mb-[0.2rem] py-[0.15rem] px-[0.2rem] bg-sky-200 rounded-sm overflow-hidden"
+        >
+          <Text
+            className="text-[0.85rem] tracking-wide font-bold"
+            numberOfLines={1}
+            ellipsizeMode="clip"
+          >
+            {schedule.title}
+          </Text>
         </View>
-      )}
+      ))}
     </TouchableOpacity>
   );
 }
