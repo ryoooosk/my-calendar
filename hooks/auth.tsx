@@ -20,17 +20,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       .select('*')
       .eq('id', userId)
       .single();
-    setUser(user);
+
+    return user;
   };
 
   // TODO: useEffectの依存配列の見直し
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      async (_event, session) => {
         setSession(session);
 
         if (!session) setUser(null);
-        else fetchUser(session.user.id);
+        else {
+          const user = await fetchUser(session.user.id);
+          setUser(user);
+        }
 
         setLoading(false);
       },
