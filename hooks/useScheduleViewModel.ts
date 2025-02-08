@@ -14,7 +14,7 @@ export type ScheduleViewModel = {
   isPublic: boolean;
 };
 
-export const useCalendarSchedules = () => {
+export const useSchedulesViewModel = () => {
   const schedules = useFetchSchedules();
   const DAY_KEY_FORMAT = 'YYYY-MM-DD';
 

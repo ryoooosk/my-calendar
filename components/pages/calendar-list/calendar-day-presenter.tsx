@@ -1,5 +1,5 @@
 import { Text } from '@/components/ui/text';
-import { ScheduleViewModel } from '@/hooks/useCalendarSchedules';
+import { ScheduleViewModel } from '@/hooks/useScheduleViewModel';
 import { TouchableOpacity, View } from 'react-native';
 import { DateData } from 'react-native-calendars';
 import { DayProps } from 'react-native-calendars/src/calendar/day';

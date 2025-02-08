@@ -1,7 +1,7 @@
 import {
   ScheduleViewModel,
-  useCalendarSchedules,
-} from '@/hooks/useCalendarSchedules';
+  useSchedulesViewModel,
+} from '@/hooks/useScheduleViewModel';
 import dayjs from 'dayjs';
 import { CalendarList, DateData, LocaleConfig } from 'react-native-calendars';
 import { DayProps } from 'react-native-calendars/src/calendar/day';
@@ -13,7 +13,7 @@ export default function CalendarListContainer() {
   const FUTURE_MONTH_RANGE = 24;
   const PAST_MONTH_RANGE = 24;
 
-  const scheduleMap: Map<string, ScheduleViewModel[]> = useCalendarSchedules();
+  const scheduleMap: Map<string, ScheduleViewModel[]> = useSchedulesViewModel();
 
   const handleGetTargetSchedules = (dateString: string | undefined) => {
     if (!dateString) return [];
