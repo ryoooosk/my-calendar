@@ -18,10 +18,10 @@ export default function HomePage() {
         <MyCalendarList />
 
         <Button
-          className="absolute right-8 bottom-16 w-16 h-16 rounded-full"
+          className="absolute right-5 bottom-5 w-16 h-16 rounded-full"
           onPress={handleClick}
         >
-          <ButtonIcon className="w-10 h-10" as={PlusIcon} />
+          <ButtonIcon className="w-11 h-11" as={PlusIcon} />
         </Button>
       </CalendarProvider>
     </SafeAreaView>
