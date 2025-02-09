@@ -1,13 +1,13 @@
 import { AuthContext } from '@/hooks/auth';
 import { Redirect, Stack } from 'expo-router';
 import { useContext } from 'react';
-import { Text } from 'react-native';
+import LoadingScreen from '../loading-screen';
 
 export default function AppLayout() {
   const { session, isLoading } = useContext(AuthContext);
 
-  if (isLoading) {
-    return <Text>Loading...</Text>;
+  if (isLoading && !session) {
+    return <LoadingScreen />;
   }
 
   if (!session) {
