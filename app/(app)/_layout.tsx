@@ -1,5 +1,4 @@
 import { AuthContext } from '@/hooks/auth';
-import { DateProvider } from '@/hooks/selectedDate';
 import { Redirect, Stack } from 'expo-router';
 import { useContext } from 'react';
 import { Text } from 'react-native';
@@ -16,22 +15,12 @@ export default function AppLayout() {
   }
 
   return (
-    <DateProvider>
-      <Stack>
-        <Stack.Screen
-          name="index"
-          options={{ headerShown: false, title: 'ホーム' }}
-        />
-        <Stack.Screen name="schedules" options={{ title: '予定' }} />
-        <Stack.Screen name="mypage" options={{ title: 'マイページ' }} />
-        <Stack.Screen
-          name="create-schedule"
-          options={{
-            title: '新しい予定',
-            headerBackTitle: 'キャンセル',
-          }}
-        />
-      </Stack>
-    </DateProvider>
+    <Stack>
+      <Stack.Screen
+        name="(calendar)"
+        options={{ headerShown: false, title: 'ホーム' }}
+      />
+      <Stack.Screen name="mypage" options={{ title: 'マイページ' }} />
+    </Stack>
   );
 }

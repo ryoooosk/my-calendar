@@ -8,11 +8,11 @@ import { VStack } from '@/components/ui/vstack';
 import { AuthContext } from '@/hooks/auth';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'expo-router';
-import { LogOut, Pencil, Share, User as UserIcon } from 'lucide-react-native';
+import { LogOut, Pencil, Share, UserIcon } from 'lucide-react-native';
 import { useContext } from 'react';
 import { View } from 'react-native';
 
-export default function MyPage() {
+export default function MyPageContainer() {
   const router = useRouter();
   const { user } = useContext(AuthContext);
 
