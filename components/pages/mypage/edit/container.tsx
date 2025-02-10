@@ -17,6 +17,16 @@ export default function ProfileEditContainer() {
   const [userName, setUserName] = useState<string | null>(null);
   const [biography, setBiography] = useState<string | null>(null);
 
+  const [isInValid, setIsInValid] = useState(false);
+  const handleSetDisplayName = (value: string) => {
+    if (!value || value === '') setIsInValid(true);
+    setDisplayName(value);
+  };
+  const handleSetUserName = (value: string) => {
+    if (!value || value === '') setIsInValid(true);
+    setUserName(value);
+  };
+
   useEffect(() => {
     if (!user) return;
     setDisplayName(user.display_name);
@@ -25,9 +35,10 @@ export default function ProfileEditContainer() {
   }, [user]);
 
   const handleSubmit = useCallback(async () => {
-    if (!user || !displayName || !userName) return;
-    if (displayName === '' || userName === '') {
-      Alert.alert('表示名とユーザー名は必須です');
+    if (!user) return;
+
+    if (isInValid) {
+      Alert.alert('入力内容が不正です');
       return;
     }
 
@@ -48,7 +59,7 @@ export default function ProfileEditContainer() {
       setUser(newUser);
       router.replace('/mypage');
     }
-  }, [user, setUser, displayName, userName, biography]);
+  }, [user, setUser, displayName, userName, biography, isInValid]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -64,9 +75,9 @@ export default function ProfileEditContainer() {
   return (
     <ProfileEditPresenter
       displayName={displayName}
-      setDisplayName={setDisplayName}
+      setDisplayName={handleSetDisplayName}
       userName={userName}
-      setUserName={setUserName}
+      setUserName={handleSetUserName}
       biography={biography}
       setBiography={setBiography}
     />
