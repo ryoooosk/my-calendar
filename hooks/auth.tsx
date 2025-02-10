@@ -7,7 +7,8 @@ export const AuthContext = createContext<{
   session: Session | null;
   user: Users | null;
   isLoading: boolean;
-}>({ session: null, user: null, isLoading: false });
+  setUser: (user: Users) => void;
+}>({ session: null, user: null, isLoading: false, setUser: () => {} });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<Users | null>(null);
@@ -46,7 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ session, user, isLoading }}>
+    <AuthContext.Provider value={{ session, user, isLoading, setUser }}>
       {children}
     </AuthContext.Provider>
   );

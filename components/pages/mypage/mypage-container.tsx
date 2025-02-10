@@ -35,14 +35,21 @@ export default function MyPageContainer() {
         </VStack>
       </HStack>
 
-      {user?.biography && (
-        <Text size="lg" className="text-gray-950">
-          {user?.biography}
-        </Text>
-      )}
+      <View className="min-h-7 mx-1">
+        {user?.biography && (
+          <Text size="lg" className="text-gray-950 tracking-wide">
+            {user?.biography}
+          </Text>
+        )}
+      </View>
 
       <View className="flex flex-row gap-3">
-        <Button variant="solid" size="md" className="rounded-full w-1/2">
+        <Button
+          variant="solid"
+          size="md"
+          className="rounded-full w-1/2"
+          onPress={() => router.push('/mypage/edit')}
+        >
           <ButtonIcon as={Pencil} />
           <ButtonText>編集する</ButtonText>
         </Button>
