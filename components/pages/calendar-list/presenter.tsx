@@ -134,7 +134,8 @@ function CalendarDayPresenter(props: CalendarDayProps) {
       {schedules.map((schedule) => (
         <View
           key={schedule.id}
-          className="w-full mb-[0.2rem] py-[0.15rem] px-[0.2rem] bg-sky-200 rounded-sm overflow-hidden"
+          className="w-full mb-[0.2rem] py-[0.15rem] px-[0.2rem] rounded-sm overflow-hidden"
+          style={{ backgroundColor: schedule.color }}
         >
           <Text
             className="text-[0.85rem] tracking-wide font-bold"
