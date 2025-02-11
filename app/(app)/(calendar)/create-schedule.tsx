@@ -4,7 +4,7 @@ import { useNavigation, useRouter } from 'expo-router';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import 'dayjs/locale/ja';
-import DateTimeSelect from '@/components/pages/create-schedule/date-time-select';
+import DateTimeSelect from '@/components/pages/create-schedule/date-time-selct';
 import ScheduleDescriptionInput from '@/components/pages/create-schedule/schedule-description-input';
 import ScheduleTitleInput from '@/components/pages/create-schedule/schedule-title-input';
 import { AuthContext } from '@/hooks/auth';
