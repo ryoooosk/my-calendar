@@ -1,4 +1,4 @@
-import CalendarListContainer from '@/components/pages/calendar-list/calendar-list-container';
+import CalendarListContainer from '@/components/pages/calendar-list/container';
 import { Button, ButtonIcon } from '@/components/ui/button';
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
