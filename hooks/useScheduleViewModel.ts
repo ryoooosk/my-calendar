@@ -1,3 +1,4 @@
+import { SCHEDULE_SLATE } from '@/constants/schedule-colors';
 import { Schedules } from '@/database.types';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
@@ -11,6 +12,7 @@ export type ScheduleViewModel = {
   startAt: string;
   endAt: string;
   isAllDay: boolean;
+  color: string;
   isPublic: boolean;
 };
 
@@ -33,6 +35,7 @@ export const useSchedulesViewModel = () => {
         startAt: schedule.start_at,
         endAt: schedule.end_at,
         isAllDay: schedule.is_all_day,
+        color: schedule.color !== '' ? schedule.color : SCHEDULE_SLATE,
         isPublic: schedule.is_public,
       };
 
