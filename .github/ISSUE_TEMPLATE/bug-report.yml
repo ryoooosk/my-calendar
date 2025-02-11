@@ -1,6 +1,6 @@
 name: バグ報告
 description: File a bug report.
-title: "Bug/ "
+title: "Bug: "
 labels: ["bug"]
 body:
   - type: markdown
@@ -26,10 +26,8 @@ body:
       label: 環境
       description: バグが発生した環境を選択してください。
       options:
-        - 本番
-        - stg
-        - dev
-        - demo
+        - prod
+        - local
       default: 0
     validations:
       required: true

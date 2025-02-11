@@ -1,5 +1,5 @@
 name: 機能/改善リクエスト
-title: "[ユーザーストーリー]"
+title: "feat: [ユーザーストーリー]"
 description: File a improvement report.
 body:
   - type: markdown
@@ -23,8 +23,8 @@ body:
         What なにが達成されればこの機能は完了となりますか？
         もし完了要件が多くなる場合はissueの分割を検討してください。
       value: |
-        - [ ] 
-        - [ ]
+        - 
+        - 
     validations:
       required: true
 
