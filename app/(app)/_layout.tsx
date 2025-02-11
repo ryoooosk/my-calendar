@@ -20,7 +20,15 @@ export default function AppLayout() {
         name="(calendar)"
         options={{ headerShown: false, title: 'ホーム' }}
       />
-      <Stack.Screen name="mypage" options={{ title: 'マイページ' }} />
+      <Stack.Screen name="mypage/index" options={{ title: 'マイページ' }} />
+      <Stack.Screen
+        name="mypage/edit"
+        options={{
+          presentation: 'modal',
+          title: 'プロフィール編集',
+          headerBackTitle: 'キャンセル',
+        }}
+      />
     </Stack>
   );
 }
