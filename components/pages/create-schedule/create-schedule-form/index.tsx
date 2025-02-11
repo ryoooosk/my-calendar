@@ -1,5 +1,6 @@
 import { Divider } from '@/components/ui/divider/divider';
-import { Users } from '@/database.types';
+import { SCHEDULE_DEFAULT_SELECTED_COLOR } from '@/constants/schedule-colors';
+import { InsertSchedules, Users } from '@/database.types';
 import { supabase } from '@/lib/supabase';
 import { roundedDateInFiveMinute } from '@/utils/date.logic';
 import dayjs from 'dayjs';
@@ -9,6 +10,7 @@ import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import DateTimeSelect from '../date-time-selct';
 import ScheduleDescriptionInput from '../schedule-description-input';
 import ScheduleTitleInput from '../schedule-title-input';
+import SelectScheduleColorContainer from '../select-schedule-color';
 
 export default function CreateScheduleFormContainer({ user }: { user: Users }) {
   const router = useRouter();
@@ -22,12 +24,14 @@ export default function CreateScheduleFormContainer({ user }: { user: Users }) {
   const [isAllDay, setIsAllDay] = useState(false);
   const [description, setDescription] = useState('');
 
+  const [color, setColor] = useState<string>(SCHEDULE_DEFAULT_SELECTED_COLOR);
+
   const handleSubmit = useCallback(async () => {
     if (endDate.isBefore(startDate)) {
       return Alert.alert('終了日時は開始日時より後に設定してください');
     }
 
-    const data = {
+    const data: InsertSchedules = {
       user_id: user.id,
       title,
       start_at: !isAllDay
@@ -38,11 +42,12 @@ export default function CreateScheduleFormContainer({ user }: { user: Users }) {
         : endDate.endOf('day').toDate().toISOString(),
       is_all_day: isAllDay,
       description,
+      color,
     };
 
     await supabase.from('schedules').insert(data);
     router.replace('/');
-  }, [user, title, startDate, endDate, isAllDay, description]);
+  }, [user, title, startDate, endDate, isAllDay, description, color]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -69,6 +74,10 @@ export default function CreateScheduleFormContainer({ user }: { user: Users }) {
         setIsAllDay={setIsAllDay}
       />
       <Divider />
+      <SelectScheduleColorContainer
+        selectedColor={color}
+        setSelectedColor={setColor}
+      />
       <ScheduleDescriptionInput
         description={description}
         setDescription={setDescription}
