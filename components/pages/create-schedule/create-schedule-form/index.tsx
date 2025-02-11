@@ -7,10 +7,10 @@ import dayjs from 'dayjs';
 import { useNavigation, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
-import DateTimeSelect from '../date-time-selct';
-import ScheduleDescriptionInput from '../schedule-description-input';
-import ScheduleTitleInput from '../schedule-title-input';
-import SelectScheduleColorContainer from '../select-schedule-color';
+import DateTimeSelect from './date-time-selct';
+import ScheduleDescriptionInput from './schedule-description-input';
+import ScheduleTitleInput from './schedule-title-input';
+import SelectScheduleColorContainer from './select-schedule-color';
 
 export default function CreateScheduleFormContainer({ user }: { user: Users }) {
   const router = useRouter();
