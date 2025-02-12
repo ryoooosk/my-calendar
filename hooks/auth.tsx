@@ -16,12 +16,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setLoading] = useState(true);
 
   const fetchUser = async (userId: string) => {
-    const { data: user } = await supabase
+    const { data: user, error } = await supabase
       .from('users')
       .select('*')
       .eq('id', userId)
       .single();
 
+    if (error) console.warn('Error fetching user:', error.message);
     return user;
   };
 
@@ -29,6 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
+        setLoading(true);
         setSession(session);
 
         if (!session) setUser(null);
