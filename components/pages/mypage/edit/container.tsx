@@ -15,7 +15,8 @@ export default function ProfileEditContainer() {
 
   const { user, setUser } = useContext(AuthContext);
 
-  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [currentImageUri, setCurrentImageUri] = useState<string | null>(null);
+  const [newImageUri, setNewImageUri] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState<string>('');
   const [userName, setUserName] = useState<string | null>(null);
   const [biography, setBiography] = useState<string | null>(null);
@@ -32,7 +33,7 @@ export default function ProfileEditContainer() {
 
   useEffect(() => {
     if (!user) return;
-    setImageUri(user.avatar_url);
+    setCurrentImageUri(user.avatar_url);
     setDisplayName(user.display_name);
     setUserName(user.user_name);
     setBiography(user.biography);
@@ -55,7 +56,7 @@ export default function ProfileEditContainer() {
         [{ resize: { width: 500 } }],
         { compress: 1, format: SaveFormat.PNG },
       );
-      setImageUri(result.uri);
+      setNewImageUri(result.uri);
     } catch (error) {
       console.error('Image manipulation failed:', error);
     }
@@ -65,53 +66,49 @@ export default function ProfileEditContainer() {
     if (!user) return;
     if (isInValid) return Alert.alert('入力内容が不正です');
 
-    const avatarUri = await uploadAvatarImage(user.id, imageUri);
+    try {
+      const avatarUri = newImageUri
+        ? await uploadAvatarImage(user.id, newImageUri)
+        : null;
 
-    // TODO: user_name が重複していないかチェック
-    const newUser: Users = {
-      ...user,
-      display_name: displayName,
-      user_name: userName,
-      biography,
-      avatar_url: avatarUri ?? null,
-    };
-    const { error } = await supabase
-      .from('users')
-      .update(newUser)
-      .eq('id', user.id);
+      // TODO: user_name が重複していないかチェック
+      const newUser: Users = {
+        ...user,
+        display_name: displayName,
+        user_name: userName,
+        biography,
+        avatar_url: avatarUri,
+      };
+      const { error } = await supabase
+        .from('users')
+        .update(newUser)
+        .eq('id', user.id);
+      if (error) throw error;
 
-    if (error) Alert.alert('保存に失敗しました');
-    else {
       setUser(newUser);
       router.replace('/mypage');
+    } catch (error) {
+      console.error('Failed to update user:', error);
+      Alert.alert('保存に失敗しました');
     }
-  }, [user, setUser, displayName, userName, biography, isInValid, imageUri]);
+  }, [user, setUser, displayName, userName, biography, isInValid, newImageUri]);
 
   const uploadAvatarImage = async (
     userId: Users['id'],
-    imageUri: string | null,
-  ): Promise<string | undefined> => {
-    if (!imageUri) return;
+    imageUri: string,
+  ): Promise<string> => {
+    const fileExt = imageUri.split('.').pop();
+    const contentType = `image/${fileExt}`;
+    const filePath = `${userId}.${fileExt}`;
 
-    try {
-      const fileExt = imageUri.split('.').pop();
-      const contentType = `image/${fileExt}`;
-      const filePath = `${userId}.${fileExt}`;
+    const arraybuffer = await fetch(imageUri).then((res) => res.arrayBuffer());
 
-      const arraybuffer = await fetch(imageUri).then((res) =>
-        res.arrayBuffer(),
-      );
+    const { data, error } = await supabase.storage
+      .from('avatars')
+      .upload(filePath, arraybuffer, { contentType, upsert: true });
 
-      const { data, error } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, arraybuffer, { contentType, upsert: true });
-
-      if (error || !data) throw error;
-      return data.fullPath;
-    } catch (error) {
-      console.error('Failed to upload avatar image:', error);
-      Alert.alert('画像のアップロードに失敗しました');
-    }
+    if (error || !data) throw error;
+    return data.fullPath;
   };
 
   useEffect(() => {
@@ -127,7 +124,7 @@ export default function ProfileEditContainer() {
 
   return (
     <ProfileEditPresenter
-      imageUri={imageUri}
+      imageUri={newImageUri ?? currentImageUri}
       displayName={displayName}
       setDisplayName={handleSetDisplayName}
       userName={userName}
