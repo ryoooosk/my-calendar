@@ -15,13 +15,14 @@ import { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 type ProfileEditPresenterProps = {
-  imageUri?: string;
+  imageUri: string | null;
   displayName: string;
   setDisplayName: (value: string) => void;
   userName: string | null;
   setUserName: (value: string) => void;
   biography: string | null;
   setBiography: (value: string) => void;
+  handlePickImage: () => void;
 };
 
 export default function ProfileEditPresenter({
@@ -32,13 +33,17 @@ export default function ProfileEditPresenter({
   setUserName,
   biography,
   setBiography,
+  handlePickImage,
 }: ProfileEditPresenterProps) {
   return (
     <ScrollView>
-      <TouchableOpacity className="flex justify-center items-center mt-5 mb-3">
+      <TouchableOpacity
+        className="flex justify-center items-center mt-5 mb-3"
+        onPress={handlePickImage}
+      >
         <Avatar size="xl" className="bg-slate-400">
           {imageUri ? (
-            <AvatarImage source={{ uri: '' }} />
+            <AvatarImage source={{ uri: imageUri }} />
           ) : (
             <Icon as={User} size="xl" />
           )}
