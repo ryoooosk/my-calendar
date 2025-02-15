@@ -46,6 +46,7 @@ export default function ProfileEditContainer() {
         allowsEditing: true,
         aspect: [1, 1],
         quality: 0.8,
+        exif: false,
       });
       if (selected.canceled) return;
 
@@ -62,11 +63,9 @@ export default function ProfileEditContainer() {
 
   const handleSubmit = useCallback(async () => {
     if (!user) return;
+    if (isInValid) return Alert.alert('入力内容が不正です');
 
-    if (isInValid) {
-      Alert.alert('入力内容が不正です');
-      return;
-    }
+    const avatarUri = await uploadAvatarImage(user.id, imageUri);
 
     // TODO: user_name が重複していないかチェック
     const newUser: Users = {
@@ -74,6 +73,7 @@ export default function ProfileEditContainer() {
       display_name: displayName,
       user_name: userName,
       biography,
+      avatar_url: avatarUri ?? null,
     };
     const { error } = await supabase
       .from('users')
@@ -86,6 +86,33 @@ export default function ProfileEditContainer() {
       router.replace('/mypage');
     }
   }, [user, setUser, displayName, userName, biography, isInValid, imageUri]);
+
+  const uploadAvatarImage = async (
+    userId: Users['id'],
+    imageUri: string | null,
+  ): Promise<string | undefined> => {
+    if (!imageUri) return;
+
+    try {
+      const fileExt = imageUri.split('.').pop();
+      const contentType = `image/${fileExt}`;
+      const filePath = `${userId}.${fileExt}`;
+
+      const arraybuffer = await fetch(imageUri).then((res) =>
+        res.arrayBuffer(),
+      );
+
+      const { data, error } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, arraybuffer, { contentType, upsert: true });
+
+      if (error || !data) throw error;
+      return data.fullPath;
+    } catch (error) {
+      console.error('Failed to upload avatar image:', error);
+      Alert.alert('画像のアップロードに失敗しました');
+    }
+  };
 
   useEffect(() => {
     navigation.setOptions({
