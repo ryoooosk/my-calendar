@@ -1,3 +1,4 @@
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import {
   FormControl,
   FormControlError,
@@ -6,31 +7,52 @@ import {
   FormControlLabel,
   FormControlLabelText,
 } from '@/components/ui/form-control';
+import { Icon } from '@/components/ui/icon';
 import { Input, InputField } from '@/components/ui/input';
 import { Textarea, TextareaInput } from '@/components/ui/textarea';
-import { AlertCircleIcon } from 'lucide-react-native';
+import { AlertCircleIcon, User } from 'lucide-react-native';
 import { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 type ProfileEditPresenterProps = {
+  imageUri: string | null;
   displayName: string;
   setDisplayName: (value: string) => void;
   userName: string | null;
   setUserName: (value: string) => void;
   biography: string | null;
   setBiography: (value: string) => void;
+  handlePickImage: () => void;
 };
 
 export default function ProfileEditPresenter({
+  imageUri,
   displayName,
   setDisplayName,
   userName,
   setUserName,
   biography,
   setBiography,
+  handlePickImage,
 }: ProfileEditPresenterProps) {
   return (
     <ScrollView>
+      <TouchableOpacity
+        className="flex justify-center items-center mt-5 mb-3"
+        onPress={handlePickImage}
+      >
+        <Avatar size="xl" className="bg-slate-400">
+          {imageUri ? (
+            <AvatarImage source={{ uri: imageUri }} />
+          ) : (
+            <Icon as={User} size="xl" />
+          )}
+        </Avatar>
+        <Text className="mt-1 text-zinc-800 text-lg tracking-wider">
+          写真を変更
+        </Text>
+      </TouchableOpacity>
+
       <View className="gap-5 my-5 mx-5">
         <InputFormField
           label={'表示名'}
