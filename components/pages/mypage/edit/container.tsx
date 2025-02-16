@@ -13,7 +13,7 @@ import ProfileEditPresenter from './presenter';
 export default function ProfileEditContainer() {
   const navigation = useNavigation();
 
-  const { user, setUser } = useContext(AuthContext);
+  const { user, handleSetUser } = useContext(AuthContext);
 
   const [currentImageUri, setCurrentImageUri] = useState<string | null>(null);
   const [newImageUri, setNewImageUri] = useState<string | null>(null);
@@ -77,7 +77,7 @@ export default function ProfileEditContainer() {
         display_name: displayName,
         user_name: userName,
         biography,
-        avatar_url: avatarUri,
+        avatar_url: avatarUri ?? currentImageUri,
       };
       const { error } = await supabase
         .from('users')
@@ -85,13 +85,21 @@ export default function ProfileEditContainer() {
         .eq('id', user.id);
       if (error) throw error;
 
-      setUser(newUser);
-      router.replace('/mypage');
+      handleSetUser(newUser);
+      router.back();
     } catch (error) {
       console.error('Failed to update user:', error);
       Alert.alert('保存に失敗しました');
     }
-  }, [user, setUser, displayName, userName, biography, isInValid, newImageUri]);
+  }, [
+    user,
+    handleSetUser,
+    displayName,
+    userName,
+    biography,
+    isInValid,
+    newImageUri,
+  ]);
 
   const uploadAvatarImage = async (
     userId: Users['id'],
@@ -108,7 +116,11 @@ export default function ProfileEditContainer() {
       .upload(filePath, arraybuffer, { contentType, upsert: true });
 
     if (error || !data) throw error;
-    return data.fullPath;
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from('avatars').getPublicUrl(data.path);
+    return publicUrl;
   };
 
   useEffect(() => {

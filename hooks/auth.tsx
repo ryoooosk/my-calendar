@@ -7,8 +7,13 @@ export const AuthContext = createContext<{
   session: Session | null;
   user: Users | null;
   isLoading: boolean;
-  setUser: (user: Users) => void;
-}>({ session: null, user: null, isLoading: false, setUser: () => {} });
+  handleSetUser: (user: Users) => void;
+}>({
+  session: null,
+  user: null,
+  isLoading: false,
+  handleSetUser: () => {},
+});
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<Users | null>(null);
@@ -26,6 +31,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return user;
   };
 
+  // CDNによるavatar_urlのキャッシュ対策
+  const handleSetUser = (user: Users) => {
+    user.avatar_url = `${user.avatar_url}?v=${new Date().getTime()}`;
+    setUser(user);
+  };
+
   // TODO: useEffectの依存配列の見直し
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
@@ -36,6 +47,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (!session) setUser(null);
         else {
           const user = await fetchUser(session.user.id);
+          if (user?.avatar_url)
+            user.avatar_url = `${user.avatar_url}?v=${new Date().getTime()}`;
           setUser(user);
         }
 
@@ -49,7 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ session, user, isLoading, setUser }}>
+    <AuthContext.Provider value={{ session, user, isLoading, handleSetUser }}>
       {children}
     </AuthContext.Provider>
   );

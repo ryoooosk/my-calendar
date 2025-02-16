@@ -1,4 +1,4 @@
-import { Avatar } from '@/components/ui/avatar';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button, ButtonIcon } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { DateContext } from '@/hooks/selectedDate';
@@ -14,7 +14,11 @@ import colors from 'tailwindcss/colors';
 
 export default function CalendarListPresenter({
   scheduleMap,
-}: { scheduleMap: Map<string, ScheduleViewModel[]> }) {
+  avatarUri,
+}: {
+  scheduleMap: Map<string, ScheduleViewModel[]>;
+  avatarUri: string | null;
+}) {
   const FUTURE_MONTH_RANGE = 24;
   const PAST_MONTH_RANGE = 24;
 
@@ -41,7 +45,10 @@ export default function CalendarListPresenter({
       pastScrollRange={PAST_MONTH_RANGE}
       renderHeader={(date: string) => {
         return (
-          <CalendarHeaderPresenter date={dayjs(date).format('YYYY年M月')} />
+          <CalendarHeaderPresenter
+            date={dayjs(date).format('YYYY年M月')}
+            avatarUri={avatarUri}
+          />
         );
       }}
       dayComponent={(
@@ -79,7 +86,10 @@ export default function CalendarListPresenter({
   );
 }
 
-function CalendarHeaderPresenter({ date }: { date?: string }) {
+function CalendarHeaderPresenter({
+  date,
+  avatarUri,
+}: { date?: string; avatarUri: string | null }) {
   const router = useRouter();
 
   return (
@@ -91,7 +101,11 @@ function CalendarHeaderPresenter({ date }: { date?: string }) {
         onPress={() => router.push('/mypage')}
       >
         <Avatar size="md" className="bg-slate-600">
-          <Icon as={User} size="md" className="stroke-white" />
+          {avatarUri ? (
+            <AvatarImage source={{ uri: avatarUri }} />
+          ) : (
+            <Icon as={User} size="md" className="stroke-white" />
+          )}
         </Avatar>
       </Button>
 
