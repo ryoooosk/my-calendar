@@ -7,12 +7,12 @@ export const AuthContext = createContext<{
   session: Session | null;
   user: Users | null;
   isLoading: boolean;
-  handleSetUser: (user: Users) => void;
+  setUser: (user: Users) => void;
 }>({
   session: null,
   user: null,
   isLoading: false,
-  handleSetUser: () => {},
+  setUser: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -29,12 +29,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (error) console.warn('Error fetching user:', error.message);
     return user;
-  };
-
-  // CDNによるavatar_urlのキャッシュ対策
-  const handleSetUser = (user: Users) => {
-    user.avatar_url = `${user.avatar_url}?v=${new Date().getTime()}`;
-    setUser(user);
   };
 
   // TODO: useEffectの依存配列の見直し
@@ -62,7 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ session, user, isLoading, handleSetUser }}>
+    <AuthContext.Provider value={{ session, user, isLoading, setUser }}>
       {children}
     </AuthContext.Provider>
   );
