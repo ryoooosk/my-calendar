@@ -1,4 +1,4 @@
-import { Avatar } from '@/components/ui/avatar';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button, ButtonIcon, ButtonText } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { HStack } from '@/components/ui/hstack';
@@ -18,7 +18,11 @@ export default function MyPagePresenter({
     <VStack space="xl" className="mt-6 px-3">
       <HStack space="lg" className="">
         <Avatar size="xl" className="bg-slate-600">
-          <Icon as={UserIcon} size="xl" className="stroke-white" />
+          {user.avatar_url ? (
+            <AvatarImage source={{ uri: user.avatar_url }} />
+          ) : (
+            <Icon as={UserIcon} size="xl" className="stroke-white" />
+          )}
         </Avatar>
 
         <VStack className="flex gap-1">

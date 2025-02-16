@@ -8,7 +8,12 @@ export const AuthContext = createContext<{
   user: Users | null;
   isLoading: boolean;
   setUser: (user: Users) => void;
-}>({ session: null, user: null, isLoading: false, setUser: () => {} });
+}>({
+  session: null,
+  user: null,
+  isLoading: false,
+  setUser: () => {},
+});
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<Users | null>(null);
@@ -36,6 +41,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (!session) setUser(null);
         else {
           const user = await fetchUser(session.user.id);
+          if (user?.avatar_url)
+            user.avatar_url = `${user.avatar_url}?v=${new Date().getTime()}`;
           setUser(user);
         }
 

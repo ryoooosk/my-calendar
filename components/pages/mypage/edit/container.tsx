@@ -2,6 +2,7 @@ import { Icon } from '@/components/ui/icon';
 import { Users } from '@/database.types';
 import { AuthContext } from '@/hooks/auth';
 import { supabase } from '@/lib/supabase';
+import dayjs from 'dayjs';
 import { SaveFormat, manipulateAsync } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { router, useNavigation } from 'expo-router';
@@ -68,7 +69,7 @@ export default function ProfileEditContainer() {
 
     try {
       const avatarUri = newImageUri
-        ? await uploadAvatarImage(user.id, newImageUri)
+        ? await uploadAvatarImage(user.id, user.avatar_url, newImageUri)
         : null;
 
       // TODO: user_name が重複していないかチェック
@@ -77,7 +78,7 @@ export default function ProfileEditContainer() {
         display_name: displayName,
         user_name: userName,
         biography,
-        avatar_url: avatarUri,
+        avatar_url: avatarUri ?? currentImageUri,
       };
       const { error } = await supabase
         .from('users')
@@ -86,7 +87,7 @@ export default function ProfileEditContainer() {
       if (error) throw error;
 
       setUser(newUser);
-      router.replace('/mypage');
+      router.back();
     } catch (error) {
       console.error('Failed to update user:', error);
       Alert.alert('保存に失敗しました');
@@ -95,20 +96,39 @@ export default function ProfileEditContainer() {
 
   const uploadAvatarImage = async (
     userId: Users['id'],
-    imageUri: string,
+    currentImageUri: string | null,
+    newImageUri: string,
   ): Promise<string> => {
-    const fileExt = imageUri.split('.').pop();
+    const fileExt = newImageUri.split('.').pop();
     const contentType = `image/${fileExt}`;
-    const filePath = `${userId}.${fileExt}`;
+    const filePath = `${userId}_${dayjs().format('YYYYMMDD-HHmmss')}.${fileExt}`;
 
-    const arraybuffer = await fetch(imageUri).then((res) => res.arrayBuffer());
+    const arraybuffer = await fetch(newImageUri).then((res) =>
+      res.arrayBuffer(),
+    );
 
     const { data, error } = await supabase.storage
       .from('avatars')
-      .upload(filePath, arraybuffer, { contentType, upsert: true });
-
+      .upload(filePath, arraybuffer, { contentType });
     if (error || !data) throw error;
-    return data.fullPath;
+
+    if (currentImageUri) await deleteCurrentAvatarImage(currentImageUri);
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from('avatars').getPublicUrl(data.path);
+    return publicUrl;
+  };
+
+  const deleteCurrentAvatarImage = async (currentImageUri: string) => {
+    const targetPath = currentImageUri.split('/').pop();
+    if (!targetPath) throw new Error('Failed to get target path');
+
+    const { data, error } = await supabase.storage
+      .from('avatars')
+      .remove([targetPath]);
+    if (!data?.length || error)
+      console.error('Failed to remove old avatar:', error);
   };
 
   useEffect(() => {
