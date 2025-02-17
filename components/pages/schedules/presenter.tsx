@@ -1,8 +1,9 @@
 import dayjs from 'dayjs';
-import { Alert, Text, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native';
 import { View } from 'react-native';
 import { Agenda, AgendaEntry, AgendaSchedule } from 'react-native-calendars';
 import colors from 'tailwindcss/colors';
+import ScheduleItem from './schedule-item';
 
 dayjs.locale('ja');
 
@@ -58,39 +59,3 @@ const handleRenderItem = (
 ) => {
   return <ScheduleItem schedule={schedule} isFirstInDay={false} />;
 };
-
-function ScheduleItem({
-  schedule,
-  isFirstInDay,
-}: {
-  schedule: AgendaEntry & { isAllDay: boolean; description: string };
-  isFirstInDay: boolean;
-}) {
-  return (
-    <TouchableOpacity
-      key={schedule.name}
-      className={`flex-1 flex gap-1 bg-white px-4 py-3 mr-5 mt-4 rounded-xl ${!isFirstInDay && 'ml-16'}`}
-      onPress={() => Alert.alert(schedule.name)}
-    >
-      <Text
-        className="text-xl font-medium tracking-wider text-slate-800"
-        numberOfLines={1}
-        ellipsizeMode="tail"
-      >
-        {schedule.name}
-      </Text>
-      <Text className="text-[1.13rem] tracking-wide text-slate-800">
-        {schedule.isAllDay ? '終日' : schedule.day}
-      </Text>
-      {schedule.description && (
-        <Text
-          className="mt-2 text-gray-500 tracking-wide"
-          numberOfLines={3}
-          ellipsizeMode="tail"
-        >
-          {schedule.description}
-        </Text>
-      )}
-    </TouchableOpacity>
-  );
-}
