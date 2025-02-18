@@ -9,13 +9,31 @@ dayjs.locale('ja');
 
 export default function SchedulesPresenter({
   agendaEntries,
+  handleSelectSchedule,
   selectedDate,
-}: { agendaEntries: AgendaSchedule; selectedDate: string }) {
+}: {
+  agendaEntries: AgendaSchedule;
+  handleSelectSchedule: (scheduleId: number) => void;
+  selectedDate: string;
+}) {
   return (
     <Agenda
       items={agendaEntries}
-      renderItem={handleRenderItem}
-      renderDay={handleRenderDay}
+      renderItem={(
+        schedule: AgendaEntry & {
+          id: number;
+          isAllDay: boolean;
+          description: string;
+        },
+      ) => handleRenderItem(schedule, handleSelectSchedule)}
+      renderDay={(
+        day: Date | undefined,
+        schedule: AgendaEntry & {
+          id: number;
+          isAllDay: boolean;
+          description: string;
+        },
+      ) => handleRenderDay(day, schedule, handleSelectSchedule)}
       selected={selectedDate}
       showClosingKnob={true}
       theme={{
@@ -28,10 +46,33 @@ export default function SchedulesPresenter({
   );
 }
 
+// 最初以外のagendaを表示する
+const handleRenderItem = (
+  schedule: AgendaEntry & {
+    id: number;
+    isAllDay: boolean;
+    description: string;
+  },
+  handleSelectSchedule: (scheduleId: number) => void,
+) => {
+  return (
+    <ScheduleItem
+      schedule={schedule}
+      isFirstInDay={false}
+      handleSelectSchedule={handleSelectSchedule}
+    />
+  );
+};
+
 // 各日とその最初のagendaを表示する
 const handleRenderDay = (
   day: Date | undefined,
-  schedule: AgendaEntry & { isAllDay: boolean; description: string },
+  schedule: AgendaEntry & {
+    id: number;
+    isAllDay: boolean;
+    description: string;
+  },
+  handleSelectSchedule: (scheduleId: number) => void,
 ) => {
   if (!day || !schedule) return;
 
@@ -48,14 +89,11 @@ const handleRenderDay = (
         <Text className="text-slate-600">{dayjs(day).format('dd')}</Text>
       </View>
 
-      <ScheduleItem schedule={schedule} isFirstInDay={true} />
+      <ScheduleItem
+        schedule={schedule}
+        isFirstInDay={true}
+        handleSelectSchedule={handleSelectSchedule}
+      />
     </View>
   );
-};
-
-// 最初以外のagendaを表示する
-const handleRenderItem = (
-  schedule: AgendaEntry & { isAllDay: boolean; description: string },
-) => {
-  return <ScheduleItem schedule={schedule} isFirstInDay={false} />;
 };

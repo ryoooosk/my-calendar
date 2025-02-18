@@ -6,9 +6,15 @@ import { AgendaEntry } from 'react-native-calendars';
 export default function ScheduleItem({
   schedule,
   isFirstInDay,
+  handleSelectSchedule,
 }: {
-  schedule: AgendaEntry & { isAllDay: boolean; description: string };
+  schedule: AgendaEntry & {
+    id: number;
+    isAllDay: boolean;
+    description: string;
+  };
   isFirstInDay: boolean;
+  handleSelectSchedule: (scheduleId: number) => void;
 }) {
   return (
     <View
@@ -38,7 +44,10 @@ export default function ScheduleItem({
         )}
       </View>
 
-      <TouchableOpacity className="p-2">
+      <TouchableOpacity
+        className="p-2"
+        onPress={() => handleSelectSchedule(schedule.id)}
+      >
         <Icon as={EditIcon} className="w-8 h-8" />
       </TouchableOpacity>
     </View>
