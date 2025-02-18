@@ -4,7 +4,7 @@ import { ScheduleContext } from '@/context/ScheduleContext';
 import { AuthContext } from '@/hooks/auth';
 import { useContext } from 'react';
 
-export default function UpdateSchedule() {
+export default function UpdateSchedulePage() {
   const { user } = useContext(AuthContext);
   const { selectedSchedule } = useContext(ScheduleContext);
 
