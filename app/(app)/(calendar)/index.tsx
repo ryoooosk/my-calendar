@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CalendarListPage() {
   const handleClick = () => {
-    router.push('/create-schedule');
+    router.push('/schedule/create');
   };
 
   return (

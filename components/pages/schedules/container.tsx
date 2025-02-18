@@ -5,8 +5,6 @@ import {
 } from '@/hooks/useScheduleViewModel';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
-import { ScheduleContext } from '@/context/ScheduleContext';
-import { useSchedules } from '@/hooks/useSchedules';
 import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
 import { useCallback, useContext, useMemo } from 'react';
@@ -18,9 +16,7 @@ dayjs.locale('ja');
 
 export default function SchedulesContainer() {
   const scheduleMap: Map<string, ScheduleViewModel[]> = useSchedulesViewModel();
-  const { schedules, setSchedules } = useSchedules();
   const { date: selectedDate } = useContext(DateContext);
-  const { setSelectedSchedule } = useContext(ScheduleContext);
 
   const agendaEntries: AgendaSchedule = useMemo(() => {
     const agendaSchedule: AgendaSchedule = {};
@@ -42,20 +38,8 @@ export default function SchedulesContainer() {
     );
   }, [scheduleMap]);
 
-  const handleSelectSchedule = useCallback(
-    (scheduleId: number) => {
-      // TODO:  重複を含むのでもっと効率の良い取得にする
-      const allSchedules = Array.from(scheduleMap.values()).flat();
-      const targetSchedule = allSchedules.find(
-        (schedule) => schedule.id === scheduleId,
-      );
-      if (!targetSchedule) throw new Error('Schedule not found');
-      setSelectedSchedule(targetSchedule);
-
-      router.push('/update-schedule');
-    },
-    [scheduleMap],
-  );
+  const handleSelectSchedule = (scheduleId: number) =>
+    router.push(`/schedule/update/${scheduleId}`);
 
   const handleDeleteSchedule = useCallback(
     (scheduleId: number) => {
