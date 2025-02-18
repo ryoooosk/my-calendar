@@ -1,21 +1,34 @@
-import { Divider } from '@/components/ui/divider/divider';
 import { SCHEDULE_DEFAULT_SELECTED_COLOR } from '@/constants/schedule-colors';
 import { InsertSchedules, Users } from '@/database.types';
+import { ScheduleViewModel } from '@/hooks/useScheduleViewModel';
 import { supabase } from '@/lib/supabase';
 import { roundedDateInFiveMinute } from '@/utils/date.logic';
 import dayjs from 'dayjs';
 import { useNavigation, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
-import DateTimeSelect from './date-time-selct';
-import ScheduleDescriptionInput from './schedule-description-input';
-import ScheduleTitleInput from './schedule-title-input';
-import SelectScheduleColorContainer from './select-schedule-color';
+import { Alert, Text, TouchableOpacity } from 'react-native';
+import UpsertScheduleFormContainerPresenter from './presenter';
 
-export default function CreateScheduleFormContainer({ user }: { user: Users }) {
+export default function UpsertScheduleFormContainer({
+  user,
+  selectedSchedule,
+}: { user: Users; selectedSchedule: ScheduleViewModel | null }) {
   const router = useRouter();
   const navigation = useNavigation();
 
+  useEffect(() => {
+    if (!selectedSchedule) return;
+
+    setId(selectedSchedule.id);
+    setTitle(selectedSchedule.title);
+    setStartDate(dayjs(selectedSchedule.startAt));
+    setEndDate(dayjs(selectedSchedule.endAt));
+    setIsAllDay(selectedSchedule.isAllDay);
+    setDescription(selectedSchedule.description ?? '');
+    setColor(selectedSchedule.color);
+  }, [selectedSchedule]);
+
+  const [id, setId] = useState<number | undefined>(undefined);
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(roundedDateInFiveMinute(dayjs()));
   const [endDate, setEndDate] = useState(
@@ -32,6 +45,7 @@ export default function CreateScheduleFormContainer({ user }: { user: Users }) {
     }
 
     const data: InsertSchedules = {
+      id,
       user_id: user.id,
       title,
       start_at: !isAllDay
@@ -45,43 +59,38 @@ export default function CreateScheduleFormContainer({ user }: { user: Users }) {
       color,
     };
 
-    await supabase.from('schedules').insert(data);
+    await supabase.from('schedules').upsert(data);
     router.replace('/');
-  }, [user, title, startDate, endDate, isAllDay, description, color]);
+  }, [user, id, title, startDate, endDate, isAllDay, description, color]);
 
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity onPress={handleSubmit}>
           <Text className="text-xl font-medium text-sky-600 tracking-wide">
-            作成
+            {id ? '更新' : '作成'}
           </Text>
         </TouchableOpacity>
       ),
     });
-  }, [navigation, handleSubmit]);
+  }, [navigation, handleSubmit, id]);
 
   return (
-    <View className="flex-1">
-      <ScheduleTitleInput title={title} setTitle={setTitle} />
-      <Divider />
-      <DateTimeSelect
-        startDate={startDate}
-        endDate={endDate}
-        isAllDay={isAllDay}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
-        setIsAllDay={setIsAllDay}
-      />
-      <Divider />
-      <SelectScheduleColorContainer
-        selectedColor={color}
-        setSelectedColor={setColor}
-      />
-      <ScheduleDescriptionInput
-        description={description}
-        setDescription={setDescription}
-      />
-    </View>
+    <UpsertScheduleFormContainerPresenter
+      {...{
+        title,
+        setTitle,
+        startDate,
+        setStartDate,
+        endDate,
+        setEndDate,
+        isAllDay,
+        setIsAllDay,
+        color,
+        setColor,
+        description,
+        setDescription,
+      }}
+    />
   );
 }

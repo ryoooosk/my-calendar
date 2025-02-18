@@ -2,7 +2,7 @@ import { SCHEDULE_SLATE } from '@/constants/schedule-colors';
 import { Schedules } from '@/database.types';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
-import { useFetchSchedules } from './useFetchSchedules';
+import { useSchedules } from './useSchedules';
 
 export type ScheduleViewModel = {
   id: number;
@@ -17,7 +17,7 @@ export type ScheduleViewModel = {
 };
 
 export const useSchedulesViewModel = () => {
-  const schedules = useFetchSchedules();
+  const schedules = useSchedules();
   const DAY_KEY_FORMAT = 'YYYY-MM-DD';
 
   const viewModel = useMemo(() => {

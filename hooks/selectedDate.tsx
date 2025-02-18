@@ -10,6 +10,7 @@ export const DateProvider = ({ children }: { children: ReactNode }) => {
   const [date, setDate] = useState<string>('');
 
   return (
+    // TODO: SelectedDate二変更する
     <DateContext.Provider value={{ date, setDate }}>
       {children}
     </DateContext.Provider>

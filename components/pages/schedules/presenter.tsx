@@ -1,20 +1,50 @@
 import dayjs from 'dayjs';
-import { Alert, Text, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native';
 import { View } from 'react-native';
 import { Agenda, AgendaEntry, AgendaSchedule } from 'react-native-calendars';
 import colors from 'tailwindcss/colors';
+import ScheduleItem from './schedule-item';
 
 dayjs.locale('ja');
 
 export default function SchedulesPresenter({
   agendaEntries,
+  handleSelectSchedule,
   selectedDate,
-}: { agendaEntries: AgendaSchedule; selectedDate: string }) {
+  handleDeleteSchedule,
+}: {
+  agendaEntries: AgendaSchedule;
+  handleSelectSchedule: (scheduleId: number) => void;
+  selectedDate: string;
+  handleDeleteSchedule: (scheduleId: number) => void;
+}) {
   return (
     <Agenda
       items={agendaEntries}
-      renderItem={handleRenderItem}
-      renderDay={handleRenderDay}
+      renderItem={(
+        schedule: AgendaEntry & {
+          id: number;
+          isAllDay: boolean;
+          description: string;
+        },
+      ) =>
+        handleRenderItem(schedule, handleSelectSchedule, handleDeleteSchedule)
+      }
+      renderDay={(
+        day: Date | undefined,
+        schedule: AgendaEntry & {
+          id: number;
+          isAllDay: boolean;
+          description: string;
+        },
+      ) =>
+        handleRenderDay(
+          day,
+          schedule,
+          handleSelectSchedule,
+          handleDeleteSchedule,
+        )
+      }
       selected={selectedDate}
       showClosingKnob={true}
       theme={{
@@ -27,10 +57,36 @@ export default function SchedulesPresenter({
   );
 }
 
+// 最初以外のagendaを表示する
+const handleRenderItem = (
+  schedule: AgendaEntry & {
+    id: number;
+    isAllDay: boolean;
+    description: string;
+  },
+  handleSelectSchedule: (scheduleId: number) => void,
+  handleDeleteSchedule: (scheduleId: number) => void,
+) => {
+  return (
+    <ScheduleItem
+      schedule={schedule}
+      isFirstInDay={false}
+      handleSelectSchedule={handleSelectSchedule}
+      handleDeleteSchedule={handleDeleteSchedule}
+    />
+  );
+};
+
 // 各日とその最初のagendaを表示する
 const handleRenderDay = (
   day: Date | undefined,
-  schedule: AgendaEntry & { isAllDay: boolean; description: string },
+  schedule: AgendaEntry & {
+    id: number;
+    isAllDay: boolean;
+    description: string;
+  },
+  handleSelectSchedule: (scheduleId: number) => void,
+  handleDeleteSchedule: (scheduleId: number) => void,
 ) => {
   if (!day || !schedule) return;
 
@@ -47,50 +103,12 @@ const handleRenderDay = (
         <Text className="text-slate-600">{dayjs(day).format('dd')}</Text>
       </View>
 
-      <ScheduleItem schedule={schedule} isFirstInDay={true} />
+      <ScheduleItem
+        schedule={schedule}
+        isFirstInDay={true}
+        handleSelectSchedule={handleSelectSchedule}
+        handleDeleteSchedule={handleDeleteSchedule}
+      />
     </View>
   );
 };
-
-// 最初以外のagendaを表示する
-const handleRenderItem = (
-  schedule: AgendaEntry & { isAllDay: boolean; description: string },
-) => {
-  return <ScheduleItem schedule={schedule} isFirstInDay={false} />;
-};
-
-function ScheduleItem({
-  schedule,
-  isFirstInDay,
-}: {
-  schedule: AgendaEntry & { isAllDay: boolean; description: string };
-  isFirstInDay: boolean;
-}) {
-  return (
-    <TouchableOpacity
-      key={schedule.name}
-      className={`flex-1 flex gap-1 bg-white px-4 py-3 mr-5 mt-4 rounded-xl ${!isFirstInDay && 'ml-16'}`}
-      onPress={() => Alert.alert(schedule.name)}
-    >
-      <Text
-        className="text-xl font-medium tracking-wider text-slate-800"
-        numberOfLines={1}
-        ellipsizeMode="tail"
-      >
-        {schedule.name}
-      </Text>
-      <Text className="text-[1.13rem] tracking-wide text-slate-800">
-        {schedule.isAllDay ? '終日' : schedule.day}
-      </Text>
-      {schedule.description && (
-        <Text
-          className="mt-2 text-gray-500 tracking-wide"
-          numberOfLines={3}
-          ellipsizeMode="tail"
-        >
-          {schedule.description}
-        </Text>
-      )}
-    </TouchableOpacity>
-  );
-}
