@@ -1,4 +1,3 @@
-import { Divider } from '@/components/ui/divider/divider';
 import { SCHEDULE_DEFAULT_SELECTED_COLOR } from '@/constants/schedule-colors';
 import { InsertSchedules, Users } from '@/database.types';
 import { ScheduleViewModel } from '@/hooks/useScheduleViewModel';
@@ -7,11 +6,8 @@ import { roundedDateInFiveMinute } from '@/utils/date.logic';
 import dayjs from 'dayjs';
 import { useNavigation, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
-import DateTimeSelect from './date-time-selct';
-import ScheduleDescriptionInput from './schedule-description-input';
-import ScheduleTitleInput from './schedule-title-input';
-import SelectScheduleColorContainer from './select-schedule-color';
+import { Alert, Text, TouchableOpacity } from 'react-native';
+import UpsertScheduleFormContainerPresenter from './presenter';
 
 export default function UpsertScheduleFormContainer({
   user,
@@ -80,26 +76,21 @@ export default function UpsertScheduleFormContainer({
   }, [navigation, handleSubmit, id]);
 
   return (
-    <View className="flex-1">
-      <ScheduleTitleInput title={title} setTitle={setTitle} />
-      <Divider />
-      <DateTimeSelect
-        startDate={startDate}
-        endDate={endDate}
-        isAllDay={isAllDay}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
-        setIsAllDay={setIsAllDay}
-      />
-      <Divider />
-      <SelectScheduleColorContainer
-        selectedColor={color}
-        setSelectedColor={setColor}
-      />
-      <ScheduleDescriptionInput
-        description={description}
-        setDescription={setDescription}
-      />
-    </View>
+    <UpsertScheduleFormContainerPresenter
+      {...{
+        title,
+        setTitle,
+        startDate,
+        setStartDate,
+        endDate,
+        setEndDate,
+        isAllDay,
+        setIsAllDay,
+        color,
+        setColor,
+        description,
+        setDescription,
+      }}
+    />
   );
 }
