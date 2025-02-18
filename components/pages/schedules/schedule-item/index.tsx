@@ -1,5 +1,5 @@
 import { Icon } from '@/components/ui/icon';
-import { EditIcon } from 'lucide-react-native';
+import { EditIcon, Trash2 } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { AgendaEntry } from 'react-native-calendars';
 
@@ -7,6 +7,7 @@ export default function ScheduleItem({
   schedule,
   isFirstInDay,
   handleSelectSchedule,
+  handleDeleteSchedule,
 }: {
   schedule: AgendaEntry & {
     id: number;
@@ -15,6 +16,7 @@ export default function ScheduleItem({
   };
   isFirstInDay: boolean;
   handleSelectSchedule: (scheduleId: number) => void;
+  handleDeleteSchedule: (scheduleId: number) => void;
 }) {
   return (
     <View
@@ -44,12 +46,20 @@ export default function ScheduleItem({
         )}
       </View>
 
-      <TouchableOpacity
-        className="p-2"
-        onPress={() => handleSelectSchedule(schedule.id)}
-      >
-        <Icon as={EditIcon} className="w-8 h-8" />
-      </TouchableOpacity>
+      <View className="flex flex-row items-center gap-3">
+        <TouchableOpacity
+          className="p-2"
+          onPress={() => handleSelectSchedule(schedule.id)}
+        >
+          <Icon as={EditIcon} className="w-6 h-6" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="p-2"
+          onPress={() => handleDeleteSchedule(schedule.id)}
+        >
+          <Icon as={Trash2} className="w-6 h-6" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

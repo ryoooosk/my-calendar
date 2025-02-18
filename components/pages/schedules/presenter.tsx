@@ -11,10 +11,12 @@ export default function SchedulesPresenter({
   agendaEntries,
   handleSelectSchedule,
   selectedDate,
+  handleDeleteSchedule,
 }: {
   agendaEntries: AgendaSchedule;
   handleSelectSchedule: (scheduleId: number) => void;
   selectedDate: string;
+  handleDeleteSchedule: (scheduleId: number) => void;
 }) {
   return (
     <Agenda
@@ -25,7 +27,9 @@ export default function SchedulesPresenter({
           isAllDay: boolean;
           description: string;
         },
-      ) => handleRenderItem(schedule, handleSelectSchedule)}
+      ) =>
+        handleRenderItem(schedule, handleSelectSchedule, handleDeleteSchedule)
+      }
       renderDay={(
         day: Date | undefined,
         schedule: AgendaEntry & {
@@ -33,7 +37,14 @@ export default function SchedulesPresenter({
           isAllDay: boolean;
           description: string;
         },
-      ) => handleRenderDay(day, schedule, handleSelectSchedule)}
+      ) =>
+        handleRenderDay(
+          day,
+          schedule,
+          handleSelectSchedule,
+          handleDeleteSchedule,
+        )
+      }
       selected={selectedDate}
       showClosingKnob={true}
       theme={{
@@ -54,12 +65,14 @@ const handleRenderItem = (
     description: string;
   },
   handleSelectSchedule: (scheduleId: number) => void,
+  handleDeleteSchedule: (scheduleId: number) => void,
 ) => {
   return (
     <ScheduleItem
       schedule={schedule}
       isFirstInDay={false}
       handleSelectSchedule={handleSelectSchedule}
+      handleDeleteSchedule={handleDeleteSchedule}
     />
   );
 };
@@ -73,6 +86,7 @@ const handleRenderDay = (
     description: string;
   },
   handleSelectSchedule: (scheduleId: number) => void,
+  handleDeleteSchedule: (scheduleId: number) => void,
 ) => {
   if (!day || !schedule) return;
 
@@ -93,6 +107,7 @@ const handleRenderDay = (
         schedule={schedule}
         isFirstInDay={true}
         handleSelectSchedule={handleSelectSchedule}
+        handleDeleteSchedule={handleDeleteSchedule}
       />
     </View>
   );
