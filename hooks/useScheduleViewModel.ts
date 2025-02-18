@@ -17,7 +17,7 @@ export type ScheduleViewModel = {
 };
 
 export const useSchedulesViewModel = () => {
-  const { schedules } = useSchedules();
+  const schedules = useSchedules();
   const DAY_KEY_FORMAT = 'YYYY-MM-DD';
 
   const viewModel = useMemo(() => {

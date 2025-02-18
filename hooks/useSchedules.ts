@@ -3,10 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from './auth';
 
-export const useSchedules = (): {
-  schedules: Schedules[] | null;
-  setSchedules: (schedule: Schedules[]) => void;
-} => {
+export const useSchedules = (): Schedules[] | null => {
   const { user } = useContext(AuthContext);
   const [schedules, setSchedules] = useState<Schedules[] | null>(null);
 
@@ -27,5 +24,5 @@ export const useSchedules = (): {
     });
   }, [user]);
 
-  return { schedules, setSchedules };
+  return schedules;
 };
