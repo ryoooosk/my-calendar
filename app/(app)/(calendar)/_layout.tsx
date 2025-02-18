@@ -16,6 +16,10 @@ export default function CalendarLayout() {
             name="create-schedule"
             options={{ title: '新しい予定' }}
           />
+          <Stack.Screen
+            name="update-schedule"
+            options={{ title: '予定を編集' }}
+          />
         </Stack>
       </ScheduleProvider>
     </DateProvider>
