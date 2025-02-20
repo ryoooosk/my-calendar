@@ -1,4 +1,4 @@
-import ProfileEditContainer from '@/components/pages/mypage/edit/container';
+import ProfileEditContainer from '@/components/pages/Mypage/ProfileEdit';
 import { View } from 'react-native';
 
 export default function ProfileEditPage() {

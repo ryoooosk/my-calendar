@@ -1,10 +1,10 @@
-import { Divider } from '@/components/ui/divider/divider';
+import { Divider } from '@/components/Divider';
 import dayjs from 'dayjs';
 import { View } from 'react-native';
-import DateTimeSelect from './date-time-selct';
-import ScheduleDescriptionInput from './schedule-description-input';
-import ScheduleTitleInput from './schedule-title-input';
-import SelectScheduleColorContainer from './select-schedule-color';
+import DateTimeSelect from './DateTimeSelect';
+import ScheduleDescriptionInput from './ScheduleDescriptionInput';
+import ScheduleTitleInput from './ScheduleTitleInput';
+import SelectScheduleColorContainer from './SelectScheduleColor';
 
 type UpsertScheduleFormContainerPresenterProps = {
   title: string;

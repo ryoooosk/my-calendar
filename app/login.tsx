@@ -12,7 +12,7 @@ import GoogleSignInButton from '../components/pages/signin/GoogleSignInButton';
 import { Heading } from '@/components/ui/heading';
 import LoginForm from '../components/pages/signin/LoginForm';
 import { View } from 'react-native';
-import { Divider } from '@/components/ui/divider/divider';
+import { Divider } from '@/components/Divider';
 
 export default function LoginPage() {
   const router = useRouter();

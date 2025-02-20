@@ -1,6 +1,6 @@
-import ColorCircle from '@/components/ui/color-circle';
+import ColorCircle from '@/components/ColorCircle';
 import { Icon } from '@/components/ui/icon';
-import { SCHEDULE_DEFAULT_COLORS } from '@/constants/schedule-colors';
+import { SCHEDULE_DEFAULT_COLORS } from '@/constants/ScheduleColors';
 import { Palette } from 'lucide-react-native';
 import { TouchableOpacity } from 'react-native';
 import { View } from 'react-native';

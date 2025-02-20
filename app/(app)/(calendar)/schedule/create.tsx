@@ -1,7 +1,7 @@
 import 'dayjs/locale/ja';
-import UpsertScheduleFormContainer from '@/components/pages/upsert-schedule-form';
+import UpsertScheduleFormContainer from '@/components/pages/UpsertScheduleForm';
 import { Spinner } from '@/components/ui/spinner';
-import { AuthContext } from '@/hooks/auth';
+import { AuthContext } from '@/contexts/AuthContext';
 import { useContext } from 'react';
 
 export default function CreateSchedulePage() {

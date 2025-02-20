@@ -1,6 +1,6 @@
-import UpsertScheduleFormContainer from '@/components/pages/upsert-schedule-form';
+import UpsertScheduleFormContainer from '@/components/pages/UpsertScheduleForm';
 import { Spinner } from '@/components/ui/spinner';
-import { AuthContext } from '@/hooks/auth';
+import { AuthContext } from '@/contexts/AuthContext';
 import { useSchedulesViewModel } from '@/hooks/useScheduleViewModel';
 import { useLocalSearchParams } from 'expo-router';
 import { useContext, useMemo } from 'react';

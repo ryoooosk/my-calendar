@@ -1,4 +1,4 @@
-import { AuthContext } from '@/hooks/auth';
+import { AuthContext } from '@/contexts/AuthContext';
 import {
   ScheduleViewModel,
   useSchedulesViewModel,
