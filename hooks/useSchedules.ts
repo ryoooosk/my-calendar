@@ -1,7 +1,7 @@
 import { Schedules } from '@/database.types';
 import { supabase } from '@/lib/supabase';
 import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from './auth';
+import { AuthContext } from '../contexts/AuthContext';
 
 export const useSchedules = (): Schedules[] | null => {
   const { user } = useContext(AuthContext);

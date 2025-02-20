@@ -1,4 +1,4 @@
-import { AuthContext } from '@/hooks/auth';
+import { AuthContext } from '@/contexts/AuthContext';
 import { Redirect, Stack } from 'expo-router';
 import { useContext } from 'react';
 import LoadingScreen from '../loading-screen';

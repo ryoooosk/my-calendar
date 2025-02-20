@@ -1,6 +1,6 @@
 import { Icon } from '@/components/ui/icon';
+import { AuthContext } from '@/contexts/AuthContext';
 import { Users } from '@/database.types';
-import { AuthContext } from '@/hooks/auth';
 import { supabase } from '@/lib/supabase';
 import dayjs from 'dayjs';
 import { SaveFormat, manipulateAsync } from 'expo-image-manipulator';
