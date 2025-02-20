@@ -1,4 +1,4 @@
-import MyPageContainer from '@/components/pages/mypage/container';
+import MyPageContainer from '@/components/pages/Mypage';
 import { Spinner } from '@/components/ui/spinner';
 import { AuthContext } from '@/hooks/auth';
 import { useContext } from 'react';

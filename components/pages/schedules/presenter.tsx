@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import { View } from 'react-native';
 import { Agenda, AgendaEntry, AgendaSchedule } from 'react-native-calendars';
 import colors from 'tailwindcss/colors';
-import ScheduleItem from './schedule-item';
+import ScheduleItem from './ScheduleItem';
 
 dayjs.locale('ja');
 
