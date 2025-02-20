@@ -1,4 +1,4 @@
-import ColorCircle from '@/components/ui/color-circle';
+import ColorCircle from '@/components/ColorCircle';
 import { Icon } from '@/components/ui/icon';
 import { SCHEDULE_DEFAULT_COLORS } from '@/constants/ScheduleColors';
 import { Palette } from 'lucide-react-native';

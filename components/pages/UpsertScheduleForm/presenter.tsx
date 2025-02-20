@@ -1,4 +1,4 @@
-import { Divider } from '@/components/ui/divider/divider';
+import { Divider } from '@/components/Divider';
 import dayjs from 'dayjs';
 import { View } from 'react-native';
 import DateTimeSelect from './DateTimeSelect';
