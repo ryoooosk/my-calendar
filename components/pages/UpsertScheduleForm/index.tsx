@@ -1,4 +1,4 @@
-import { SCHEDULE_DEFAULT_SELECTED_COLOR } from '@/constants/schedule-colors';
+import { SCHEDULE_DEFAULT_SELECTED_COLOR } from '@/constants/ScheduleColors';
 import { InsertSchedules, Users } from '@/database.types';
 import { ScheduleViewModel } from '@/hooks/useScheduleViewModel';
 import { supabase } from '@/lib/supabase';

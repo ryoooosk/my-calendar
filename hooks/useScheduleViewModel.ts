@@ -1,4 +1,4 @@
-import { SCHEDULE_SLATE } from '@/constants/schedule-colors';
+import { SCHEDULE_SLATE } from '@/constants/ScheduleColors';
 import { Schedules } from '@/database.types';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
