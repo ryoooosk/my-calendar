@@ -32,8 +32,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (!session) setUser(null);
         else {
           const user = await fetchUser(session.user.id);
-          if (user?.avatar_url)
-            user.avatar_url = `${user.avatar_url}?v=${new Date().getTime()}`;
           setUser(user);
         }
 
