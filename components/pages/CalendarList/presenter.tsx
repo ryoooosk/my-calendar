@@ -1,16 +1,10 @@
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { Button, ButtonIcon } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
-import { DateContext } from '@/contexts/DateContext';
 import { ScheduleViewModel } from '@/hooks/view-model/useScheduleViewModel';
 import dayjs from 'dayjs';
-import { router, useRouter } from 'expo-router';
-import { Settings2, User } from 'lucide-react-native';
-import { useContext } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
 import { CalendarList, DateData, LocaleConfig } from 'react-native-calendars';
 import { DayProps } from 'react-native-calendars/src/calendar/day';
 import colors from 'tailwindcss/colors';
+import CalendarDay from './CalendarDay';
+import CalendarHeader from './CalendarHeader';
 
 export default function CalendarListPresenter({
   scheduleMap,
@@ -45,7 +39,7 @@ export default function CalendarListPresenter({
       pastScrollRange={PAST_MONTH_RANGE}
       renderHeader={(date: string) => {
         return (
-          <CalendarHeaderPresenter
+          <CalendarHeader
             date={dayjs(date).format('YYYY年M月')}
             avatarUri={avatarUri}
           />
@@ -57,7 +51,7 @@ export default function CalendarListPresenter({
         },
       ) => {
         const targetSchedules = handleGetTargetSchedules(day.date?.dateString);
-        return <CalendarDayPresenter {...day} schedules={targetSchedules} />;
+        return <CalendarDay {...day} schedules={targetSchedules} />;
       }}
       theme={{
         calendarBackground: 'transparent',
@@ -83,84 +77,6 @@ export default function CalendarListPresenter({
         },
       }}
     />
-  );
-}
-
-function CalendarHeaderPresenter({
-  date,
-  avatarUri,
-}: { date?: string; avatarUri: string | null }) {
-  const router = useRouter();
-
-  return (
-    <View className="w-full pb-4 flex-row justify-between items-center border-b border-gray-300">
-      <Button
-        size="md"
-        variant="link"
-        className="rounded-full w-12 h-12"
-        onPress={() => router.push('/mypage')}
-      >
-        <Avatar size="md" className="bg-slate-600">
-          {avatarUri ? (
-            <AvatarImage source={{ uri: avatarUri }} />
-          ) : (
-            <Icon as={User} size="md" className="stroke-white" />
-          )}
-        </Avatar>
-      </Button>
-
-      {date && <Text className="text-2xl font-medium">{date}</Text>}
-
-      <Button size="md" variant="link" className="rounded-full p-1">
-        <ButtonIcon as={Settings2} className="color-gray-700 w-8 h-8" />
-      </Button>
-    </View>
-  );
-}
-
-type CalendarDayProps = DayProps & {
-  date?: DateData | undefined;
-  schedules: ScheduleViewModel[];
-};
-
-function CalendarDayPresenter(props: CalendarDayProps) {
-  const { date, children, state, schedules } = props;
-  const { setDate } = useContext(DateContext);
-  const handlePressDay = (date?: string) => {
-    if (!date) return;
-
-    setDate(date);
-    router.push('/schedules');
-  };
-
-  return (
-    <TouchableOpacity
-      className={`w-full h-full border-[0.5px] border-gray-100 ${state === 'selected' && 'border-2 border-amber-500'}`}
-      onPress={() => handlePressDay(date?.dateString)}
-    >
-      <Text
-        className={`font-medium text-center tracking-wide ${state === 'today' && 'text-amber-500'} ${state === 'disabled' && 'text-gray-400'}`}
-      >
-        {children}
-      </Text>
-
-      {/* TODO: 連日の予定の場合は日をまたいで表示する */}
-      {schedules.map((schedule) => (
-        <View
-          key={schedule.id}
-          className="w-full mb-[0.2rem] py-[0.15rem] px-[0.2rem] rounded-sm overflow-hidden"
-          style={{ backgroundColor: schedule.color }}
-        >
-          <Text
-            className="text-[0.85rem] tracking-wide font-bold"
-            numberOfLines={1}
-            ellipsizeMode="clip"
-          >
-            {schedule.title}
-          </Text>
-        </View>
-      ))}
-    </TouchableOpacity>
   );
 }
 
