@@ -1,4 +1,4 @@
-import { DateProvider } from '@/hooks/selectedDate';
+import { DateProvider } from '@/contexts/DateContext';
 import { Stack } from 'expo-router';
 
 export default function CalendarLayout() {

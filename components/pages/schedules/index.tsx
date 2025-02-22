@@ -1,4 +1,4 @@
-import { DateContext } from '@/hooks/selectedDate';
+import { DateContext } from '@/contexts/DateContext';
 import { useSchedulesViewModel } from '@/hooks/view-model/useScheduleViewModel';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';

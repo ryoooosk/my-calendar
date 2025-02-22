@@ -1,7 +1,7 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button, ButtonIcon } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
-import { DateContext } from '@/hooks/selectedDate';
+import { DateContext } from '@/contexts/DateContext';
 import { ScheduleViewModel } from '@/hooks/view-model/useScheduleViewModel';
 import dayjs from 'dayjs';
 import { router, useRouter } from 'expo-router';
