@@ -3,7 +3,6 @@ import { Users } from '@/database.types';
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
 import { useContext } from 'react';
-import { Alert } from 'react-native';
 import { useSupabaseStorageRepository } from '../repository/useSupabaseStorageRepository';
 import { useUserRepository } from '../repository/useUserRepository';
 
@@ -22,27 +21,23 @@ export const useUserModel = () => {
   ): Promise<void> => {
     if (!user) throw new Error('User is not found');
 
-    try {
-      const avatarUri = newImageUri
-        ? await uploadUserAvatar(user.id, user.avatar_url, newImageUri)
-        : null;
+    const avatarUri = newImageUri
+      ? await uploadUserAvatar(user.id, user.avatar_url, newImageUri)
+      : null;
 
-      // TODO: user_name が重複していないかチェック
-      const newUser: Users = {
-        ...user,
-        display_name: displayName,
-        user_name: userName,
-        biography,
-        avatar_url: avatarUri ?? currentImageUri,
-      };
-      await updateUserRepository(newUser);
+    // TODO: user_name が重複していないかチェック
+    const newUser: Users = {
+      ...user,
+      display_name: displayName,
+      user_name: userName,
+      biography,
+      avatar_url: avatarUri ?? currentImageUri,
+    };
+    const error = await updateUserRepository(newUser);
+    if (error) throw error;
 
-      setUser(newUser);
-      router.back();
-    } catch (error) {
-      console.error('Failed to update user:', error);
-      Alert.alert('保存に失敗しました');
-    }
+    setUser(newUser);
+    router.back();
   };
 
   const uploadUserAvatar = async (

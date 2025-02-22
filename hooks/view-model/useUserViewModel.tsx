@@ -33,13 +33,19 @@ export const useUserViewModel = () => {
 
   const handleUpdateUser = useCallback(async () => {
     if (isInValid) return Alert.alert('入力内容が不正です');
-    await updateUser(
-      newImageUri,
-      displayName,
-      userName,
-      biography,
-      currentImageUri,
-    );
+
+    try {
+      await updateUser(
+        newImageUri,
+        displayName,
+        userName,
+        biography,
+        currentImageUri,
+      );
+    } catch (error) {
+      console.error(error);
+      Alert.alert('保存に失敗しました');
+    }
   }, [
     isInValid,
     updateUser,

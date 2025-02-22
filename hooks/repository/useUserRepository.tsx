@@ -1,5 +1,6 @@
 import { Users } from '@/database.types';
 import { supabase } from '@/lib/supabase';
+import { PostgrestError } from '@supabase/supabase-js';
 import { useCallback } from 'react';
 
 export const useUserRepository = () => {
@@ -14,13 +15,18 @@ export const useUserRepository = () => {
     return user;
   }, []);
 
-  const updateUser = useCallback(async (user: Users): Promise<void> => {
-    const { error } = await supabase
-      .from('users')
-      .update(user)
-      .eq('id', user.id);
-    if (error) throw error;
-  }, []);
+  const updateUser = useCallback(
+    async (user: Users): Promise<PostgrestError | null> => {
+      const { error } = await supabase
+        .from('users')
+        .update(user)
+        .eq('id', user.id);
+      if (error) throw error;
+
+      return error;
+    },
+    [],
+  );
 
   return { fetchUser, updateUser };
 };
