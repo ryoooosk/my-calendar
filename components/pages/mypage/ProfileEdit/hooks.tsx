@@ -9,7 +9,7 @@ import { Alert } from 'react-native';
 export const useProfileEdit = () => {
   const handlePickImage = async (): Promise<ImageResult | undefined> => {
     try {
-      const selectedImage = await pickImageFromLibray();
+      const selectedImage = await pickImageFromLibrary();
       if (selectedImage.canceled) return;
 
       const result = await resizeImage(selectedImage.assets[0].uri);
@@ -31,7 +31,7 @@ async function resizeImage(imageUri: string) {
   return result;
 }
 
-async function pickImageFromLibray(): Promise<ImagePicker.ImagePickerResult> {
+async function pickImageFromLibrary(): Promise<ImagePicker.ImagePickerResult> {
   // No permissions request is necessary for launching the image library
   const selected = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ['images'],
