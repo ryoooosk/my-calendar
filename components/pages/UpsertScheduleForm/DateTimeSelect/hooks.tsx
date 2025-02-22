@@ -11,6 +11,13 @@ type UseDateTimeSelectProps = {
   setIsAllDay: (isAllDay: boolean) => void;
 };
 
+export enum DateTimePickerType {
+  StartDay = 'StartDay',
+  StartTime = 'StartTime',
+  EndDay = 'EndDay',
+  EndTime = 'EndTime',
+}
+
 export const useDateTimeSelect = ({
   startDate,
   setStartDate,
@@ -32,20 +39,20 @@ export const useDateTimeSelect = ({
   }, []);
 
   const handlePressDatePicker = useCallback(
-    (type: 'StartDay' | 'StartTime' | 'EndDay' | 'EndTine') => {
+    (type: DateTimePickerType) => {
       closeAllDatePicker();
 
       switch (type) {
-        case 'StartDay':
+        case DateTimePickerType.StartDay:
           setIsOpenStartDay(true);
           break;
-        case 'StartTime':
+        case DateTimePickerType.StartTime:
           setIsOpenStartTime(true);
           break;
-        case 'EndDay':
+        case DateTimePickerType.EndDay:
           setIsOpenEndDay(true);
           break;
-        case 'EndTine':
+        case DateTimePickerType.EndTime:
           setIsOpenEndTime(true);
           break;
 

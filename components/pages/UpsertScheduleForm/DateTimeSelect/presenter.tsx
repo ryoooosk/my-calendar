@@ -12,6 +12,7 @@ import { TouchableOpacity, View } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import DateTimePicker, { DateType } from 'react-native-ui-datepicker';
 import colors from 'tailwindcss/colors';
+import { DateTimePickerType } from './hooks';
 
 type DateTimeSelectPresenterProps = {
   startDate: dayjs.Dayjs;
@@ -21,9 +22,7 @@ type DateTimeSelectPresenterProps = {
   isOpenEndDay: boolean;
   isOpenStartTime: boolean;
   isOpenEndTime: boolean;
-  handlePressDatePicker: (
-    type: 'StartDay' | 'StartTime' | 'EndDay' | 'EndTine',
-  ) => void;
+  handlePressDatePicker: (type: DateTimePickerType) => void;
   handleChangeDay: (params: { date: DateType }) => void;
   handleChangeTime: (date: Date) => void;
   handleSetIsAllDay: (isAllDay: boolean) => void;
@@ -51,7 +50,9 @@ export default function DateTimeSelectPresenter({
           <View
             className={`flex flex-row flex-1 items-center ${isAllDay ? 'justify-center' : 'justify-between'} rounded-3xl px-2 ${(isOpenStartDay || isOpenStartTime) && 'bg-sky-100'}`}
           >
-            <TouchableOpacity onPress={() => handlePressDatePicker('StartDay')}>
+            <TouchableOpacity
+              onPress={() => handlePressDatePicker(DateTimePickerType.StartDay)}
+            >
               <Text
                 className={`text-2xl tracking-widest font-medium p-2 text-sky-500 ${isOpenStartDay && 'underline decoration-amber-400'}`}
               >
@@ -60,7 +61,9 @@ export default function DateTimeSelectPresenter({
             </TouchableOpacity>
             {!isAllDay && (
               <TouchableOpacity
-                onPress={() => handlePressDatePicker('StartTime')}
+                onPress={() =>
+                  handlePressDatePicker(DateTimePickerType.StartTime)
+                }
               >
                 <Text
                   className={`text-3xl tracking-widest font-medium p-2 text-sky-500 ${isOpenStartTime && 'underline decoration-amber-400'}`}
@@ -74,7 +77,9 @@ export default function DateTimeSelectPresenter({
           <View
             className={`flex flex-row flex-1 items-center ${isAllDay ? 'justify-center' : 'justify-between'} rounded-3xl px-2 ${(isOpenEndDay || isOpenEndTime) && 'bg-sky-100'}`}
           >
-            <TouchableOpacity onPress={() => handlePressDatePicker('EndDay')}>
+            <TouchableOpacity
+              onPress={() => handlePressDatePicker(DateTimePickerType.EndDay)}
+            >
               <Text
                 className={`text-2xl tracking-widest font-medium p-2 text-sky-500 ${isOpenEndDay && 'underline decoration-amber-400'}`}
               >
@@ -83,7 +88,9 @@ export default function DateTimeSelectPresenter({
             </TouchableOpacity>
             {!isAllDay && (
               <TouchableOpacity
-                onPress={() => handlePressDatePicker('EndTine')}
+                onPress={() =>
+                  handlePressDatePicker(DateTimePickerType.EndTime)
+                }
               >
                 <Text
                   className={`text-3xl tracking-widest font-medium p-2 text-sky-500 ${isOpenEndTime && 'underline decoration-amber-400'}`}
