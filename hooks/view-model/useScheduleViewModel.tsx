@@ -26,7 +26,11 @@ export const useSchedulesViewModel = () => {
     if (!schedules) return viewModelMap;
 
     schedules.map((schedule: Schedules) => {
-      const diff = dayjs(schedule.end_at).diff(dayjs(schedule.start_at), 'day');
+      const diff =
+        dayjs(dayjs(schedule.end_at).format('YYYY-MM-DD')).diff(
+          dayjs(schedule.start_at).format('YYYY-MM-DD'),
+          'day',
+        ) + 1;
       const dayKey = dayjs(schedule.start_at).format(DAY_KEY_FORMAT);
       const viewModel: ScheduleViewModel = {
         id: schedule.id,
@@ -40,7 +44,7 @@ export const useSchedulesViewModel = () => {
         isPublic: schedule.is_public,
       };
 
-      if (diff === 0) {
+      if (diff === 1) {
         const existingSchedules = viewModelMap.get(dayKey) ?? [];
         existingSchedules.push(viewModel);
         existingSchedules.sort((a, b) =>
