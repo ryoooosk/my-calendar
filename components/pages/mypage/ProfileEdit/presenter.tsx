@@ -22,7 +22,7 @@ type ProfileEditPresenterProps = {
   setUserName: (value: string) => void;
   biography: string | null;
   setBiography: (value: string) => void;
-  handlePickImage: () => void;
+  handleEditImage: () => void;
 };
 
 export default function ProfileEditPresenter({
@@ -33,13 +33,13 @@ export default function ProfileEditPresenter({
   setUserName,
   biography,
   setBiography,
-  handlePickImage,
+  handleEditImage,
 }: ProfileEditPresenterProps) {
   return (
     <ScrollView>
       <TouchableOpacity
         className="flex justify-center items-center mt-5 mb-3"
-        onPress={handlePickImage}
+        onPress={handleEditImage}
       >
         <Avatar size="xl" className="bg-slate-400">
           {imageUri ? (

@@ -1,11 +1,10 @@
 import { Icon } from '@/components/ui/icon';
 import { useUserViewModel } from '@/hooks/view-model/useUserViewModel';
-import { SaveFormat, manipulateAsync } from 'expo-image-manipulator';
-import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from 'expo-router';
 import { X } from 'lucide-react-native';
 import { useEffect } from 'react';
 import { Button, TouchableOpacity } from 'react-native';
+import { useProfileEdit } from './hooks';
 import ProfileEditPresenter from './presenter';
 
 export default function ProfileEditContainer() {
@@ -22,28 +21,12 @@ export default function ProfileEditContainer() {
     handleSetDisplayName,
     handleSetUserName,
   } = useUserViewModel();
+  const { handlePickImage } = useProfileEdit();
 
-  const pickImage = async () => {
-    try {
-      // No permissions request is necessary for launching the image library
-      const selected = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['images'],
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.8,
-        exif: false,
-      });
-      if (selected.canceled) return;
-
-      const result = await manipulateAsync(
-        selected.assets[0].uri,
-        [{ resize: { width: 500 } }],
-        { compress: 1, format: SaveFormat.PNG },
-      );
-      setNewImageUri(result.uri);
-    } catch (error) {
-      console.error('Image manipulation failed:', error);
-    }
+  const handleEditImage = async () => {
+    const result = await handlePickImage();
+    if (!result) return;
+    setNewImageUri(result.uri);
   };
 
   useEffect(() => {
@@ -66,7 +49,7 @@ export default function ProfileEditContainer() {
       setUserName={handleSetUserName}
       biography={biography}
       setBiography={setBiography}
-      handlePickImage={pickImage}
+      handleEditImage={handleEditImage}
     />
   );
 }
