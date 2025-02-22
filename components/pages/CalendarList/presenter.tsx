@@ -2,7 +2,7 @@ import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button, ButtonIcon } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { DateContext } from '@/hooks/selectedDate';
-import { ScheduleViewModel } from '@/hooks/useScheduleViewModel';
+import { ScheduleViewModel } from '@/hooks/view-model/useScheduleViewModel';
 import dayjs from 'dayjs';
 import { router, useRouter } from 'expo-router';
 import { Settings2, User } from 'lucide-react-native';

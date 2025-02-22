@@ -1,6 +1,6 @@
 import { SCHEDULE_DEFAULT_SELECTED_COLOR } from '@/constants/ScheduleColors';
 import { InsertSchedules, Users } from '@/database.types';
-import { ScheduleViewModel } from '@/hooks/useScheduleViewModel';
+import { ScheduleViewModel } from '@/hooks/view-model/useScheduleViewModel';
 import { supabase } from '@/lib/supabase';
 import { roundedDateInFiveMinute } from '@/utils/date.logic';
 import dayjs from 'dayjs';
