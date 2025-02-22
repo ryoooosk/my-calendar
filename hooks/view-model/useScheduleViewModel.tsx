@@ -1,8 +1,9 @@
 import { SCHEDULE_SLATE } from '@/constants/ScheduleColors';
 import { Schedules } from '@/database.types';
 import dayjs from 'dayjs';
-import { useMemo } from 'react';
-import { useSchedules } from './useSchedules';
+import { useCallback, useMemo } from 'react';
+import { AgendaSchedule } from 'react-native-calendars';
+import { useScheduleModel } from '../model/useScheduleModel';
 
 export type ScheduleViewModel = {
   id: number;
@@ -17,10 +18,10 @@ export type ScheduleViewModel = {
 };
 
 export const useSchedulesViewModel = () => {
-  const schedules = useSchedules();
+  const { schedules, deleteSchedule } = useScheduleModel();
   const DAY_KEY_FORMAT = 'YYYY-MM-DD';
 
-  const viewModel = useMemo(() => {
+  const scheduleMap = useMemo(() => {
     const viewModelMap = new Map<string, ScheduleViewModel[]>();
     if (!schedules) return viewModelMap;
 
@@ -66,5 +67,37 @@ export const useSchedulesViewModel = () => {
     return viewModelMap;
   }, [schedules]);
 
-  return viewModel;
+  const agendaEntries: AgendaSchedule = useMemo(() => {
+    const agendaSchedule: AgendaSchedule = {};
+
+    return Array.from(scheduleMap.entries()).reduce(
+      (acc, [date, scheduleArray]) => {
+        const agendaSchedules = scheduleArray.map((schedule) => ({
+          id: schedule.id,
+          name: schedule.title,
+          height: 70,
+          day: `${dayjs(schedule.startAt).format('HH:mm')} - ${dayjs(schedule.endAt).format('HH:mm')}`,
+          isAllDay: schedule.isAllDay,
+          description: schedule.description,
+        }));
+        acc[date] = agendaSchedules;
+        return acc;
+      },
+      agendaSchedule,
+    );
+  }, [scheduleMap]);
+
+  const getTargetSchedule = useCallback(
+    (scheduleId: number): ScheduleViewModel => {
+      const allSchedules = Array.from(scheduleMap.values()).flat();
+      const targetSchedule = allSchedules.find(
+        (schedule) => schedule.id === scheduleId,
+      );
+      if (!targetSchedule) throw new Error('Schedule not found');
+      return targetSchedule;
+    },
+    [scheduleMap],
+  );
+
+  return { scheduleMap, agendaEntries, getTargetSchedule, deleteSchedule };
 };

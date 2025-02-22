@@ -1,4 +1,5 @@
 import { Users } from '@/database.types';
+import { useUserRepository } from '@/hooks/repository/useUserRepository';
 import { supabase } from '@/lib/supabase';
 import { Session } from '@supabase/supabase-js';
 import { ReactNode, createContext, useEffect, useState } from 'react';
@@ -19,17 +20,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<Users | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setLoading] = useState(true);
-
-  const fetchUser = async (userId: string) => {
-    const { data: user, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', userId)
-      .single();
-
-    if (error) console.warn('Error fetching user:', error.message);
-    return user;
-  };
+  const { fetchUser } = useUserRepository();
 
   // TODO: useEffectの依存配列の見直し
   useEffect(() => {
