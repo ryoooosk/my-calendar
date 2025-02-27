@@ -23,6 +23,8 @@ export default function UpsertScheduleFormContainer({
     setIsAllDay,
     color,
     setColor,
+    remainderOffset,
+    setRemainderOffset,
     description,
     setDescription,
     handleSubmit,
@@ -53,6 +55,8 @@ export default function UpsertScheduleFormContainer({
         setIsAllDay,
         color,
         setColor,
+        remainderOffset,
+        setRemainderOffset,
         description,
         setDescription,
       }}

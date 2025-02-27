@@ -19,9 +19,9 @@ export const useUpsertScheduleForm = (
     roundedDateInFiveMinute(dayjs().add(1, 'hour')),
   );
   const [isAllDay, setIsAllDay] = useState(false);
-  const [description, setDescription] = useState('');
-
   const [color, setColor] = useState<string>(SCHEDULE_DEFAULT_SELECTED_COLOR);
+  const [remainderOffset, setRemainderOffset] = useState<number | null>(null);
+  const [description, setDescription] = useState('');
 
   useEffect(() => {
     if (!selectedSchedule) return;
@@ -33,6 +33,7 @@ export const useUpsertScheduleForm = (
     setIsAllDay(selectedSchedule.isAllDay);
     setDescription(selectedSchedule.description ?? '');
     setColor(selectedSchedule.color);
+    // TODO: setRemainderOffset必要
   }, [selectedSchedule]);
 
   const handleSubmit = useCallback(async () => {
@@ -71,6 +72,8 @@ export const useUpsertScheduleForm = (
     setIsAllDay,
     color,
     setColor,
+    remainderOffset,
+    setRemainderOffset,
     description,
     setDescription,
     handleSubmit,

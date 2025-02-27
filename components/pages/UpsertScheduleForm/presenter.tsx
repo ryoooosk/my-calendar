@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { View } from 'react-native';
 import DateTimeSelect from './DateTimeSelect';
 import ScheduleDescriptionInput from './ScheduleDescriptionInput';
+import ScheduleRemainderSelect from './ScheduleRemainderSelect';
 import ScheduleTitleInput from './ScheduleTitleInput';
 import SelectScheduleColorContainer from './SelectScheduleColor';
 
@@ -17,6 +18,8 @@ type UpsertScheduleFormContainerPresenterProps = {
   setIsAllDay: (isAllDay: boolean) => void;
   color: string;
   setColor: (color: string) => void;
+  remainderOffset: number | null;
+  setRemainderOffset: (offset: number | null) => void;
   description: string;
   setDescription: (description: string) => void;
 };
@@ -32,6 +35,8 @@ export default function UpsertScheduleFormContainerPresenter({
   setIsAllDay,
   color,
   setColor,
+  remainderOffset,
+  setRemainderOffset,
   description,
   setDescription,
 }: UpsertScheduleFormContainerPresenterProps) {
@@ -51,6 +56,11 @@ export default function UpsertScheduleFormContainerPresenter({
       <SelectScheduleColorContainer
         selectedColor={color}
         setSelectedColor={setColor}
+      />
+      <Divider />
+      <ScheduleRemainderSelect
+        remainderOffset={remainderOffset}
+        setRemainderOffset={setRemainderOffset}
       />
       <ScheduleDescriptionInput
         description={description}
