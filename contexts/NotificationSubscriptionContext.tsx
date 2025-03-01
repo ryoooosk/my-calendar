@@ -1,4 +1,4 @@
-import { useNotificationRepository } from '@/hooks/repository/useNotificationRepository';
+import { useExpoNotificationRepository } from '@/hooks/repository/useExpoNotificationRepository';
 import * as Notifications from 'expo-notifications';
 import { ReactNode, createContext, useEffect, useState } from 'react';
 
@@ -21,7 +21,7 @@ export const NotificationSubscriptionProvider = ({
     Notifications.PermissionStatus.UNDETERMINED,
   );
   const { requestPermissions, forgroundSubscription, backgroundSubscription } =
-    useNotificationRepository();
+    useExpoNotificationRepository();
 
   useEffect(() => {
     const requestPermission = async () => {

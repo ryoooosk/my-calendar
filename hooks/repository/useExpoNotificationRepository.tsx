@@ -1,7 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import { useCallback } from 'react';
 
-export function useNotificationRepository() {
+export function useExpoNotificationRepository() {
   const requestPermissions = useCallback(async () => {
     const { status } = await Notifications.requestPermissionsAsync();
     return status;
