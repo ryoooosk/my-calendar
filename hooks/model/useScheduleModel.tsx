@@ -144,7 +144,7 @@ export const useScheduleModel = () => {
   );
 
   const upsertSchedule = async (entity: ScheduleEntity) => {
-    if (!user || !entity.reminderOffset) return;
+    if (!user) throw new Error('User not found');
 
     const data: InsertSchedules = {
       id: entity.id,
@@ -158,9 +158,10 @@ export const useScheduleModel = () => {
     };
     const scheduleRes = await upsertScheduleRepository(data);
 
-    if (entity.reminderIdentifier) {
+    if (!entity.reminderOffset) return;
+
+    if (entity.reminderIdentifier)
       await cancelScheduleNotification(entity.reminderIdentifier);
-    }
     const identifier = await scheduleNotification(
       scheduleRes.title,
       new Date(
