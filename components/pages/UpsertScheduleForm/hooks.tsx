@@ -1,7 +1,9 @@
 import { SCHEDULE_DEFAULT_SELECTED_COLOR } from '@/constants/ScheduleColors';
 import { Users } from '@/database.types';
-import { ScheduleEntity } from '@/hooks/model/useScheduleModel';
-import { useSchedulesViewModel } from '@/hooks/view-model/useScheduleViewModel';
+import {
+  ScheduleEntity,
+  useScheduleModel,
+} from '@/hooks/model/useScheduleModel';
 import { roundedDateInFiveMinute } from '@/utils/date.logic';
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
@@ -12,7 +14,7 @@ export const useUpsertScheduleForm = (
   selectedSchedule: ScheduleEntity | null,
   user: Users,
 ) => {
-  const { handleUpsertSchedule } = useSchedulesViewModel();
+  const { upsertSchedule } = useScheduleModel();
   const [id, setId] = useState<number | undefined>(undefined);
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(roundedDateInFiveMinute(dayjs()));
@@ -37,9 +39,9 @@ export const useUpsertScheduleForm = (
     setIsAllDay(selectedSchedule.isAllDay);
     setDescription(selectedSchedule.description ?? '');
     setColor(selectedSchedule.color);
-    setReminderId(selectedSchedule.reminderIds?.[0]);
-    setReminderIdentifier(selectedSchedule.reminderIdentifier?.[0]);
-    setReminderOffset(selectedSchedule.reminderOffset?.[0] ?? null);
+    setReminderId(selectedSchedule.reminderId);
+    setReminderIdentifier(selectedSchedule.reminderIdentifier);
+    setReminderOffset(selectedSchedule.reminderOffset ?? null);
   }, [selectedSchedule]);
 
   const handleSubmit = useCallback(async () => {
@@ -54,21 +56,31 @@ export const useUpsertScheduleForm = (
       return Alert.alert('リマインダーは現在時刻より後に設定してください');
     }
 
-    await handleUpsertSchedule(
-      id,
-      user.id,
-      title,
-      isAllDay,
-      startDate,
-      endDate,
-      reminderId,
-      reminderIdentifier,
-      reminderOffset,
-      color,
-      description,
-    );
-
-    router.replace('/');
+    try {
+      const entity: ScheduleEntity = {
+        id,
+        userId: user.id,
+        title,
+        startAt: !isAllDay
+          ? startDate.toDate().toISOString()
+          : startDate.startOf('day').toDate().toISOString(),
+        endAt: !isAllDay
+          ? endDate.toDate().toISOString()
+          : endDate.endOf('day').toDate().toISOString(),
+        isAllDay,
+        reminderId,
+        reminderIdentifier,
+        reminderOffset,
+        color,
+        description,
+        isPublic: true,
+      };
+      await upsertSchedule(entity);
+      router.replace('/');
+    } catch (e) {
+      console.error(e);
+      Alert.alert('スケジュールの登録に失敗しました');
+    }
   }, [
     user,
     id,
@@ -77,8 +89,11 @@ export const useUpsertScheduleForm = (
     endDate,
     isAllDay,
     description,
+    reminderId,
+    reminderIdentifier,
     reminderOffset,
     color,
+    upsertSchedule,
   ]);
 
   return {

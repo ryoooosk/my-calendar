@@ -1,16 +1,10 @@
-import { InsertScheduleReminders, InsertSchedules } from '@/database.types';
 import dayjs from 'dayjs';
 import { useCallback, useMemo } from 'react';
-import { Alert } from 'react-native';
 import { AgendaSchedule } from 'react-native-calendars';
 import { ScheduleEntity, useScheduleModel } from '../model/useScheduleModel';
-import { useExpoNotificationRepository } from '../repository/useExpoNotificationRepository';
 
 export const useSchedulesViewModel = () => {
-  const { schedules, upsertSchedule, deleteSchedule, upsertScheduleReminder } =
-    useScheduleModel();
-  const { scheduleNotification, cancelScheduleNotification } =
-    useExpoNotificationRepository();
+  const { schedules } = useScheduleModel();
   const DAY_KEY_FORMAT = 'YYYY-MM-DD';
 
   const scheduleMap = useMemo(() => {
@@ -84,78 +78,9 @@ export const useSchedulesViewModel = () => {
     [scheduleMap],
   );
 
-  // TODO: Model行き
-  const handleUpsertSchedule = async (
-    id: number | undefined,
-    userId: string,
-    title: string,
-    isAllDay: boolean,
-    startDate: dayjs.Dayjs,
-    endDate: dayjs.Dayjs,
-    reminderId: number | undefined,
-    reminderIdentifier: string | undefined,
-    reminderOffset: number | null,
-    color: string,
-    description: string,
-  ) => {
-    if (!reminderOffset) return;
-
-    const data: InsertSchedules = {
-      id,
-      user_id: userId,
-      title,
-      start_at: !isAllDay
-        ? startDate.toDate().toISOString()
-        : startDate.startOf('day').toDate().toISOString(),
-      end_at: !isAllDay
-        ? endDate.toDate().toISOString()
-        : endDate.endOf('day').toDate().toISOString(),
-      is_all_day: isAllDay,
-      description,
-      color,
-    };
-
-    try {
-      const scheduleRes = await upsertSchedule(data);
-
-      if (reminderIdentifier) {
-        await cancelScheduleNotification(reminderIdentifier);
-      }
-
-      const identifier = await scheduleNotification(
-        scheduleRes.title,
-        new Date(
-          dayjs(startDate)
-            .subtract(reminderOffset, 'minute')
-            .toDate()
-            .toISOString(),
-        ),
-        reminderOffset,
-      );
-      const reminder: InsertScheduleReminders = {
-        id: reminderId,
-        schedule_id: scheduleRes.id,
-        identifier,
-        reminder_type: 'push_notification',
-        reminder_time: dayjs(startDate)
-          .subtract(reminderOffset, 'minute')
-          .toDate()
-          .toISOString(),
-        reminder_offset: reminderOffset,
-      };
-
-      upsertScheduleReminder(reminder);
-    } catch (error) {
-      console.error(error);
-      Alert.alert('スケジュールの登録に失敗しました');
-    }
-  };
-
   return {
     scheduleMap,
     agendaEntries,
     getTargetSchedule,
-    handleUpsertSchedule,
-    deleteSchedule,
   };
 };
