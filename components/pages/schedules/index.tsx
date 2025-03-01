@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 import { useScheduleModel } from '@/hooks/model/useScheduleModel';
 import { router } from 'expo-router';
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { Alert } from 'react-native';
 import SchedulesPresenter from './presenter';
 
@@ -17,20 +17,23 @@ export default function SchedulesContainer() {
 
   const handleSelectSchedule = (scheduleId: number) =>
     router.push(`/schedule/update/${scheduleId}`);
-  const handleDeleteSchedule = (scheduleId: number) => {
-    const targetSchedule = getTargetSchedule(scheduleId);
+  const handleDeleteSchedule = useCallback(
+    (scheduleId: number) => {
+      const targetSchedule = getTargetSchedule(scheduleId);
 
-    Alert.alert('予定の削除', `「${targetSchedule.title}」を削除しますか？`, [
-      { text: 'キャンセル', onPress: () => {} },
-      {
-        text: '削除する',
-        onPress: async () => {
-          await deleteSchedule(scheduleId);
-          router.replace('/');
+      Alert.alert('予定の削除', `「${targetSchedule.title}」を削除しますか？`, [
+        { text: 'キャンセル', onPress: () => {} },
+        {
+          text: '削除する',
+          onPress: async () => {
+            await deleteSchedule(scheduleId, targetSchedule.reminderIdentifier);
+            router.replace('/');
+          },
         },
-      },
-    ]);
-  };
+      ]);
+    },
+    [getTargetSchedule, deleteSchedule],
+  );
 
   return (
     <SchedulesPresenter
