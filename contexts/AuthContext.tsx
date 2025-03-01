@@ -24,6 +24,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // TODO: useEffectの依存配列の見直し
   useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session) setLoading(false);
+    });
+
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         setLoading(true);
