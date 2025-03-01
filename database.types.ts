@@ -9,6 +9,47 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      schedule_reminders: {
+        Row: {
+          created_at: string;
+          id: number;
+          identifier: string;
+          reminder_offset: number;
+          reminder_time: string;
+          reminder_type: string;
+          schedule_id: number;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+          identifier: string;
+          reminder_offset: number;
+          reminder_time: string;
+          reminder_type: string;
+          schedule_id: number;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          identifier?: string;
+          reminder_offset?: number;
+          reminder_time?: string;
+          reminder_type?: string;
+          schedule_id?: number;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'schedule_remainders_schedule_id_fkey';
+            columns: ['schedule_id'];
+            isOneToOne: false;
+            referencedRelation: 'schedules';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       schedules: {
         Row: {
           color: string;
@@ -213,6 +254,13 @@ export type CompositeTypes<
 
 // Schema: public
 // Tables
+export type ScheduleReminders =
+  Database['public']['Tables']['schedule_reminders']['Row'];
+export type InsertScheduleReminders =
+  Database['public']['Tables']['schedule_reminders']['Insert'];
+export type UpdateScheduleReminders =
+  Database['public']['Tables']['schedule_reminders']['Update'];
+
 export type Schedules = Database['public']['Tables']['schedules']['Row'];
 export type InsertSchedules =
   Database['public']['Tables']['schedules']['Insert'];
