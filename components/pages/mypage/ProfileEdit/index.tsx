@@ -1,26 +1,32 @@
 import { Icon } from '@/components/ui/icon';
-import { useUserViewModel } from '@/hooks/view-model/useUserViewModel';
+import { useUserModel } from '@/hooks/model/useUserModel';
 import { useNavigation } from 'expo-router';
 import { X } from 'lucide-react-native';
-import { useEffect } from 'react';
-import { Button, TouchableOpacity } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { Alert, Button, TouchableOpacity } from 'react-native';
 import { useProfileEdit } from './hooks';
 import ProfileEditPresenter from './presenter';
 
 export default function ProfileEditContainer() {
   const navigation = useNavigation();
-  const {
-    displayName,
-    userName,
-    biography,
-    setBiography,
-    newImageUri,
-    currentImageUri,
-    setNewImageUri,
-    handleUpdateUser,
-    handleSetDisplayName,
-    handleSetUserName,
-  } = useUserViewModel();
+
+  const { user, updateUser } = useUserModel();
+  const [currentImageUri, setCurrentImageUri] = useState<string | null>(null);
+  const [newImageUri, setNewImageUri] = useState<string | null>(null);
+  const [displayName, setDisplayName] = useState<string>('');
+  const [userName, setUserName] = useState<string | null>(null);
+  const [biography, setBiography] = useState<string | null>(null);
+
+  const [isInValid, setIsInValid] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    setCurrentImageUri(user.avatar_url);
+    setDisplayName(user.display_name);
+    setUserName(user.user_name);
+    setBiography(user.biography);
+  }, [user]);
+
   const { handlePickImage } = useProfileEdit();
 
   const handleEditImage = async () => {
@@ -28,6 +34,41 @@ export default function ProfileEditContainer() {
     if (!result) return;
     setNewImageUri(result.uri);
   };
+
+  const handleSetDisplayName = (value: string) => {
+    if (!value || value === '') setIsInValid(true);
+    setDisplayName(value);
+  };
+
+  const handleSetUserName = (value: string) => {
+    if (!value || value === '') setIsInValid(true);
+    setUserName(value);
+  };
+
+  const handleUpdateUser = useCallback(async () => {
+    if (isInValid) return Alert.alert('入力内容が不正です');
+
+    try {
+      await updateUser(
+        newImageUri,
+        displayName,
+        userName,
+        biography,
+        currentImageUri,
+      );
+    } catch (error) {
+      console.error(error);
+      Alert.alert('保存に失敗しました');
+    }
+  }, [
+    isInValid,
+    updateUser,
+    newImageUri,
+    displayName,
+    userName,
+    biography,
+    currentImageUri,
+  ]);
 
   useEffect(() => {
     navigation.setOptions({
