@@ -5,6 +5,7 @@ import {
   MenuItemLabel,
   MenuSeparator,
 } from '@/components/ui/menu';
+import { convertMinuteToDuration } from '@/utils/convertMinuteToDuration';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { Bell, ChevronsUpDown } from 'lucide-react-native';
@@ -15,19 +16,13 @@ import { View } from 'react-native';
 dayjs.extend(duration);
 
 export default function ScheduleRemainderSelect({
-  remainderOffset,
+  reminderOffset,
   setRemainderOffset,
 }: {
-  remainderOffset: number | null;
+  reminderOffset: number | null;
   setRemainderOffset: (offset: number | null) => void;
 }) {
   const defaultOffsetMinutes = [30, 60, 1440, 10080];
-  const formatOffset = (offset: number) => {
-    const dur = dayjs.duration(offset, 'minutes');
-    if (dur.asWeeks() >= 1) return `${dur.asWeeks()}週間前`;
-    if (dur.asDays() >= 1) return `${dur.asDays()}日前`;
-    return `${offset}分前`;
-  };
 
   return (
     <View className="flex flex-row items-center gap-6 px-4 py-1 bg-white">
@@ -44,9 +39,9 @@ export default function ScheduleRemainderSelect({
               {...triggerProps}
               className="flex-1 flex flex-row justify-between items-center px-3 py-3"
             >
-              {remainderOffset ? (
+              {reminderOffset ? (
                 <Text className="text-xl text-gray-800 tracking-wider">
-                  {formatOffset(remainderOffset)}
+                  {convertMinuteToDuration(reminderOffset)}前
                 </Text>
               ) : (
                 <Text className="text-lg text-gray-500 tracking-wide">
@@ -69,12 +64,12 @@ export default function ScheduleRemainderSelect({
           <React.Fragment key={offset}>
             <MenuItem
               key={offset}
-              textValue={formatOffset(offset)}
+              textValue={`${convertMinuteToDuration(offset)}前`}
               className={`bg-white ${index === defaultOffsetMinutes.length - 1 && 'rounded-b-xl'}`}
               onPress={() => setRemainderOffset(offset)}
             >
               <MenuItemLabel className="text-lg">
-                {formatOffset(offset)}
+                {convertMinuteToDuration(offset)}前
               </MenuItemLabel>
             </MenuItem>
             {index !== defaultOffsetMinutes.length - 1 && <MenuSeparator />}

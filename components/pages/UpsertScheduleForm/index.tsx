@@ -1,5 +1,5 @@
 import { Users } from '@/database.types';
-import { ScheduleViewModel } from '@/hooks/view-model/useScheduleViewModel';
+import { ScheduleEntity } from '@/hooks/model/useScheduleModel';
 import { useNavigation } from 'expo-router';
 import { useEffect } from 'react';
 import { Text, TouchableOpacity } from 'react-native';
@@ -9,7 +9,7 @@ import UpsertScheduleFormContainerPresenter from './presenter';
 export default function UpsertScheduleFormContainer({
   user,
   selectedSchedule,
-}: { user: Users; selectedSchedule: ScheduleViewModel | null }) {
+}: { user: Users; selectedSchedule: ScheduleEntity | null }) {
   const navigation = useNavigation();
   const {
     id,
@@ -23,8 +23,8 @@ export default function UpsertScheduleFormContainer({
     setIsAllDay,
     color,
     setColor,
-    remainderOffset,
-    setRemainderOffset,
+    reminderOffset,
+    setReminderOffset,
     description,
     setDescription,
     handleSubmit,
@@ -55,8 +55,8 @@ export default function UpsertScheduleFormContainer({
         setIsAllDay,
         color,
         setColor,
-        remainderOffset,
-        setRemainderOffset,
+        reminderOffset,
+        setReminderOffset,
         description,
         setDescription,
       }}

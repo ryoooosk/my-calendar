@@ -18,8 +18,8 @@ type UpsertScheduleFormContainerPresenterProps = {
   setIsAllDay: (isAllDay: boolean) => void;
   color: string;
   setColor: (color: string) => void;
-  remainderOffset: number | null;
-  setRemainderOffset: (offset: number | null) => void;
+  reminderOffset: number | null;
+  setReminderOffset: (offset: number | null) => void;
   description: string;
   setDescription: (description: string) => void;
 };
@@ -35,8 +35,8 @@ export default function UpsertScheduleFormContainerPresenter({
   setIsAllDay,
   color,
   setColor,
-  remainderOffset,
-  setRemainderOffset,
+  reminderOffset,
+  setReminderOffset,
   description,
   setDescription,
 }: UpsertScheduleFormContainerPresenterProps) {
@@ -59,8 +59,8 @@ export default function UpsertScheduleFormContainerPresenter({
       />
       <Divider />
       <ScheduleRemainderSelect
-        remainderOffset={remainderOffset}
-        setRemainderOffset={setRemainderOffset}
+        reminderOffset={reminderOffset}
+        setRemainderOffset={setReminderOffset}
       />
       <ScheduleDescriptionInput
         description={description}

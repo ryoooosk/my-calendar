@@ -1,7 +1,7 @@
 import { SCHEDULE_DEFAULT_SELECTED_COLOR } from '@/constants/ScheduleColors';
-import { InsertSchedules, Users } from '@/database.types';
-import { ScheduleViewModel } from '@/hooks/view-model/useScheduleViewModel';
-import { supabase } from '@/lib/supabase';
+import { Users } from '@/database.types';
+import { ScheduleEntity } from '@/hooks/model/useScheduleModel';
+import { useSchedulesViewModel } from '@/hooks/view-model/useScheduleViewModel';
 import { roundedDateInFiveMinute } from '@/utils/date.logic';
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
@@ -9,9 +9,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 
 export const useUpsertScheduleForm = (
-  selectedSchedule: ScheduleViewModel | null,
+  selectedSchedule: ScheduleEntity | null,
   user: Users,
 ) => {
+  const { handleUpsertSchedule } = useSchedulesViewModel();
   const [id, setId] = useState<number | undefined>(undefined);
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(roundedDateInFiveMinute(dayjs()));
@@ -20,12 +21,15 @@ export const useUpsertScheduleForm = (
   );
   const [isAllDay, setIsAllDay] = useState(false);
   const [color, setColor] = useState<string>(SCHEDULE_DEFAULT_SELECTED_COLOR);
-  const [remainderOffset, setRemainderOffset] = useState<number | null>(null);
+  const [reminderId, setReminderId] = useState<number | undefined>(undefined);
+  const [reminderIdentifier, setReminderIdentifier] = useState<
+    string | undefined
+  >(undefined);
+  const [reminderOffset, setReminderOffset] = useState<number | null>(null);
   const [description, setDescription] = useState('');
 
   useEffect(() => {
     if (!selectedSchedule) return;
-
     setId(selectedSchedule.id);
     setTitle(selectedSchedule.title);
     setStartDate(dayjs(selectedSchedule.startAt));
@@ -33,7 +37,9 @@ export const useUpsertScheduleForm = (
     setIsAllDay(selectedSchedule.isAllDay);
     setDescription(selectedSchedule.description ?? '');
     setColor(selectedSchedule.color);
-    // TODO: setRemainderOffset必要
+    setReminderId(selectedSchedule.reminderIds?.[0]);
+    setReminderIdentifier(selectedSchedule.reminderIdentifier?.[0]);
+    setReminderOffset(selectedSchedule.reminderOffset?.[0] ?? null);
   }, [selectedSchedule]);
 
   const handleSubmit = useCallback(async () => {
@@ -41,24 +47,39 @@ export const useUpsertScheduleForm = (
       return Alert.alert('終了日時は開始日時より後に設定してください');
     }
 
-    const data: InsertSchedules = {
-      id,
-      user_id: user.id,
-      title,
-      start_at: !isAllDay
-        ? startDate.toDate().toISOString()
-        : startDate.startOf('day').toDate().toISOString(),
-      end_at: !isAllDay
-        ? endDate.toDate().toISOString()
-        : endDate.endOf('day').toDate().toISOString(),
-      is_all_day: isAllDay,
-      description,
-      color,
-    };
+    const isReminderBeforeNow =
+      reminderOffset &&
+      dayjs(startDate).subtract(reminderOffset, 'minute').isBefore(dayjs());
+    if (isReminderBeforeNow) {
+      return Alert.alert('リマインダーは現在時刻より後に設定してください');
+    }
 
-    await supabase.from('schedules').upsert(data);
+    await handleUpsertSchedule(
+      id,
+      user.id,
+      title,
+      isAllDay,
+      startDate,
+      endDate,
+      reminderId,
+      reminderIdentifier,
+      reminderOffset,
+      color,
+      description,
+    );
+
     router.replace('/');
-  }, [user, id, title, startDate, endDate, isAllDay, description, color]);
+  }, [
+    user,
+    id,
+    title,
+    startDate,
+    endDate,
+    isAllDay,
+    description,
+    reminderOffset,
+    color,
+  ]);
 
   return {
     id,
@@ -72,8 +93,8 @@ export const useUpsertScheduleForm = (
     setIsAllDay,
     color,
     setColor,
-    remainderOffset,
-    setRemainderOffset,
+    reminderOffset,
+    setReminderOffset,
     description,
     setDescription,
     handleSubmit,
