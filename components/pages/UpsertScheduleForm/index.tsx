@@ -1,67 +1,34 @@
-import { SCHEDULE_DEFAULT_SELECTED_COLOR } from '@/constants/ScheduleColors';
-import { InsertSchedules, Users } from '@/database.types';
-import { ScheduleViewModel } from '@/hooks/view-model/useScheduleViewModel';
-import { supabase } from '@/lib/supabase';
-import { roundedDateInFiveMinute } from '@/utils/date.logic';
-import dayjs from 'dayjs';
-import { useNavigation, useRouter } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
-import { Alert, Text, TouchableOpacity } from 'react-native';
+import { Users } from '@/database.types';
+import { ScheduleEntity } from '@/hooks/model/useScheduleModel';
+import { useNavigation } from 'expo-router';
+import { useEffect } from 'react';
+import { Text, TouchableOpacity } from 'react-native';
+import { useUpsertScheduleForm } from './hooks';
 import UpsertScheduleFormContainerPresenter from './presenter';
 
 export default function UpsertScheduleFormContainer({
   user,
   selectedSchedule,
-}: { user: Users; selectedSchedule: ScheduleViewModel | null }) {
-  const router = useRouter();
+}: { user: Users; selectedSchedule: ScheduleEntity | null }) {
   const navigation = useNavigation();
-
-  useEffect(() => {
-    if (!selectedSchedule) return;
-
-    setId(selectedSchedule.id);
-    setTitle(selectedSchedule.title);
-    setStartDate(dayjs(selectedSchedule.startAt));
-    setEndDate(dayjs(selectedSchedule.endAt));
-    setIsAllDay(selectedSchedule.isAllDay);
-    setDescription(selectedSchedule.description ?? '');
-    setColor(selectedSchedule.color);
-  }, [selectedSchedule]);
-
-  const [id, setId] = useState<number | undefined>(undefined);
-  const [title, setTitle] = useState('');
-  const [startDate, setStartDate] = useState(roundedDateInFiveMinute(dayjs()));
-  const [endDate, setEndDate] = useState(
-    roundedDateInFiveMinute(dayjs().add(1, 'hour')),
-  );
-  const [isAllDay, setIsAllDay] = useState(false);
-  const [description, setDescription] = useState('');
-
-  const [color, setColor] = useState<string>(SCHEDULE_DEFAULT_SELECTED_COLOR);
-
-  const handleSubmit = useCallback(async () => {
-    if (endDate.isBefore(startDate)) {
-      return Alert.alert('終了日時は開始日時より後に設定してください');
-    }
-
-    const data: InsertSchedules = {
-      id,
-      user_id: user.id,
-      title,
-      start_at: !isAllDay
-        ? startDate.toDate().toISOString()
-        : startDate.startOf('day').toDate().toISOString(),
-      end_at: !isAllDay
-        ? endDate.toDate().toISOString()
-        : endDate.endOf('day').toDate().toISOString(),
-      is_all_day: isAllDay,
-      description,
-      color,
-    };
-
-    await supabase.from('schedules').upsert(data);
-    router.replace('/');
-  }, [user, id, title, startDate, endDate, isAllDay, description, color]);
+  const {
+    id,
+    title,
+    setTitle,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    isAllDay,
+    setIsAllDay,
+    color,
+    setColor,
+    reminderOffset,
+    setReminderOffset,
+    description,
+    setDescription,
+    handleSubmit,
+  } = useUpsertScheduleForm(selectedSchedule, user);
 
   useEffect(() => {
     navigation.setOptions({
@@ -88,6 +55,8 @@ export default function UpsertScheduleFormContainer({
         setIsAllDay,
         color,
         setColor,
+        reminderOffset,
+        setReminderOffset,
         description,
         setDescription,
       }}

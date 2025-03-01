@@ -1,4 +1,4 @@
-import { useNotificationRepository } from '@/hooks/repository/useNotificationRepository';
+import { useExpoNotificationRepository } from '@/hooks/repository/useExpoNotificationRepository';
 import * as Notifications from 'expo-notifications';
 import { ReactNode, createContext, useEffect, useState } from 'react';
 
@@ -20,8 +20,12 @@ export const NotificationSubscriptionProvider = ({
   const [permission, setPermission] = useState<Notifications.PermissionStatus>(
     Notifications.PermissionStatus.UNDETERMINED,
   );
-  const { requestPermissions, forgroundSubscription, backgroundSubscription } =
-    useNotificationRepository();
+  const {
+    getAllScheduledNotifications,
+    requestPermissions,
+    forgroundSubscription,
+    backgroundSubscription,
+  } = useExpoNotificationRepository();
 
   useEffect(() => {
     const requestPermission = async () => {
@@ -36,7 +40,7 @@ export const NotificationSubscriptionProvider = ({
 
     const fsubscription = forgroundSubscription();
     const backSubscriotion = backgroundSubscription();
-
+    console.log(getAllScheduledNotifications());
     return () => {
       fsubscription.remove();
       backSubscriotion.remove();

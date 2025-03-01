@@ -1,52 +1,33 @@
-import { SCHEDULE_SLATE } from '@/constants/ScheduleColors';
-import { Schedules } from '@/database.types';
+import { InsertScheduleReminders, InsertSchedules } from '@/database.types';
 import dayjs from 'dayjs';
 import { useCallback, useMemo } from 'react';
+import { Alert } from 'react-native';
 import { AgendaSchedule } from 'react-native-calendars';
-import { useScheduleModel } from '../model/useScheduleModel';
-
-export type ScheduleViewModel = {
-  id: number;
-  userId: string;
-  title: string;
-  description: string | null;
-  startAt: string;
-  endAt: string;
-  isAllDay: boolean;
-  color: string;
-  isPublic: boolean;
-};
+import { ScheduleEntity, useScheduleModel } from '../model/useScheduleModel';
+import { useExpoNotificationRepository } from '../repository/useExpoNotificationRepository';
 
 export const useSchedulesViewModel = () => {
-  const { schedules, deleteSchedule } = useScheduleModel();
+  const { schedules, upsertSchedule, deleteSchedule, upsertScheduleReminder } =
+    useScheduleModel();
+  const { scheduleNotification, cancelScheduleNotification } =
+    useExpoNotificationRepository();
   const DAY_KEY_FORMAT = 'YYYY-MM-DD';
 
   const scheduleMap = useMemo(() => {
-    const viewModelMap = new Map<string, ScheduleViewModel[]>();
+    const viewModelMap = new Map<string, ScheduleEntity[]>();
     if (!schedules) return viewModelMap;
 
-    schedules.map((schedule: Schedules) => {
+    schedules.map((schedule: ScheduleEntity) => {
       const diff =
-        dayjs(dayjs(schedule.end_at).format('YYYY-MM-DD')).diff(
-          dayjs(schedule.start_at).format('YYYY-MM-DD'),
+        dayjs(dayjs(schedule.endAt).format('YYYY-MM-DD')).diff(
+          dayjs(schedule.startAt).format('YYYY-MM-DD'),
           'day',
         ) + 1;
-      const dayKey = dayjs(schedule.start_at).format(DAY_KEY_FORMAT);
-      const viewModel: ScheduleViewModel = {
-        id: schedule.id,
-        userId: schedule.user_id,
-        title: schedule.title,
-        description: schedule.description,
-        startAt: schedule.start_at,
-        endAt: schedule.end_at,
-        isAllDay: schedule.is_all_day,
-        color: schedule.color !== '' ? schedule.color : SCHEDULE_SLATE,
-        isPublic: schedule.is_public,
-      };
+      const dayKey = dayjs(schedule.startAt).format(DAY_KEY_FORMAT);
 
       if (diff === 1) {
         const existingSchedules = viewModelMap.get(dayKey) ?? [];
-        existingSchedules.push(viewModel);
+        existingSchedules.push(schedule);
         existingSchedules.sort((a, b) =>
           dayjs(a.startAt).diff(dayjs(b.startAt)),
         );
@@ -55,11 +36,11 @@ export const useSchedulesViewModel = () => {
         Array(diff)
           .fill(undefined)
           .forEach((_, index) => {
-            const targetDayKey = dayjs(schedule.start_at)
+            const targetDayKey = dayjs(schedule.startAt)
               .add(index, 'day')
               .format(DAY_KEY_FORMAT);
             const existingSchedules = viewModelMap.get(targetDayKey) ?? [];
-            existingSchedules.push(viewModel);
+            existingSchedules.push(schedule);
             existingSchedules.sort((a, b) =>
               dayjs(a.startAt).diff(dayjs(b.startAt)),
             );
@@ -92,7 +73,7 @@ export const useSchedulesViewModel = () => {
   }, [scheduleMap]);
 
   const getTargetSchedule = useCallback(
-    (scheduleId: number): ScheduleViewModel => {
+    (scheduleId: number): ScheduleEntity => {
       const allSchedules = Array.from(scheduleMap.values()).flat();
       const targetSchedule = allSchedules.find(
         (schedule) => schedule.id === scheduleId,
@@ -103,5 +84,78 @@ export const useSchedulesViewModel = () => {
     [scheduleMap],
   );
 
-  return { scheduleMap, agendaEntries, getTargetSchedule, deleteSchedule };
+  // TODO: Model行き
+  const handleUpsertSchedule = async (
+    id: number | undefined,
+    userId: string,
+    title: string,
+    isAllDay: boolean,
+    startDate: dayjs.Dayjs,
+    endDate: dayjs.Dayjs,
+    reminderId: number | undefined,
+    reminderIdentifier: string | undefined,
+    reminderOffset: number | null,
+    color: string,
+    description: string,
+  ) => {
+    if (!reminderOffset) return;
+
+    const data: InsertSchedules = {
+      id,
+      user_id: userId,
+      title,
+      start_at: !isAllDay
+        ? startDate.toDate().toISOString()
+        : startDate.startOf('day').toDate().toISOString(),
+      end_at: !isAllDay
+        ? endDate.toDate().toISOString()
+        : endDate.endOf('day').toDate().toISOString(),
+      is_all_day: isAllDay,
+      description,
+      color,
+    };
+
+    try {
+      const scheduleRes = await upsertSchedule(data);
+
+      if (reminderIdentifier) {
+        await cancelScheduleNotification(reminderIdentifier);
+      }
+
+      const identifier = await scheduleNotification(
+        scheduleRes.title,
+        new Date(
+          dayjs(startDate)
+            .subtract(reminderOffset, 'minute')
+            .toDate()
+            .toISOString(),
+        ),
+        reminderOffset,
+      );
+      const reminder: InsertScheduleReminders = {
+        id: reminderId,
+        schedule_id: scheduleRes.id,
+        identifier,
+        reminder_type: 'push_notification',
+        reminder_time: dayjs(startDate)
+          .subtract(reminderOffset, 'minute')
+          .toDate()
+          .toISOString(),
+        reminder_offset: reminderOffset,
+      };
+
+      upsertScheduleReminder(reminder);
+    } catch (error) {
+      console.error(error);
+      Alert.alert('スケジュールの登録に失敗しました');
+    }
+  };
+
+  return {
+    scheduleMap,
+    agendaEntries,
+    getTargetSchedule,
+    handleUpsertSchedule,
+    deleteSchedule,
+  };
 };
