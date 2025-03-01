@@ -20,8 +20,12 @@ export const NotificationSubscriptionProvider = ({
   const [permission, setPermission] = useState<Notifications.PermissionStatus>(
     Notifications.PermissionStatus.UNDETERMINED,
   );
-  const { requestPermissions, forgroundSubscription, backgroundSubscription } =
-    useExpoNotificationRepository();
+  const {
+    getAllScheduledNotifications,
+    requestPermissions,
+    forgroundSubscription,
+    backgroundSubscription,
+  } = useExpoNotificationRepository();
 
   useEffect(() => {
     const requestPermission = async () => {
@@ -36,7 +40,7 @@ export const NotificationSubscriptionProvider = ({
 
     const fsubscription = forgroundSubscription();
     const backSubscriotion = backgroundSubscription();
-
+    console.log(getAllScheduledNotifications());
     return () => {
       fsubscription.remove();
       backSubscriotion.remove();

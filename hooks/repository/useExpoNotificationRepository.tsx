@@ -1,23 +1,35 @@
+import { convertMinuteToDuration } from '@/utils/convertMinuteToDuration';
 import * as Notifications from 'expo-notifications';
 import { useCallback } from 'react';
 
 export function useExpoNotificationRepository() {
+  async function getAllScheduledNotifications() {
+    const scheduledNotifications =
+      await Notifications.getAllScheduledNotificationsAsync();
+    console.log('Scheduled notifications:', scheduledNotifications);
+    return scheduledNotifications;
+  }
+
   const requestPermissions = useCallback(async () => {
     const { status } = await Notifications.requestPermissionsAsync();
     return status;
   }, []);
 
   const scheduleNotification = useCallback(
-    async (date: Date): Promise<string> => {
+    async (title: string, date: Date, offset?: number): Promise<string> => {
+      const formattedOffset = offset ? convertMinuteToDuration(offset) : null;
+
       return await Notifications.scheduleNotificationAsync({
         content: {
           title: 'リマインダー',
-          body: `${date}の通知です 📅`,
+          body: formattedOffset
+            ? `${title}の${formattedOffset}前です`
+            : `${title}の時間です 📅`,
           sound: 'default',
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.DATE,
-          date,
+          date: new Date(date),
         },
       });
     },
@@ -47,6 +59,7 @@ export function useExpoNotificationRepository() {
   );
 
   return {
+    getAllScheduledNotifications,
     requestPermissions,
     scheduleNotification,
     forgroundSubscription,
