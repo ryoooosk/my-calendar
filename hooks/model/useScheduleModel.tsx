@@ -30,7 +30,7 @@ export const useScheduleModel = () => {
   const {
     fetchSchedules,
     upsertSchedule: upsertScheduleRepository,
-    deleteSchedule,
+    deleteSchedule: deleteScheduleRepository,
     upsertScheduleReminder,
   } = useScheduleRepository();
   const { scheduleNotification, cancelScheduleNotification } =
@@ -187,12 +187,22 @@ export const useScheduleModel = () => {
     upsertScheduleReminder(reminder);
   };
 
+  const deleteSchedule = useCallback(
+    async (scheduleId: number, reminderIdentifier?: string): Promise<void> => {
+      if (reminderIdentifier)
+        await cancelScheduleNotification(reminderIdentifier);
+
+      await deleteScheduleRepository(scheduleId);
+    },
+    [],
+  );
+
   return {
     schedules,
     agendaEntries,
     scheduleMap,
     getTargetSchedule,
-    deleteSchedule,
     upsertSchedule,
+    deleteSchedule,
   };
 };
