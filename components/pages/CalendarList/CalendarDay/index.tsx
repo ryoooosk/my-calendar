@@ -1,5 +1,6 @@
 import { DateContext } from '@/contexts/DateContext';
-import { ScheduleViewModel } from '@/hooks/view-model/useScheduleViewModel';
+import { ScheduleEntity } from '@/hooks/model/useScheduleModel';
+
 import { router } from 'expo-router';
 import { useContext } from 'react';
 import { Text } from 'react-native';
@@ -10,7 +11,7 @@ import { DayProps } from 'react-native-calendars/src/calendar/day';
 
 type CalendarDayProps = DayProps & {
   date?: DateData | undefined;
-  schedules: ScheduleViewModel[];
+  schedules: ScheduleEntity[];
 };
 
 export default function CalendarDay(props: CalendarDayProps) {

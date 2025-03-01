@@ -1,10 +1,10 @@
 import { AuthContext } from '@/contexts/AuthContext';
-import { useSchedulesViewModel } from '@/hooks/view-model/useScheduleViewModel';
+import { useScheduleModel } from '@/hooks/model/useScheduleModel';
 import { useContext } from 'react';
 import CalendarListPresenter from './presenter';
 
 export default function CalendarListContainer() {
-  const { scheduleMap } = useSchedulesViewModel();
+  const { scheduleMap } = useScheduleModel();
   const { user } = useContext(AuthContext);
 
   return (

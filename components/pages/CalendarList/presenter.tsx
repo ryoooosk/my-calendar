@@ -1,4 +1,4 @@
-import { ScheduleViewModel } from '@/hooks/view-model/useScheduleViewModel';
+import { ScheduleEntity } from '@/hooks/model/useScheduleModel';
 import dayjs from 'dayjs';
 import { CalendarList, DateData, LocaleConfig } from 'react-native-calendars';
 import { DayProps } from 'react-native-calendars/src/calendar/day';
@@ -10,7 +10,7 @@ export default function CalendarListPresenter({
   scheduleMap,
   avatarUri,
 }: {
-  scheduleMap: Map<string, ScheduleViewModel[]>;
+  scheduleMap: Map<string, ScheduleEntity[]>;
   avatarUri: string | null;
 }) {
   const FUTURE_MONTH_RANGE = 24;
