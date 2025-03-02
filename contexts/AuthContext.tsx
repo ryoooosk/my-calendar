@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (!session) setUser(null);
         else {
           const user = await fetchUser(session.user.id);
+          console.log('AuthContext user', user);
           setUser(user);
         }
 
