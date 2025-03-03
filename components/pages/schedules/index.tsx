@@ -2,7 +2,7 @@ import { DateContext } from '@/contexts/DateContext';
 
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
-import { useScheduleModel } from '@/hooks/model/useScheduleModel';
+import { ScheduleContext } from '@/contexts/ScheduleContext';
 import { router } from 'expo-router';
 import { useCallback, useContext } from 'react';
 import { Alert } from 'react-native';
@@ -11,8 +11,8 @@ import SchedulesPresenter from './presenter';
 dayjs.locale('ja');
 
 export default function SchedulesContainer() {
-  const { agendaEntries, getTargetSchedule } = useScheduleModel();
-  const { deleteSchedule } = useScheduleModel();
+  const { agendaEntries, getTargetSchedule, deleteSchedule } =
+    useContext(ScheduleContext);
   const { date: selectedDate } = useContext(DateContext);
 
   const handleSelectSchedule = (scheduleId: number) =>

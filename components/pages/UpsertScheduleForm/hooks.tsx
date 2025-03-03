@@ -1,20 +1,18 @@
 import { SCHEDULE_DEFAULT_SELECTED_COLOR } from '@/constants/ScheduleColors';
+import { ScheduleContext } from '@/contexts/ScheduleContext';
 import { Users } from '@/database.types';
-import {
-  ScheduleEntity,
-  useScheduleModel,
-} from '@/hooks/model/useScheduleModel';
+import { ScheduleEntity } from '@/hooks/model/useScheduleModel';
 import { roundedDateInFiveMinute } from '@/utils/date.logic';
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 
 export const useUpsertScheduleForm = (
   selectedSchedule: ScheduleEntity | null,
   user: Users,
 ) => {
-  const { upsertSchedule } = useScheduleModel();
+  const { upsertSchedule } = useContext(ScheduleContext);
   const [id, setId] = useState<number | undefined>(undefined);
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(roundedDateInFiveMinute(dayjs()));

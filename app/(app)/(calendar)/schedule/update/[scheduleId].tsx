@@ -1,13 +1,14 @@
 import UpsertScheduleFormContainer from '@/components/pages/UpsertScheduleForm';
 import { Spinner } from '@/components/ui/spinner';
 import { AuthContext } from '@/contexts/AuthContext';
-import { useScheduleModel } from '@/hooks/model/useScheduleModel';
+import { ScheduleContext } from '@/contexts/ScheduleContext';
 import { useLocalSearchParams } from 'expo-router';
 import { useContext, useMemo } from 'react';
 
 export default function UpdateSchedulePage() {
   const { user } = useContext(AuthContext);
-  const { scheduleMap } = useScheduleModel();
+  const { scheduleMap } = useContext(ScheduleContext);
+
   const scheduleId = (() => {
     const { scheduleId } = useLocalSearchParams();
     const id = Number(Array.isArray(scheduleId) ? scheduleId[0] : scheduleId);
