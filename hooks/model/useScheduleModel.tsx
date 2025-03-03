@@ -133,14 +133,13 @@ export const useScheduleModel = () => {
 
   const getTargetSchedule = useCallback(
     (scheduleId: number): ScheduleEntity => {
-      const allSchedules = Array.from(scheduleMap.values()).flat();
-      const targetSchedule = allSchedules.find(
+      const targetSchedule = schedules?.find(
         (schedule) => schedule.id === scheduleId,
       );
       if (!targetSchedule) throw new Error('Schedule not found');
       return targetSchedule;
     },
-    [scheduleMap],
+    [schedules],
   );
 
   const upsertSchedule = useCallback(
@@ -206,7 +205,6 @@ export const useScheduleModel = () => {
     [schedules, user],
   );
 
-  // TODO: stateを更新する
   const deleteSchedule = useCallback(
     async (scheduleId: number, reminderIdentifier?: string): Promise<void> => {
       if (reminderIdentifier)
