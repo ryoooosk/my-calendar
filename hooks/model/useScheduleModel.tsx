@@ -133,59 +133,77 @@ export const useScheduleModel = () => {
 
   const getTargetSchedule = useCallback(
     (scheduleId: number): ScheduleEntity => {
-      const allSchedules = Array.from(scheduleMap.values()).flat();
-      const targetSchedule = allSchedules.find(
+      const targetSchedule = schedules?.find(
         (schedule) => schedule.id === scheduleId,
       );
       if (!targetSchedule) throw new Error('Schedule not found');
       return targetSchedule;
     },
-    [scheduleMap],
+    [schedules],
   );
 
-  const upsertSchedule = async (entity: ScheduleEntity) => {
-    if (!user) throw new Error('User not found');
+  const upsertSchedule = useCallback(
+    async (entity: ScheduleEntity): Promise<void> => {
+      if (!user) throw new Error('User not found');
+      if (!schedules) throw new Error('Schedules not found');
 
-    const data: InsertSchedules = {
-      id: entity.id,
-      user_id: user.id,
-      title: entity.title,
-      start_at: entity.startAt,
-      end_at: entity.endAt,
-      is_all_day: entity.isAllDay,
-      description: entity.description,
-      color: entity.color,
-    };
-    const scheduleRes = await upsertScheduleRepository(data);
+      const data: InsertSchedules = {
+        id: entity.id,
+        user_id: user.id,
+        title: entity.title,
+        start_at: entity.startAt,
+        end_at: entity.endAt,
+        is_all_day: entity.isAllDay,
+        description: entity.description,
+        color: entity.color,
+      };
+      const scheduleRes = await upsertScheduleRepository(data);
 
-    if (!entity.reminderOffset) return;
+      // TODO: setScheduleの処理を共通化する
+      if (!entity.reminderOffset)
+        return setSchedules([
+          ...schedules.filter((s) => s.id !== entity.id),
+          { ...entity, id: scheduleRes.id },
+        ]);
 
-    if (entity.reminderIdentifier)
-      await cancelScheduleNotification(entity.reminderIdentifier);
-    const identifier = await scheduleNotification(
-      scheduleRes.title,
-      new Date(
-        dayjs(entity.startAt)
+      if (entity.reminderIdentifier)
+        await cancelScheduleNotification(entity.reminderIdentifier);
+      const identifier = await scheduleNotification(
+        scheduleRes.title,
+        new Date(
+          dayjs(entity.startAt)
+            .subtract(entity.reminderOffset, 'minute')
+            .toDate()
+            .toISOString(),
+        ),
+        entity.reminderOffset,
+      );
+
+      const reminder: InsertScheduleReminders = {
+        id: entity.reminderId,
+        schedule_id: scheduleRes.id,
+        identifier,
+        reminder_type: 'push_notification',
+        reminder_time: dayjs(entity.startAt)
           .subtract(entity.reminderOffset, 'minute')
           .toDate()
           .toISOString(),
-      ),
-      entity.reminderOffset,
-    );
+        reminder_offset: entity.reminderOffset,
+      };
+      await upsertScheduleReminder(reminder);
 
-    const reminder: InsertScheduleReminders = {
-      id: entity.reminderId,
-      schedule_id: scheduleRes.id,
-      identifier,
-      reminder_type: 'push_notification',
-      reminder_time: dayjs(entity.startAt)
-        .subtract(entity.reminderOffset, 'minute')
-        .toDate()
-        .toISOString(),
-      reminder_offset: entity.reminderOffset,
-    };
-    upsertScheduleReminder(reminder);
-  };
+      setSchedules([
+        ...schedules.filter((s) => s.id !== entity.id),
+        {
+          ...entity,
+          id: scheduleRes.id,
+          reminderId: reminder.id,
+          reminderIdentifier: identifier,
+        },
+      ]);
+    },
+    [schedules, user],
+  );
 
   const deleteSchedule = useCallback(
     async (scheduleId: number, reminderIdentifier?: string): Promise<void> => {
@@ -193,8 +211,11 @@ export const useScheduleModel = () => {
         await cancelScheduleNotification(reminderIdentifier);
 
       await deleteScheduleRepository(scheduleId);
+
+      if (!schedules) throw new Error('Schedules not found');
+      setSchedules(schedules.filter((s) => s.id !== scheduleId));
     },
-    [],
+    [schedules, cancelScheduleNotification, deleteScheduleRepository],
   );
 
   return {
