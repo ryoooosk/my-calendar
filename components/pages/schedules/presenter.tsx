@@ -47,6 +47,11 @@ export default function SchedulesPresenter({
       }
       selected={selectedDate}
       showClosingKnob={true}
+      renderEmptyData={() => (
+        <View className="flex items-center justify-center h-20">
+          <Text className="text-gray-500">予定はありません</Text>
+        </View>
+      )}
       theme={{
         agendaDayNumColor: colors.gray[600],
         agendaDayTextColor: colors.gray[600],
