@@ -12,7 +12,7 @@ export default function CalendarHeader({
   const router = useRouter();
 
   return (
-    <View className="w-full pb-4 flex-row justify-between items-center border-b border-gray-300">
+    <View className="w-full pb-4 px-3 flex-row justify-between items-center border-b border-gray-300">
       <Button
         size="md"
         variant="link"
