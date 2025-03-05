@@ -1,17 +1,15 @@
 import { ScheduleEntity } from '@/hooks/model/useScheduleModel';
-import dayjs from 'dayjs';
 import { CalendarList, DateData, LocaleConfig } from 'react-native-calendars';
 import { DayProps } from 'react-native-calendars/src/calendar/day';
 import colors from 'tailwindcss/colors';
 import CalendarDay from './CalendarDay';
-import CalendarHeader from './CalendarHeader';
 
 export default function CalendarListPresenter({
   scheduleMap,
-  avatarUri,
+  handleSetVisibleMonth,
 }: {
   scheduleMap: Map<string, ScheduleEntity[]>;
-  avatarUri: string | null;
+  handleSetVisibleMonth: (date: string) => void;
 }) {
   const FUTURE_MONTH_RANGE = 24;
   const PAST_MONTH_RANGE = 24;
@@ -31,20 +29,13 @@ export default function CalendarListPresenter({
         paddingRight: 0,
         backgroundColor: colors.white,
       }}
+      renderHeader={() => null}
       pagingEnabled={true}
       horizontal={true}
       hideExtraDays={false}
       firstDay={1}
       futureScrollRange={FUTURE_MONTH_RANGE}
       pastScrollRange={PAST_MONTH_RANGE}
-      renderHeader={(date: string) => {
-        return (
-          <CalendarHeader
-            date={dayjs(date).format('YYYY年M月')}
-            avatarUri={avatarUri}
-          />
-        );
-      }}
       dayComponent={(
         day: DayProps & {
           date?: DateData;
@@ -53,6 +44,9 @@ export default function CalendarListPresenter({
         const targetSchedules = handleGetTargetSchedules(day.date?.dateString);
         return <CalendarDay {...day} schedules={targetSchedules} />;
       }}
+      onVisibleMonthsChange={(months) =>
+        handleSetVisibleMonth(months[0].dateString)
+      }
       theme={{
         calendarBackground: 'transparent',
         textMonthFontSize: 18,

@@ -1,8 +1,8 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { Button, ButtonIcon } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { useRouter } from 'expo-router';
-import { Settings2, User } from 'lucide-react-native';
+import { User } from 'lucide-react-native';
 import { Text, View } from 'react-native';
 
 export default function CalendarHeader({
@@ -12,11 +12,13 @@ export default function CalendarHeader({
   const router = useRouter();
 
   return (
-    <View className="w-full pb-4 flex-row justify-between items-center border-b border-gray-300">
+    <View className="w-full pb-4 px-5 flex-row justify-between items-center border-b border-gray-300">
+      {date && <Text className="text-2xl font-medium">{date}</Text>}
+
       <Button
         size="md"
         variant="link"
-        className="rounded-full w-12 h-12"
+        className="rounded-full w-11 h-11"
         onPress={() => router.push('/mypage')}
       >
         <Avatar size="md" className="bg-slate-600">
@@ -26,12 +28,6 @@ export default function CalendarHeader({
             <Icon as={User} size="md" className="stroke-white" />
           )}
         </Avatar>
-      </Button>
-
-      {date && <Text className="text-2xl font-medium">{date}</Text>}
-
-      <Button size="md" variant="link" className="rounded-full p-1">
-        <ButtonIcon as={Settings2} className="color-gray-700 w-8 h-8" />
       </Button>
     </View>
   );
