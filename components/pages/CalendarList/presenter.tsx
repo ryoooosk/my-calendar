@@ -6,10 +6,10 @@ import CalendarDay from './CalendarDay';
 
 export default function CalendarListPresenter({
   scheduleMap,
-  handleSetVisibleMonth,
+  setDate,
 }: {
   scheduleMap: Map<string, ScheduleEntity[]>;
-  handleSetVisibleMonth: (date: string) => void;
+  setDate: (date: string) => void;
 }) {
   const FUTURE_MONTH_RANGE = 24;
   const PAST_MONTH_RANGE = 24;
@@ -44,9 +44,7 @@ export default function CalendarListPresenter({
         const targetSchedules = handleGetTargetSchedules(day.date?.dateString);
         return <CalendarDay {...day} schedules={targetSchedules} />;
       }}
-      onVisibleMonthsChange={(months) =>
-        handleSetVisibleMonth(months[0].dateString)
-      }
+      onVisibleMonthsChange={(months) => setDate(months[0].dateString)}
       theme={{
         calendarBackground: 'transparent',
         textMonthFontSize: 18,

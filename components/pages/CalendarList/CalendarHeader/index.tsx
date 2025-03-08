@@ -1,19 +1,33 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Button, ButtonIcon } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
-import { useRouter } from 'expo-router';
-import { User } from 'lucide-react-native';
+import { router } from 'expo-router';
+import { ChevronLeft, Menu, User } from 'lucide-react-native';
 import { Text, View } from 'react-native';
 
 export default function CalendarHeader({
   date,
   avatarUri,
-}: { date?: string; avatarUri: string | null }) {
-  const router = useRouter();
-
+  canGoBack = false,
+}: { date: string; avatarUri: string | null; canGoBack?: boolean }) {
   return (
-    <View className="w-full pb-4 px-5 flex-row justify-between items-center border-b border-gray-300">
-      {date && <Text className="text-2xl font-medium">{date}</Text>}
+    <View className="w-full pb-3 pl-3 pr-4 flex-row justify-between items-center border-b border-gray-300">
+      <View className="flex-row items-center gap-3">
+        <Button
+          className="bg-transparent px-2 rounded-full"
+          action="secondary"
+          onPress={() => {
+            if (canGoBack) router.back();
+          }}
+        >
+          {canGoBack ? (
+            <ButtonIcon className="w-7 h-7 color-slate-700" as={ChevronLeft} />
+          ) : (
+            <ButtonIcon className="w-7 h-7 color-slate-700" as={Menu} />
+          )}
+        </Button>
+        <Text className="text-2xl font-medium">{date}</Text>
+      </View>
 
       <Button
         size="md"
