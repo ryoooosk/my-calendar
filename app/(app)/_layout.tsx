@@ -19,6 +19,14 @@ export default function AppLayout() {
               options={{ headerShown: false, title: 'ホーム' }}
             />
             <Stack.Screen
+              name="schedule/create"
+              options={{ title: '新しい予定' }}
+            />
+            <Stack.Screen
+              name="schedule/update/[scheduleId]"
+              options={{ title: '予定を編集' }}
+            />
+            <Stack.Screen
               name="mypage/index"
               options={{ title: 'マイページ' }}
             />
