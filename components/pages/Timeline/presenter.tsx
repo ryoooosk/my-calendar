@@ -17,25 +17,25 @@ export default function TimelinePresenter({
 
   return (
     <>
-      {dayEvents.length > 0 && (
-        <View className="flex flex-row items-center py-3 bg-white border-b border-gray-300">
-          <View
-            className="flex flex-col items-center"
-            style={{ width: TIME_LINE_LEFT_INSET }}
-          >
-            <Text className="text-gray-700 text-base">
-              {dayjs(date).locale('ja').format('dd')}
-            </Text>
-            <Text className="text-xl font-medium tracking-widest">
-              {dayjs(date).format('DD')}
-            </Text>
-          </View>
+      <View className="flex flex-row items-center py-3 bg-white border-b border-gray-300">
+        <View
+          className="flex flex-col items-center"
+          style={{ width: TIME_LINE_LEFT_INSET }}
+        >
+          <Text className="text-gray-700 text-base">
+            {dayjs(date).locale('ja').format('dd')}
+          </Text>
+          <Text className="text-xl font-medium tracking-widest">
+            {dayjs(date).format('DD')}
+          </Text>
+        </View>
 
-          <View
-            className="flex flex-col gap-1 flex-1"
-            style={{ marginRight: TIME_LINE_RIGHT_INSET }}
-          >
-            {dayEvents.map((event) => (
+        <View
+          className="flex flex-col gap-1 flex-1"
+          style={{ marginRight: TIME_LINE_RIGHT_INSET }}
+        >
+          {dayEvents.length > 0 || timeEvents.length > 0 ? (
+            dayEvents.map((event) => (
               <TouchableOpacity
                 key={event.id}
                 className="p-1 rounded-md"
@@ -46,10 +46,14 @@ export default function TimelinePresenter({
                   {event.title}
                 </Text>
               </TouchableOpacity>
-            ))}
-          </View>
+            ))
+          ) : (
+            <Text className="ml-2 text-lg text-gray-800 tracking-wide">
+              予定がありません
+            </Text>
+          )}
         </View>
-      )}
+      </View>
 
       <Timeline
         date={date}
