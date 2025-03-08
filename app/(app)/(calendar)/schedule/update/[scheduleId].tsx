@@ -1,13 +1,16 @@
 import UpsertScheduleFormContainer from '@/components/pages/UpsertScheduleForm';
+import { Button, ButtonIcon, ButtonText } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { AuthContext } from '@/contexts/AuthContext';
 import { ScheduleContext } from '@/contexts/ScheduleContext';
-import { useLocalSearchParams } from 'expo-router';
-import { useContext, useMemo } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import { Trash2 } from 'lucide-react-native';
+import { useCallback, useContext } from 'react';
+import { Alert, View } from 'react-native';
 
 export default function UpdateSchedulePage() {
   const { user } = useContext(AuthContext);
-  const { scheduleMap } = useContext(ScheduleContext);
+  const { getTargetSchedule, deleteSchedule } = useContext(ScheduleContext);
 
   const scheduleId = (() => {
     const { scheduleId } = useLocalSearchParams();
@@ -17,22 +20,40 @@ export default function UpdateSchedulePage() {
     return id;
   })();
 
-  const getTargetSchedule = useMemo(() => {
-    // TODO:  重複を含むのでもっと効率の良い取得にしたい
-    const allSchedules = Array.from(scheduleMap.values()).flat();
-    const targetSchedule = allSchedules.find(
-      (schedule) => schedule.id === scheduleId,
-    );
-
-    if (!targetSchedule) return;
-    return targetSchedule;
-  }, [scheduleId, scheduleMap]);
+  const handleDeleteSchedule = useCallback(() => {
+    const targetSchedule = getTargetSchedule(scheduleId);
+    Alert.alert('予定の削除', `「${targetSchedule.title}」を削除しますか？`, [
+      { text: 'キャンセル', onPress: () => {} },
+      {
+        text: '削除する',
+        onPress: async () => {
+          await deleteSchedule(scheduleId, targetSchedule.reminderIdentifier);
+          router.replace('/');
+        },
+      },
+    ]);
+  }, [getTargetSchedule, deleteSchedule, scheduleId]);
 
   if (!user || !getTargetSchedule) return <Spinner />;
   return (
-    <UpsertScheduleFormContainer
-      user={user}
-      selectedSchedule={getTargetSchedule}
-    />
+    <View className="flex-1 relative">
+      <UpsertScheduleFormContainer
+        user={user}
+        selectedSchedule={getTargetSchedule(scheduleId)}
+      />
+
+      <View className="absolute bottom-12 w-full flex items-center justify-center">
+        <Button
+          className="rounded-md bg-red-100"
+          action="negative"
+          onPress={handleDeleteSchedule}
+        >
+          <ButtonText className="text-base text-red-600 tracking-wide">
+            このスケジュールを削除する
+          </ButtonText>
+          <ButtonIcon className="text-red-600" as={Trash2} />
+        </Button>
+      </View>
+    </View>
   );
 }
