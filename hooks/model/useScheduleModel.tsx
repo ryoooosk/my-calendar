@@ -2,7 +2,6 @@ import { SCHEDULE_SLATE } from '@/constants/ScheduleColors';
 import { InsertScheduleReminders, InsertSchedules } from '@/database.types';
 import dayjs from 'dayjs';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { AgendaSchedule } from 'react-native-calendars';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useExpoNotificationRepository } from '../repository/useExpoNotificationRepository';
 import {
@@ -111,26 +110,6 @@ export const useScheduleModel = () => {
     return viewModelMap;
   }, [schedules]);
 
-  const agendaEntries: AgendaSchedule = useMemo(() => {
-    const agendaSchedule: AgendaSchedule = {};
-
-    return Array.from(scheduleMap.entries()).reduce(
-      (acc, [date, scheduleArray]) => {
-        const agendaSchedules = scheduleArray.map((schedule) => ({
-          id: schedule.id,
-          name: schedule.title,
-          height: 70,
-          day: `${dayjs(schedule.startAt).format('HH:mm')} - ${dayjs(schedule.endAt).format('HH:mm')}`,
-          isAllDay: schedule.isAllDay,
-          description: schedule.description,
-        }));
-        acc[date] = agendaSchedules;
-        return acc;
-      },
-      agendaSchedule,
-    );
-  }, [scheduleMap]);
-
   const getTargetSchedule = useCallback(
     (scheduleId: number): ScheduleEntity => {
       const targetSchedule = schedules?.find(
@@ -140,6 +119,15 @@ export const useScheduleModel = () => {
       return targetSchedule;
     },
     [schedules],
+  );
+
+  const getTargetDaySchedules = useCallback(
+    (date: string) => {
+      const targetDaySchedules = scheduleMap.get(date);
+      if (!targetDaySchedules) return [];
+      return targetDaySchedules;
+    },
+    [scheduleMap],
   );
 
   const upsertSchedule = useCallback(
@@ -220,9 +208,9 @@ export const useScheduleModel = () => {
 
   return {
     schedules,
-    agendaEntries,
     scheduleMap,
     getTargetSchedule,
+    getTargetDaySchedules,
     upsertSchedule,
     deleteSchedule,
   };

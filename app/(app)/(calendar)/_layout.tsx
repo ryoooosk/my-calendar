@@ -9,7 +9,10 @@ export default function CalendarLayout() {
           name="index"
           options={{ headerShown: false, title: 'ホーム' }}
         />
-        <Stack.Screen name="schedules" options={{ title: '予定' }} />
+        <Stack.Screen
+          name="timeline/[date]"
+          options={{ title: 'タイムライン' }}
+        />
         <Stack.Screen
           name="schedule/create"
           options={{ title: '新しい予定' }}
