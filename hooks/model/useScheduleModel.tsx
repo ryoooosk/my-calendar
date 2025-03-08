@@ -142,6 +142,15 @@ export const useScheduleModel = () => {
     [schedules],
   );
 
+  const getTargetDaySchedules = useCallback(
+    (date: string) => {
+      const targetDaySchedules = scheduleMap.get(date);
+      if (!targetDaySchedules) return [];
+      return targetDaySchedules;
+    },
+    [scheduleMap],
+  );
+
   const upsertSchedule = useCallback(
     async (entity: ScheduleEntity): Promise<void> => {
       if (!user) throw new Error('User not found');
@@ -223,6 +232,7 @@ export const useScheduleModel = () => {
     agendaEntries,
     scheduleMap,
     getTargetSchedule,
+    getTargetDaySchedules,
     upsertSchedule,
     deleteSchedule,
   };

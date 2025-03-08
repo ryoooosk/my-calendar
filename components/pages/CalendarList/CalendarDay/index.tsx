@@ -21,7 +21,7 @@ export default function CalendarDay(props: CalendarDayProps) {
     if (!date) return;
 
     setDate(date);
-    router.push('/schedules');
+    router.push(`/timeline/${date}`);
   };
 
   return (
