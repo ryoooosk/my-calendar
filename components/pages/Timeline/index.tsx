@@ -6,10 +6,10 @@ import { Event } from 'react-native-calendars/src/timeline/EventBlock';
 import TimelinePresenter from './presenter';
 
 export default function TimelineContainer({ date }: { date: string }) {
-  const { getTargetDaySchedules } = useContext(ScheduleContext);
+  const { getSchedulesForDay } = useContext(ScheduleContext);
   const schedules = useMemo(
-    () => getTargetDaySchedules(date),
-    [date, getTargetDaySchedules],
+    () => getSchedulesForDay(date),
+    [date, getSchedulesForDay],
   );
 
   const timeEvents: Event[] = schedules

@@ -45,7 +45,7 @@ export function useScheduleMapViewModel() {
     return viewModelMap;
   }, [schedules]);
 
-  const getTargetDaySchedules = useCallback(
+  const getSchedulesForDay = useCallback(
     (date: string) => {
       const targetDaySchedules = scheduleMap.get(date);
       if (!targetDaySchedules) return [];
@@ -56,6 +56,6 @@ export function useScheduleMapViewModel() {
 
   return {
     scheduleMap,
-    getTargetDaySchedules,
+    getSchedulesForDay,
   };
 }
