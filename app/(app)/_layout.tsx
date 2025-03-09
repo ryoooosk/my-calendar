@@ -1,4 +1,5 @@
 import { AuthContext } from '@/contexts/AuthContext';
+import { CurrentDateProvider } from '@/contexts/CurrentDateContext';
 import { NotificationSubscriptionProvider } from '@/contexts/NotificationSubscriptionContext';
 import { ScheduleProvider } from '@/contexts/ScheduleContext';
 import { Redirect, Stack } from 'expo-router';
@@ -13,24 +14,34 @@ export default function AppLayout() {
     <NotificationSubscriptionProvider>
       {session ? (
         <ScheduleProvider>
-          <Stack>
-            <Stack.Screen
-              name="(calendar)"
-              options={{ headerShown: false, title: 'ホーム' }}
-            />
-            <Stack.Screen
-              name="mypage/index"
-              options={{ title: 'マイページ' }}
-            />
-            <Stack.Screen
-              name="mypage/edit"
-              options={{
-                presentation: 'modal',
-                title: 'プロフィール編集',
-                headerBackTitle: 'キャンセル',
-              }}
-            />
-          </Stack>
+          <CurrentDateProvider>
+            <Stack>
+              <Stack.Screen
+                name="(calendar)"
+                options={{ headerShown: false, title: 'ホーム' }}
+              />
+              <Stack.Screen
+                name="schedule/create"
+                options={{ title: '新しい予定' }}
+              />
+              <Stack.Screen
+                name="schedule/update/[scheduleId]"
+                options={{ title: '予定を編集' }}
+              />
+              <Stack.Screen
+                name="mypage/index"
+                options={{ title: 'マイページ' }}
+              />
+              <Stack.Screen
+                name="mypage/edit"
+                options={{
+                  presentation: 'modal',
+                  title: 'プロフィール編集',
+                  headerBackTitle: 'キャンセル',
+                }}
+              />
+            </Stack>
+          </CurrentDateProvider>
         </ScheduleProvider>
       ) : (
         <LoadingScreen />

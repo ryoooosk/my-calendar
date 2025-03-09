@@ -1,8 +1,6 @@
-import { DateContext } from '@/contexts/DateContext';
 import { ScheduleEntity } from '@/hooks/model/useScheduleModel';
 
 import { router } from 'expo-router';
-import { useContext } from 'react';
 import { Text } from 'react-native';
 import { View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
@@ -16,11 +14,8 @@ type CalendarDayProps = DayProps & {
 
 export default function CalendarDay(props: CalendarDayProps) {
   const { date, children, state, schedules } = props;
-  const { setDate } = useContext(DateContext);
   const handlePressDay = (date?: string) => {
     if (!date) return;
-
-    setDate(date);
     router.push(`/timeline/${date}`);
   };
 
