@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native';
 
 export default function CalendarLayout() {
   const { user } = useContext(AuthContext);
-  const { date, setDate } = useContext(DateContext);
+  const { date } = useContext(DateContext);
   const navigation = useNavigation();
 
   const [visibleMonth, setVisibleMonth] = useState<string>(
@@ -35,8 +35,9 @@ export default function CalendarLayout() {
   }, [navigation]);
 
   useEffect(() => {
+    if (!date) return;
     handleSetVisibleMonth(date);
-  }, [date, setDate]);
+  }, [date]);
 
   return (
     <SafeAreaView className="relative flex-1 bg-white">
