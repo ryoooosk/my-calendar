@@ -57,7 +57,7 @@ export const useScheduleRepository = () => {
   );
 
   const upsertScheduleReminder = useCallback(
-    async (body: InsertScheduleReminders) => {
+    async (body: InsertScheduleReminders): Promise<ScheduleReminders> => {
       const { data, error } = await supabase
         .from('schedule_reminders')
         .upsert(body)

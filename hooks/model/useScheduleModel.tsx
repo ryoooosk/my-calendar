@@ -1,5 +1,9 @@
 import { SCHEDULE_SLATE } from '@/constants/ScheduleColors';
-import { InsertScheduleReminders, InsertSchedules } from '@/database.types';
+import {
+  InsertScheduleReminders,
+  InsertSchedules,
+  ScheduleReminders,
+} from '@/database.types';
 import dayjs from 'dayjs';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -24,7 +28,7 @@ export type ScheduleEntity = {
   reminderOffset?: number | null;
 };
 
-export const useScheduleModel = () => {
+export function useScheduleModel() {
   const { user } = useContext(AuthContext);
   const {
     fetchSchedules,
@@ -146,48 +150,19 @@ export const useScheduleModel = () => {
         color: entity.color,
       };
       const scheduleRes = await upsertScheduleRepository(data);
-
-      // TODO: setScheduleの処理を共通化する
-      if (!entity.reminderOffset)
-        return setSchedules([
-          ...schedules.filter((s) => s.id !== entity.id),
-          { ...entity, id: scheduleRes.id },
-        ]);
-
-      if (entity.reminderIdentifier)
-        await cancelScheduleNotification(entity.reminderIdentifier);
-      const identifier = await scheduleNotification(
-        scheduleRes.title,
-        new Date(
-          dayjs(entity.startAt)
-            .subtract(entity.reminderOffset, 'minute')
-            .toDate()
-            .toISOString(),
-        ),
-        entity.reminderOffset,
-      );
-
-      const reminder: InsertScheduleReminders = {
-        id: entity.reminderId,
-        schedule_id: scheduleRes.id,
-        identifier,
-        reminder_type: 'push_notification',
-        reminder_time: dayjs(entity.startAt)
-          .subtract(entity.reminderOffset, 'minute')
-          .toDate()
-          .toISOString(),
-        reminder_offset: entity.reminderOffset,
-      };
-      await upsertScheduleReminder(reminder);
+      const newEntity: ScheduleEntity = { ...entity, id: scheduleRes.id };
+      const finalEntity = newEntity.reminderOffset
+        ? await upsertScheduleReminderAndNotification(
+            newEntity,
+            cancelScheduleNotification,
+            scheduleNotification,
+            upsertScheduleReminder,
+          )
+        : newEntity;
 
       setSchedules([
         ...schedules.filter((s) => s.id !== entity.id),
-        {
-          ...entity,
-          id: scheduleRes.id,
-          reminderId: reminder.id,
-          reminderIdentifier: identifier,
-        },
+        finalEntity,
       ]);
     },
     [schedules, user],
@@ -214,4 +189,55 @@ export const useScheduleModel = () => {
     upsertSchedule,
     deleteSchedule,
   };
-};
+}
+
+async function upsertScheduleReminderAndNotification(
+  entity: ScheduleEntity,
+  cancelScheduleNotification: (identifier: string) => Promise<void>,
+  scheduleNotification: (
+    title: string,
+    date: Date,
+    offset?: number,
+  ) => Promise<string>,
+  upsertScheduleReminder: (
+    body: InsertScheduleReminders,
+  ) => Promise<ScheduleReminders>,
+): Promise<ScheduleEntity> {
+  if (!entity.id) throw new Error('Schedule not found');
+  if (!entity.reminderOffset) throw new Error('Reminder offset not found');
+
+  if (entity.reminderIdentifier)
+    await cancelScheduleNotification(entity.reminderIdentifier);
+  const identifier = await scheduleNotification(
+    entity.title,
+    new Date(
+      dayjs(entity.startAt)
+        .subtract(entity.reminderOffset, 'minute')
+        .toDate()
+        .toISOString(),
+    ),
+    entity.reminderOffset,
+  );
+
+  const reminder: InsertScheduleReminders = {
+    id: entity.reminderId,
+    schedule_id: entity.id,
+    identifier,
+    reminder_type: 'push_notification',
+    reminder_time: dayjs(entity.startAt)
+      .subtract(entity.reminderOffset, 'minute')
+      .toDate()
+      .toISOString(),
+    reminder_offset: entity.reminderOffset,
+  };
+  await upsertScheduleReminder(reminder);
+
+  const result = {
+    ...entity,
+    id: entity.id,
+    reminderId: reminder.id,
+    reminderIdentifier: identifier,
+  };
+
+  return result;
+}

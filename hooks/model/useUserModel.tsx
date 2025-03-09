@@ -3,14 +3,17 @@ import { Users } from '@/database.types';
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
 import { useContext } from 'react';
-import { useSupabaseStorageRepository } from '../repository/useSupabaseStorageRepository';
+import {
+  SupabaseStorageUploadResponse,
+  useSupabaseStorageRepository,
+} from '../repository/useSupabaseStorageRepository';
 import { useUserRepository } from '../repository/useUserRepository';
 
-export const useUserModel = () => {
+export function useUserModel() {
   const { updateUser: updateUserRepository } = useUserRepository();
-  const { user, setUser } = useContext(AuthContext);
   const { getPublicUrl, uploadToStorage, deleteFromStorage } =
     useSupabaseStorageRepository();
+  const { user, setUser } = useContext(AuthContext);
 
   const updateUser = async (
     newImageUri: string | null,
@@ -22,7 +25,14 @@ export const useUserModel = () => {
     if (!user) throw new Error('User is not found');
 
     const avatarUri = newImageUri
-      ? await uploadUserAvatar(user.id, user.avatar_url, newImageUri)
+      ? await uploadUserAvatar(
+          user.id,
+          user.avatar_url,
+          newImageUri,
+          getPublicUrl,
+          uploadToStorage,
+          deleteFromStorage,
+        )
       : null;
 
     // TODO: user_name が重複していないかチェック
@@ -40,37 +50,43 @@ export const useUserModel = () => {
     router.back();
   };
 
-  const uploadUserAvatar = async (
-    userId: Users['id'],
-    currentImageUri: string | null,
-    newImageUri: string,
-  ): Promise<string> => {
-    const fileExt = newImageUri.split('.').pop();
-    const contentType = `image/${fileExt}`;
-    const filePath = `${userId}_${dayjs().format('YYYYMMDD-HHmmss')}.${fileExt}`;
-    const arraybuffer = await fetch(newImageUri).then((res) =>
-      res.arrayBuffer(),
-    );
-
-    const data = await uploadToStorage(
-      'avatars',
-      filePath,
-      arraybuffer,
-      contentType,
-    );
-
-    if (currentImageUri) {
-      const targetPath = currentImageUri.split('/').pop();
-      if (!targetPath) throw new Error('Failed to get target path');
-      await deleteFromStorage('avatars', targetPath);
-    }
-
-    const publicUrl = getPublicUrl('avatars', data.path);
-    return publicUrl;
-  };
-
   return {
     user,
     updateUser,
   };
-};
+}
+
+async function uploadUserAvatar(
+  userId: Users['id'],
+  currentImageUri: string | null,
+  newImageUri: string,
+  getPublicUrl: (bucket: string, path: string) => string,
+  uploadToStorage: (
+    bucket: string,
+    path: string,
+    fileBody: ArrayBuffer,
+    contentType: string,
+  ) => Promise<SupabaseStorageUploadResponse>,
+  deleteFromStorage: (bucket: string, path: string) => Promise<void>,
+): Promise<string> {
+  const fileExt = newImageUri.split('.').pop();
+  const contentType = `image/${fileExt}`;
+  const filePath = `${userId}_${dayjs().format('YYYYMMDD-HHmmss')}.${fileExt}`;
+  const arraybuffer = await fetch(newImageUri).then((res) => res.arrayBuffer());
+
+  const data = await uploadToStorage(
+    'avatars',
+    filePath,
+    arraybuffer,
+    contentType,
+  );
+
+  if (currentImageUri) {
+    const targetPath = currentImageUri.split('/').pop();
+    if (!targetPath) throw new Error('Failed to get target path');
+    await deleteFromStorage('avatars', targetPath);
+  }
+
+  const publicUrl = getPublicUrl('avatars', data.path);
+  return publicUrl;
+}
