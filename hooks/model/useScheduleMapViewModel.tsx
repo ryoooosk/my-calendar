@@ -1,9 +1,8 @@
 import dayjs from 'dayjs';
 import { useCallback, useMemo } from 'react';
-import { ScheduleEntity, useScheduleModel } from '../model/useScheduleModel';
+import { ScheduleEntity } from './useScheduleActions';
 
-export function useScheduleMapViewModel() {
-  const { schedules } = useScheduleModel();
+export function useScheduleMapViewModel(schedules: ScheduleEntity[] | null) {
   const DAY_KEY_FORMAT = 'YYYY-MM-DD';
 
   const scheduleMap: Map<string, ScheduleEntity[]> = useMemo(() => {

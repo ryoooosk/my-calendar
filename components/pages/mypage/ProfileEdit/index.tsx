@@ -1,8 +1,8 @@
 import { Icon } from '@/components/ui/icon';
-import { useUserModel } from '@/hooks/model/useUserModel';
+import { AuthContext } from '@/contexts/AuthContext';
 import { useNavigation } from 'expo-router';
 import { X } from 'lucide-react-native';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { Alert, Button, TouchableOpacity } from 'react-native';
 import { useProfileEdit } from './hooks';
 import ProfileEditPresenter from './presenter';
@@ -10,7 +10,7 @@ import ProfileEditPresenter from './presenter';
 export default function ProfileEditContainer() {
   const navigation = useNavigation();
 
-  const { user, updateUser } = useUserModel();
+  const { user, updateUser } = useContext(AuthContext);
   const [currentImageUri, setCurrentImageUri] = useState<string | null>(null);
   const [newImageUri, setNewImageUri] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState<string>('');

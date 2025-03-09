@@ -1,5 +1,5 @@
 import { Users } from '@/database.types';
-import { ScheduleEntity } from '@/hooks/model/useScheduleModel';
+import { ScheduleEntity } from '@/hooks/model/useScheduleActions';
 import { useNavigation } from 'expo-router';
 import { useEffect } from 'react';
 import { Text, TouchableOpacity } from 'react-native';
