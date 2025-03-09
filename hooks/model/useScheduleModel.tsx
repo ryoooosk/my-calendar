@@ -137,7 +137,6 @@ export function useScheduleModel() {
   const upsertSchedule = useCallback(
     async (entity: ScheduleEntity): Promise<void> => {
       if (!user) throw new Error('User not found');
-      if (!schedules) throw new Error('Schedules not found');
 
       const data: InsertSchedules = {
         id: entity.id,
@@ -160,25 +159,25 @@ export function useScheduleModel() {
           )
         : newEntity;
 
-      setSchedules([
-        ...schedules.filter((s) => s.id !== entity.id),
-        finalEntity,
-      ]);
+      setSchedules((prev) => {
+        if (!prev) return [finalEntity];
+
+        const filtered = prev?.filter((s) => s.id !== entity.id);
+        return [...filtered, finalEntity];
+      });
     },
-    [schedules, user],
+    [user],
   );
 
   const deleteSchedule = useCallback(
     async (scheduleId: number, reminderIdentifier?: string): Promise<void> => {
       if (reminderIdentifier)
         await cancelScheduleNotification(reminderIdentifier);
-
       await deleteScheduleRepository(scheduleId);
 
-      if (!schedules) throw new Error('Schedules not found');
-      setSchedules(schedules.filter((s) => s.id !== scheduleId));
+      setSchedules((prev) => prev?.filter((s) => s.id !== scheduleId) ?? []);
     },
-    [schedules, cancelScheduleNotification, deleteScheduleRepository],
+    [cancelScheduleNotification, deleteScheduleRepository],
   );
 
   return {
