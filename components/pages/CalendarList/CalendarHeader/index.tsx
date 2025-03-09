@@ -14,16 +14,16 @@ export default function CalendarHeader({
     <View className="w-full pb-3 pl-3 pr-4 flex-row justify-between items-center border-b border-gray-300">
       <View className="flex-row items-center gap-3">
         <Button
-          className="bg-transparent px-2 rounded-full"
+          className="w-10 h-10 bg-transparent px-2 rounded-full"
           action="secondary"
           onPress={() => {
             if (canGoBack) router.back();
           }}
         >
           {canGoBack ? (
-            <ButtonIcon className="w-7 h-7 color-slate-700" as={ChevronLeft} />
+            <ButtonIcon className="w-9 h-9 color-slate-700" as={ChevronLeft} />
           ) : (
-            <ButtonIcon className="w-7 h-7 color-slate-700" as={Menu} />
+            <ButtonIcon className="w-8 h-8 color-slate-700" as={Menu} />
           )}
         </Button>
         <Text className="text-2xl font-medium">{date}</Text>
