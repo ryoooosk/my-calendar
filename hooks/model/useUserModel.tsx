@@ -1,19 +1,23 @@
-import { AuthContext } from '@/contexts/AuthContext';
 import { Users } from '@/database.types';
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
-import { useContext } from 'react';
+import { useEffect, useState } from 'react';
 import {
   SupabaseStorageUploadResponse,
   useSupabaseStorageRepository,
 } from '../repository/useSupabaseStorageRepository';
 import { useUserRepository } from '../repository/useUserRepository';
 
-export function useUserModel() {
-  const { updateUser: updateUserRepository } = useUserRepository();
+export function useUserModel(userId: string | undefined) {
+  const [user, setUser] = useState<Users | null>(null);
+  const { fetchUser, updateUser: updateUserRepository } = useUserRepository();
   const { getPublicUrl, uploadToStorage, deleteFromStorage } =
     useSupabaseStorageRepository();
-  const { user, setUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!userId) return;
+    fetchUser(userId).then((user) => setUser(user));
+  }, [userId, fetchUser]);
 
   const updateUser = async (
     newImageUri: string | null,
