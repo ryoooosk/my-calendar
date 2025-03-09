@@ -1,11 +1,13 @@
-import { DateContext } from '@/contexts/DateContext';
+import { CurrentDateContext } from '@/contexts/CurrentDateContext';
 import { ScheduleContext } from '@/contexts/ScheduleContext';
 import { useContext } from 'react';
 import CalendarListPresenter from './presenter';
 
 export default function CalendarListContainer() {
   const { scheduleMap } = useContext(ScheduleContext);
-  const { setDate } = useContext(DateContext);
+  const { setCurrentDate } = useContext(CurrentDateContext);
 
-  return <CalendarListPresenter scheduleMap={scheduleMap} setDate={setDate} />;
+  return (
+    <CalendarListPresenter scheduleMap={scheduleMap} setDate={setCurrentDate} />
+  );
 }

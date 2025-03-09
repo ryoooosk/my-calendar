@@ -1,5 +1,5 @@
 import { AuthContext } from '@/contexts/AuthContext';
-import { DateProvider } from '@/contexts/DateContext';
+import { CurrentDateProvider } from '@/contexts/CurrentDateContext';
 import { NotificationSubscriptionProvider } from '@/contexts/NotificationSubscriptionContext';
 import { ScheduleProvider } from '@/contexts/ScheduleContext';
 import { Redirect, Stack } from 'expo-router';
@@ -14,7 +14,7 @@ export default function AppLayout() {
     <NotificationSubscriptionProvider>
       {session ? (
         <ScheduleProvider>
-          <DateProvider>
+          <CurrentDateProvider>
             <Stack>
               <Stack.Screen
                 name="(calendar)"
@@ -41,7 +41,7 @@ export default function AppLayout() {
                 }}
               />
             </Stack>
-          </DateProvider>
+          </CurrentDateProvider>
         </ScheduleProvider>
       ) : (
         <LoadingScreen />

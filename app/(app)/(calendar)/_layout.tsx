@@ -1,7 +1,7 @@
 import CalendarHeader from '@/components/pages/CalendarList/CalendarHeader';
 import { Button, ButtonIcon } from '@/components/ui/button';
 import { AuthContext } from '@/contexts/AuthContext';
-import { DateContext } from '@/contexts/DateContext';
+import { CurrentDateContext } from '@/contexts/CurrentDateContext';
 import dayjs from 'dayjs';
 import { Stack, router, useNavigation } from 'expo-router';
 import { PlusIcon } from 'lucide-react-native';
@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native';
 
 export default function CalendarLayout() {
   const { user } = useContext(AuthContext);
-  const { date } = useContext(DateContext);
+  const { currentDate } = useContext(CurrentDateContext);
   const navigation = useNavigation();
 
   const [visibleMonth, setVisibleMonth] = useState<string>(
@@ -35,9 +35,9 @@ export default function CalendarLayout() {
   }, [navigation]);
 
   useEffect(() => {
-    if (!date) return;
-    handleSetVisibleMonth(date);
-  }, [date]);
+    if (!currentDate) return;
+    handleSetVisibleMonth(currentDate);
+  }, [currentDate]);
 
   return (
     <SafeAreaView className="relative flex-1 bg-white">
