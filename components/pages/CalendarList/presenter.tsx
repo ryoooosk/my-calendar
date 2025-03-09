@@ -1,4 +1,4 @@
-import { ScheduleEntity } from '@/hooks/model/useScheduleModel';
+import { ScheduleEntity } from '@/hooks/model/useScheduleActions';
 import { CalendarList, DateData, LocaleConfig } from 'react-native-calendars';
 import { DayProps } from 'react-native-calendars/src/calendar/day';
 import colors from 'tailwindcss/colors';

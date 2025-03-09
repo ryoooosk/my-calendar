@@ -1,9 +1,11 @@
 import {
   ScheduleEntity,
-  useScheduleModel,
-} from '@/hooks/model/useScheduleModel';
-import { useScheduleMapViewModel } from '@/hooks/view-model/useScheduleMapViewModel';
-import { createContext } from 'react';
+  useScheduleActions,
+} from '@/hooks/model/useScheduleActions';
+import { useScheduleMapViewModel } from '@/hooks/model/useScheduleMapViewModel';
+import { useScheduleState } from '@/hooks/model/useScheduleState';
+import { createContext, useContext } from 'react';
+import { AuthContext } from './AuthContext';
 
 export const ScheduleContext = createContext<{
   scheduleMap: Map<string, ScheduleEntity[]>;
@@ -33,9 +35,16 @@ export const ScheduleContext = createContext<{
 export const ScheduleProvider = ({
   children,
 }: { children: React.ReactNode }) => {
-  const { getTargetSchedule, upsertSchedule, deleteSchedule } =
-    useScheduleModel();
-  const { scheduleMap, getSchedulesForDay } = useScheduleMapViewModel();
+  const { user } = useContext(AuthContext);
+  const { schedules, setSchedules, getTargetSchedule } = useScheduleState(
+    user?.id,
+  );
+  const { upsertSchedule, deleteSchedule } = useScheduleActions(
+    user?.id,
+    setSchedules,
+  );
+  const { scheduleMap, getSchedulesForDay } =
+    useScheduleMapViewModel(schedules);
 
   return (
     <ScheduleContext.Provider

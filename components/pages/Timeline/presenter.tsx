@@ -1,4 +1,4 @@
-import { ScheduleEntity } from '@/hooks/model/useScheduleModel';
+import { ScheduleEntity } from '@/hooks/model/useScheduleActions';
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
 import { Text, TouchableOpacity, View } from 'react-native';

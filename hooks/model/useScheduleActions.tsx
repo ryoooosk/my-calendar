@@ -1,17 +1,12 @@
-import { SCHEDULE_SLATE } from '@/constants/ScheduleColors';
 import {
   InsertScheduleReminders,
   InsertSchedules,
   ScheduleReminders,
 } from '@/database.types';
 import dayjs from 'dayjs';
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useCallback } from 'react';
 import { useExpoNotificationRepository } from '../repository/useExpoNotificationRepository';
-import {
-  ScheduleRepository,
-  useScheduleRepository,
-} from '../repository/useScheduleRepository';
+import { useScheduleRepository } from '../repository/useScheduleRepository';
 
 export type ScheduleEntity = {
   id?: number;
@@ -28,69 +23,25 @@ export type ScheduleEntity = {
   reminderOffset?: number | null;
 };
 
-export function useScheduleModel() {
-  const { user } = useContext(AuthContext);
+export function useScheduleActions(
+  userId: string | undefined,
+  setSchedules: React.Dispatch<React.SetStateAction<ScheduleEntity[] | null>>,
+) {
   const {
-    fetchSchedules,
     upsertSchedule: upsertScheduleRepository,
     deleteSchedule: deleteScheduleRepository,
     upsertScheduleReminder,
   } = useScheduleRepository();
   const { scheduleNotification, cancelScheduleNotification } =
     useExpoNotificationRepository();
-  const [schedules, setSchedules] = useState<ScheduleEntity[] | null>(null);
-
-  useEffect(() => {
-    if (!user) return;
-
-    fetchSchedules(user.id).then((schedules) => {
-      const entities: ScheduleEntity[] = schedules.map(
-        (schedule: ScheduleRepository) => {
-          const entity: ScheduleEntity = {
-            id: schedule.id,
-            userId: schedule.user_id,
-            title: schedule.title,
-            description: schedule.description,
-            startAt: schedule.start_at,
-            endAt: schedule.end_at,
-            isAllDay: schedule.is_all_day,
-            color: schedule.color !== '' ? schedule.color : SCHEDULE_SLATE,
-            isPublic: schedule.is_public,
-            reminderId: schedule.schedule_reminders?.map((r) => r.id)[0],
-            reminderIdentifier: schedule.schedule_reminders?.map(
-              (r) => r.identifier,
-            )[0],
-            reminderOffset:
-              schedule.schedule_reminders?.map((r) => r.reminder_offset)[0] ??
-              null,
-          };
-
-          return entity;
-        },
-      );
-
-      setSchedules(entities);
-    });
-  }, [user]);
-
-  const getTargetSchedule = useCallback(
-    (scheduleId: number): ScheduleEntity => {
-      const targetSchedule = schedules?.find(
-        (schedule) => schedule.id === scheduleId,
-      );
-      if (!targetSchedule) throw new Error('Schedule not found');
-      return targetSchedule;
-    },
-    [schedules],
-  );
 
   const upsertSchedule = useCallback(
     async (entity: ScheduleEntity): Promise<void> => {
-      if (!user) throw new Error('User not found');
+      if (!userId) throw new Error('User not found');
 
       const data: InsertSchedules = {
         id: entity.id,
-        user_id: user.id,
+        user_id: userId,
         title: entity.title,
         start_at: entity.startAt,
         end_at: entity.endAt,
@@ -116,7 +67,14 @@ export function useScheduleModel() {
         return [...filtered, finalEntity];
       });
     },
-    [user],
+    [
+      userId,
+      cancelScheduleNotification,
+      scheduleNotification,
+      upsertScheduleReminder,
+      upsertScheduleRepository,
+      setSchedules,
+    ],
   );
 
   const deleteSchedule = useCallback(
@@ -127,12 +85,10 @@ export function useScheduleModel() {
 
       setSchedules((prev) => prev?.filter((s) => s.id !== scheduleId) ?? []);
     },
-    [cancelScheduleNotification, deleteScheduleRepository],
+    [cancelScheduleNotification, deleteScheduleRepository, setSchedules],
   );
 
   return {
-    schedules,
-    getTargetSchedule,
     upsertSchedule,
     deleteSchedule,
   };
