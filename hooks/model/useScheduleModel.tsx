@@ -5,7 +5,7 @@ import {
   ScheduleReminders,
 } from '@/database.types';
 import dayjs from 'dayjs';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useExpoNotificationRepository } from '../repository/useExpoNotificationRepository';
 import {
@@ -40,8 +40,6 @@ export function useScheduleModel() {
     useExpoNotificationRepository();
   const [schedules, setSchedules] = useState<ScheduleEntity[] | null>(null);
 
-  const DAY_KEY_FORMAT = 'YYYY-MM-DD';
-
   useEffect(() => {
     if (!user) return;
 
@@ -75,45 +73,6 @@ export function useScheduleModel() {
     });
   }, [user]);
 
-  const scheduleMap: Map<string, ScheduleEntity[]> = useMemo(() => {
-    const viewModelMap = new Map<string, ScheduleEntity[]>();
-    if (!schedules) return viewModelMap;
-
-    schedules.map((schedule: ScheduleEntity) => {
-      const diff =
-        dayjs(dayjs(schedule.endAt).format('YYYY-MM-DD')).diff(
-          dayjs(schedule.startAt).format('YYYY-MM-DD'),
-          'day',
-        ) + 1;
-      const dayKey = dayjs(schedule.startAt).format(DAY_KEY_FORMAT);
-
-      if (diff === 1) {
-        const existingSchedules = viewModelMap.get(dayKey) ?? [];
-        existingSchedules.push(schedule);
-        existingSchedules.sort((a, b) =>
-          dayjs(a.startAt).diff(dayjs(b.startAt)),
-        );
-        viewModelMap.set(dayKey, existingSchedules);
-      } else {
-        Array(diff)
-          .fill(undefined)
-          .forEach((_, index) => {
-            const targetDayKey = dayjs(schedule.startAt)
-              .add(index, 'day')
-              .format(DAY_KEY_FORMAT);
-            const existingSchedules = viewModelMap.get(targetDayKey) ?? [];
-            existingSchedules.push(schedule);
-            existingSchedules.sort((a, b) =>
-              dayjs(a.startAt).diff(dayjs(b.startAt)),
-            );
-            viewModelMap.set(targetDayKey, existingSchedules);
-          });
-      }
-    });
-
-    return viewModelMap;
-  }, [schedules]);
-
   const getTargetSchedule = useCallback(
     (scheduleId: number): ScheduleEntity => {
       const targetSchedule = schedules?.find(
@@ -123,15 +82,6 @@ export function useScheduleModel() {
       return targetSchedule;
     },
     [schedules],
-  );
-
-  const getTargetDaySchedules = useCallback(
-    (date: string) => {
-      const targetDaySchedules = scheduleMap.get(date);
-      if (!targetDaySchedules) return [];
-      return targetDaySchedules;
-    },
-    [scheduleMap],
   );
 
   const upsertSchedule = useCallback(
@@ -182,9 +132,7 @@ export function useScheduleModel() {
 
   return {
     schedules,
-    scheduleMap,
     getTargetSchedule,
-    getTargetDaySchedules,
     upsertSchedule,
     deleteSchedule,
   };

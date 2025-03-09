@@ -2,6 +2,7 @@ import {
   ScheduleEntity,
   useScheduleModel,
 } from '@/hooks/model/useScheduleModel';
+import { useScheduleMapViewModel } from '@/hooks/view-model/useScheduleMapViewModel';
 import { createContext } from 'react';
 
 export const ScheduleContext = createContext<{
@@ -32,13 +33,9 @@ export const ScheduleContext = createContext<{
 export const ScheduleProvider = ({
   children,
 }: { children: React.ReactNode }) => {
-  const {
-    scheduleMap,
-    getTargetSchedule,
-    getTargetDaySchedules,
-    upsertSchedule,
-    deleteSchedule,
-  } = useScheduleModel();
+  const { getTargetSchedule, upsertSchedule, deleteSchedule } =
+    useScheduleModel();
+  const { scheduleMap, getTargetDaySchedules } = useScheduleMapViewModel();
 
   return (
     <ScheduleContext.Provider
