@@ -1,0 +1,13 @@
+categories:
+  - title: "🚀 新機能"
+    labels: ["feature", "enhancement"]
+  - title: "🐛 バグ修正"
+    labels: ["bug", "fix"]
+  - title: "🛠 メンテナンス"
+    labels: ["chore", "refactor", "docs", "ci"]
+
+change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
+
+template: |
+  ## What’s Changed
+  $CHANGES
