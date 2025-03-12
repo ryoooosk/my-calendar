@@ -1,0 +1,18 @@
+changelog:
+  categories:
+    - title: 🚀 新機能
+      labels:
+        - enhancement
+    - title: 🐛 バグ修正
+      labels:
+        - bug
+        - fix
+    - title: 🛠 メンテナンス
+      labels:
+        - chore
+        - refactor
+        - docs
+        - ci
+    - title: その他
+      labels:
+        - "*"
