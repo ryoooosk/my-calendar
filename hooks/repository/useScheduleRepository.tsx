@@ -70,10 +70,22 @@ export const useScheduleRepository = () => {
     [],
   );
 
+  const deleteScheduleReminder = useCallback(
+    async (scheduleReminderId: number): Promise<void> => {
+      const { error } = await supabase
+        .from('schedule_reminders')
+        .delete()
+        .eq('id', scheduleReminderId);
+      if (error) throw error;
+    },
+    [],
+  );
+
   return {
     fetchSchedules,
     upsertSchedule,
     deleteSchedule,
     upsertScheduleReminder,
+    deleteScheduleReminder,
   };
 };

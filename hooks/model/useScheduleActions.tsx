@@ -31,6 +31,7 @@ export function useScheduleActions(
     upsertSchedule: upsertScheduleRepository,
     deleteSchedule: deleteScheduleRepository,
     upsertScheduleReminder,
+    deleteScheduleReminder,
   } = useScheduleRepository();
   const { scheduleNotification, cancelScheduleNotification } =
     useExpoNotificationRepository();
@@ -51,15 +52,29 @@ export function useScheduleActions(
       };
       const scheduleRes = await upsertScheduleRepository(data);
       const newEntity: ScheduleEntity = { ...entity, id: scheduleRes.id };
-      const finalEntity = newEntity.reminderOffset
+
+      const upsertedScheduleReminder = newEntity.reminderOffset
         ? await upsertScheduleReminderAndNotification(
             newEntity,
             cancelScheduleNotification,
             scheduleNotification,
             upsertScheduleReminder,
           )
-        : newEntity;
+        : null;
+      if (!newEntity.reminderOffset && newEntity.reminderId) {
+        if (newEntity.reminderIdentifier)
+          await cancelScheduleNotification(newEntity.reminderIdentifier);
 
+        await deleteScheduleReminder(newEntity.reminderId);
+      }
+
+      const finalEntity = upsertedScheduleReminder
+        ? {
+            ...newEntity,
+            reminderId: upsertedScheduleReminder.reminderId,
+            reminderIdentifier: upsertedScheduleReminder.reminderIdentifier,
+          }
+        : newEntity;
       setSchedules((prev) => {
         if (!prev) return [finalEntity];
 
@@ -105,7 +120,7 @@ async function upsertScheduleReminderAndNotification(
   upsertScheduleReminder: (
     body: InsertScheduleReminders,
   ) => Promise<ScheduleReminders>,
-): Promise<ScheduleEntity> {
+): Promise<{ reminderId: number; reminderIdentifier: string }> {
   if (!entity.id) throw new Error('Schedule not found');
   if (!entity.reminderOffset) throw new Error('Reminder offset not found');
 
@@ -133,14 +148,7 @@ async function upsertScheduleReminderAndNotification(
       .toISOString(),
     reminder_offset: entity.reminderOffset,
   };
-  await upsertScheduleReminder(reminder);
+  const res = await upsertScheduleReminder(reminder);
 
-  const result = {
-    ...entity,
-    id: entity.id,
-    reminderId: reminder.id,
-    reminderIdentifier: identifier,
-  };
-
-  return result;
+  return { reminderId: res.id, reminderIdentifier: res.identifier };
 }
