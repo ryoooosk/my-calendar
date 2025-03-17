@@ -50,6 +50,7 @@
     "@testing-library/react-native": "^13.2.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "dayjs": "^1.11.13",
+    "dotenv": "^16.4.7",
     "expo": "~52.0.20",
     "expo-apple-authentication": "~7.1.2",
     "expo-blur": "~14.0.1",
