@@ -12,7 +12,9 @@ export default function AppLayout() {
   if (!session && !isLoading) return <Redirect href="/login" />;
   return (
     <NotificationSubscriptionProvider>
-      {session ? (
+      {!session ? (
+        <LoadingScreen />
+      ) : (
         <ScheduleProvider>
           <CurrentDateProvider>
             <Stack>
@@ -46,8 +48,6 @@ export default function AppLayout() {
             </Stack>
           </CurrentDateProvider>
         </ScheduleProvider>
-      ) : (
-        <LoadingScreen />
       )}
     </NotificationSubscriptionProvider>
   );
