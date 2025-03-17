@@ -40,7 +40,7 @@ export const NotificationSubscriptionProvider = ({
 
     const fsubscription = forgroundSubscription();
     const backSubscriotion = backgroundSubscription();
-    console.log(getAllScheduledNotifications());
+
     return () => {
       fsubscription.remove();
       backSubscriotion.remove();

@@ -6,7 +6,7 @@ export function useExpoNotificationRepository() {
   async function getAllScheduledNotifications() {
     const scheduledNotifications =
       await Notifications.getAllScheduledNotificationsAsync();
-    console.log('Scheduled notifications:', scheduledNotifications);
+
     return scheduledNotifications;
   }
 
