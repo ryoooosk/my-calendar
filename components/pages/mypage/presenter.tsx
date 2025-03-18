@@ -39,29 +39,27 @@ export default function MyPagePresenter({
         )}
       </View>
 
-      <View className="flex flex-row gap-3">
-        <Button
-          variant="solid"
-          size="md"
-          className="rounded-full w-1/2"
-          onPress={() => router.push('/mypage/edit')}
-        >
-          <ButtonIcon as={Pencil} />
-          <ButtonText>編集する</ButtonText>
-        </Button>
+      <Button
+        variant="solid"
+        size="md"
+        className="rounded-full"
+        onPress={() => router.push('/mypage/edit')}
+      >
+        <ButtonIcon as={Pencil} />
+        <ButtonText>編集する</ButtonText>
+      </Button>
 
-        <Button
-          variant="outline"
-          size="md"
-          className="rounded-full w-1/2"
-          onPress={logOut}
-        >
-          <ButtonIcon as={LogOut} />
-          <ButtonText>ログアウト</ButtonText>
-        </Button>
-      </View>
+      <Button
+        variant="outline"
+        size="md"
+        className="rounded-full"
+        onPress={logOut}
+      >
+        <ButtonIcon as={LogOut} />
+        <ButtonText>ログアウト</ButtonText>
+      </Button>
 
-      <Button variant="outline" size="md" className="rounded-full flex-grow">
+      <Button variant="outline" size="md" className="rounded-full">
         <ButtonIcon as={Share} />
         <ButtonText>共有する</ButtonText>
       </Button>
