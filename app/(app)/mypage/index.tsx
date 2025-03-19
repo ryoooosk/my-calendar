@@ -9,7 +9,7 @@ export default function MyPage() {
 
   if (!user) return <Spinner />;
   return (
-    <View className="bg-white">
+    <View className="flex-1 bg-white px-3">
       <MyPageContainer user={user} />
     </View>
   );
