@@ -11,6 +11,7 @@ import { Alert } from 'react-native';
 export const useUpsertScheduleForm = (
   selectedSchedule: ScheduleEntity | null,
   user: Users,
+  selectedDate: string | null,
 ) => {
   const { upsertSchedule } = useContext(ScheduleContext);
   const [id, setId] = useState<number | undefined>(undefined);
@@ -41,6 +42,15 @@ export const useUpsertScheduleForm = (
     setReminderIdentifier(selectedSchedule.reminderIdentifier);
     setReminderOffset(selectedSchedule.reminderOffset ?? null);
   }, [selectedSchedule]);
+
+  useEffect(() => {
+    if (!selectedDate) return;
+    if (selectedSchedule) throw new Error('invalid selectedSchedule');
+
+    const selectedDayjs = dayjs(selectedDate);
+    setStartDate((prev) => prev.set('date', selectedDayjs.date()));
+    setEndDate((prev) => prev.set('date', selectedDayjs.date()));
+  }, [selectedDate]);
 
   const handleSubmit = useCallback(async () => {
     if (endDate.isBefore(startDate)) {
