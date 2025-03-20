@@ -26,7 +26,7 @@ export const useUpsertScheduleForm = (
     string | undefined
   >(undefined);
   const [reminderOffset, setReminderOffset] = useState<number | null>(null);
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState<string | null>(null);
 
   useEffect(() => {
     if (!selectedSchedule) return;

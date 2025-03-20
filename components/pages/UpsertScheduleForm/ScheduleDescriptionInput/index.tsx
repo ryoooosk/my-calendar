@@ -9,7 +9,7 @@ import { LetterText } from 'lucide-react-native';
 import { View } from 'react-native';
 
 type ScheduleDescriptionInputProps = {
-  description: string;
+  description: string | null;
   setDescription: (description: string) => void;
 };
 
@@ -28,7 +28,7 @@ export default function ScheduleDescriptionInput({
 
         <Textarea className="border-0">
           <TextareaInput
-            value={description}
+            value={description ?? ''}
             onChangeText={(text: string) => setDescription(text)}
             placeholder="コメントを入力"
           />
