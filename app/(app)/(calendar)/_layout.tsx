@@ -3,7 +3,12 @@ import { Button, ButtonIcon } from '@/components/ui/button';
 import { AuthContext } from '@/contexts/AuthContext';
 import { CurrentDateContext } from '@/contexts/CurrentDateContext';
 import dayjs from 'dayjs';
-import { Stack, router, useNavigation } from 'expo-router';
+import {
+  Stack,
+  router,
+  useGlobalSearchParams,
+  useNavigation,
+} from 'expo-router';
 import { PlusIcon } from 'lucide-react-native';
 import { useContext, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native';
@@ -12,6 +17,7 @@ export default function CalendarLayout() {
   const { user } = useContext(AuthContext);
   const { currentDate } = useContext(CurrentDateContext);
   const navigation = useNavigation();
+  const params = useGlobalSearchParams();
 
   const [visibleMonth, setVisibleMonth] = useState<string>(
     dayjs().format('YYYY年M月'),
@@ -19,7 +25,8 @@ export default function CalendarLayout() {
   const [canGoBack, setCanGoBack] = useState(false);
 
   const handleClick = () => {
-    router.push('/schedule/create');
+    const date = Array.isArray(params.date) ? params.date[0] : params.date;
+    router.push({ pathname: '/schedule/create', params: { date } });
   };
   const handleSetVisibleMonth = (date: string) => {
     const displayMonth = dayjs(date).format('YYYY年M月');

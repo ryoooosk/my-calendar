@@ -9,8 +9,13 @@ import UpsertScheduleFormContainerPresenter from './presenter';
 
 export default function UpsertScheduleFormContainer({
   user,
+  selectedDate,
   selectedSchedule,
-}: { user: Users; selectedSchedule: ScheduleEntity | null }) {
+}: {
+  user: Users;
+  selectedDate: string | null;
+  selectedSchedule: ScheduleEntity | null;
+}) {
   const navigation = useNavigation();
 
   const {
@@ -30,7 +35,7 @@ export default function UpsertScheduleFormContainer({
     description,
     setDescription,
     handleSubmit,
-  } = useUpsertScheduleForm(selectedSchedule, user);
+  } = useUpsertScheduleForm(selectedSchedule, user, selectedDate);
   const [isOpenScheduleHistory, setIsOpenScheduleHistory] = useState(false);
   const applyTemplateSchedule = (schedule: ScheduleEntity) => {
     setTitle(schedule.title);
