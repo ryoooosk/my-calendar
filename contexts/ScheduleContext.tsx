@@ -8,6 +8,7 @@ import { createContext, useContext } from 'react';
 import { AuthContext } from './AuthContext';
 
 export const ScheduleContext = createContext<{
+  schedules: ScheduleEntity[] | null;
   scheduleMap: Map<string, ScheduleEntity[]>;
   getTargetSchedule: (scheduleId: number) => ScheduleEntity;
   getSchedulesForDay: (date: string) => ScheduleEntity[];
@@ -17,6 +18,7 @@ export const ScheduleContext = createContext<{
     reminderIdentifier?: string,
   ) => Promise<void>;
 }>({
+  schedules: [],
   scheduleMap: new Map(),
   getTargetSchedule: (scheduleId: number) => {
     throw new Error('getTargetSchedule function must be overridden');
@@ -49,6 +51,7 @@ export const ScheduleProvider = ({
   return (
     <ScheduleContext.Provider
       value={{
+        schedules,
         scheduleMap,
         getTargetSchedule,
         getSchedulesForDay,
