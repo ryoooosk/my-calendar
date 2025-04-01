@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { useCallback, useMemo } from 'react';
-import { ScheduleEntity } from './useScheduleActions';
+import { ScheduleEntity } from './useScheduleState';
 
 export function useScheduleMapViewModel(schedules: ScheduleEntity[] | null) {
   const DAY_KEY_FORMAT = 'YYYY-MM-DD';

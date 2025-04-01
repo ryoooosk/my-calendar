@@ -1,4 +1,3 @@
-import { ScheduleEntity } from '@/hooks/model/useScheduleActions';
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
 import { Text, TouchableOpacity, View } from 'react-native';
@@ -6,6 +5,7 @@ import { Timeline } from 'react-native-calendars';
 import { Event } from 'react-native-calendars/src/timeline/EventBlock';
 import colors from 'tailwindcss/colors';
 import 'dayjs/locale/ja';
+import { ScheduleEntity } from '@/hooks/model/useScheduleState';
 
 export default function TimelinePresenter({
   date,

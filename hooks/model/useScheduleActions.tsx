@@ -7,21 +7,7 @@ import dayjs from 'dayjs';
 import { useCallback } from 'react';
 import { useExpoNotificationRepository } from '../repository/useExpoNotificationRepository';
 import { useScheduleRepository } from '../repository/useScheduleRepository';
-
-export type ScheduleEntity = {
-  id?: number;
-  userId: string;
-  title: string;
-  description: string | null;
-  startAt: string;
-  endAt: string;
-  isAllDay: boolean;
-  color: string;
-  isPublic: boolean;
-  reminderId?: number;
-  reminderIdentifier?: string;
-  reminderOffset?: number | null;
-};
+import { ScheduleEntity } from './useScheduleState';
 
 export function useScheduleActions(
   userId: string | undefined,

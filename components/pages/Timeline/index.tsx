@@ -1,5 +1,5 @@
 import { ScheduleContext } from '@/contexts/ScheduleContext';
-import { ScheduleEntity } from '@/hooks/model/useScheduleActions';
+import { ScheduleEntity } from '@/hooks/model/useScheduleState';
 import dayjs from 'dayjs';
 import { useContext, useMemo } from 'react';
 import { Event } from 'react-native-calendars/src/timeline/EventBlock';

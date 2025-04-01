@@ -1,7 +1,7 @@
 import { SCHEDULE_DEFAULT_SELECTED_COLOR } from '@/constants/ScheduleColors';
 import { ScheduleContext } from '@/contexts/ScheduleContext';
 import { Users } from '@/database.types';
-import { ScheduleEntity } from '@/hooks/model/useScheduleActions';
+import { ScheduleEntity } from '@/hooks/model/useScheduleState';
 import { roundedDateInFiveMinute } from '@/utils/date.logic';
 import dayjs from 'dayjs';
 import { router } from 'expo-router';

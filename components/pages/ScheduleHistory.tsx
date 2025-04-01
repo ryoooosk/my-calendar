@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { ScheduleContext } from '@/contexts/ScheduleContext';
-import { ScheduleEntity } from '@/hooks/model/useScheduleActions';
+import { ScheduleEntity } from '@/hooks/model/useScheduleState';
 import dayjs from 'dayjs';
 import { useContext } from 'react';
 import { FlatList, Text, TouchableOpacity } from 'react-native';

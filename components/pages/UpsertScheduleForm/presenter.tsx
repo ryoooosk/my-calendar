@@ -1,6 +1,6 @@
 import { Divider } from '@/components/Divider';
 import { Icon } from '@/components/ui/icon';
-import { ScheduleEntity } from '@/hooks/model/useScheduleActions';
+import { ScheduleEntity } from '@/hooks/model/useScheduleState';
 import dayjs from 'dayjs';
 import { HistoryIcon } from 'lucide-react-native';
 import { Modal, Text, TouchableOpacity, View } from 'react-native';

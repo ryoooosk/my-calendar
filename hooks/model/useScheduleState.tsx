@@ -4,7 +4,21 @@ import {
   ScheduleRepository,
   useScheduleRepository,
 } from '../repository/useScheduleRepository';
-import { ScheduleEntity } from './useScheduleActions';
+
+export type ScheduleEntity = {
+  id?: number;
+  userId: string;
+  title: string;
+  description: string | null;
+  startAt: string;
+  endAt: string;
+  isAllDay: boolean;
+  color: string;
+  isPublic: boolean;
+  reminderId?: number;
+  reminderIdentifier?: string;
+  reminderOffset?: number | null;
+};
 
 export function useScheduleState(userId: string | undefined) {
   const [schedules, setSchedules] = useState<ScheduleEntity[] | null>(null);

@@ -1,5 +1,4 @@
-import { ScheduleEntity } from '@/hooks/model/useScheduleActions';
-
+import { ScheduleEntity } from '@/hooks/model/useScheduleState';
 import { router } from 'expo-router';
 import { Text } from 'react-native';
 import { View } from 'react-native';

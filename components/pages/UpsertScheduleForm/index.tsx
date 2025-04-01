@@ -1,5 +1,6 @@
 import { Users } from '@/database.types';
-import { ScheduleEntity } from '@/hooks/model/useScheduleActions';
+
+import { ScheduleEntity } from '@/hooks/model/useScheduleState';
 import dayjs, { Dayjs } from 'dayjs';
 import { useNavigation } from 'expo-router';
 import { useEffect, useState } from 'react';
