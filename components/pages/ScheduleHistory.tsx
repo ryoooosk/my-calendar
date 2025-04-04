@@ -13,10 +13,10 @@ export default function ScheduleHistory({
   return (
     <FlatList
       data={schedules}
-      keyExtractor={(schedule) => schedule.id?.toString() ?? ''}
+      keyExtractor={(schedule) => schedule.eventId?.toString() ?? ''}
       renderItem={({ item: schedule }) => (
         <TouchableOpacity
-          key={schedule.id}
+          key={schedule.eventId}
           className="mb-3"
           onPress={() => selectSchedule(schedule)}
         >

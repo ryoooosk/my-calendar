@@ -10,36 +10,37 @@ import { Alert, View } from 'react-native';
 
 export default function UpdateSchedulePage() {
   const { user } = useContext(AuthContext);
-  const { getTargetSchedule, deleteSchedule } = useContext(ScheduleContext);
+  const { getTargetSchedule, deleteScheduleAction } =
+    useContext(ScheduleContext);
 
-  const scheduleId = (() => {
-    const { scheduleId } = useLocalSearchParams();
-    const id = Number(Array.isArray(scheduleId) ? scheduleId[0] : scheduleId);
-
-    if (Number.isNaN(id) || id < 1) throw new Error('Invalid schedule id');
+  const scheduleEventId = (() => {
+    const { scheduleEventId } = useLocalSearchParams();
+    const id = Array.isArray(scheduleEventId)
+      ? scheduleEventId[0]
+      : scheduleEventId;
     return id;
   })();
 
   const handleDeleteSchedule = useCallback(() => {
-    const targetSchedule = getTargetSchedule(scheduleId);
+    const targetSchedule = getTargetSchedule(scheduleEventId);
     Alert.alert('予定の削除', `「${targetSchedule.title}」を削除しますか？`, [
       { text: 'キャンセル', onPress: () => {} },
       {
         text: '削除する',
         onPress: async () => {
-          await deleteSchedule(scheduleId, targetSchedule.reminderIdentifier);
+          await deleteScheduleAction(targetSchedule.id, targetSchedule.eventId);
           router.replace('/');
         },
       },
     ]);
-  }, [getTargetSchedule, deleteSchedule, scheduleId]);
+  }, [getTargetSchedule, deleteScheduleAction, scheduleEventId]);
 
   if (!user || !getTargetSchedule) return <Spinner />;
   return (
     <View className="flex-1 relative">
       <UpsertScheduleFormContainer
         user={user}
-        selectedSchedule={getTargetSchedule(scheduleId)}
+        selectedSchedule={getTargetSchedule(scheduleEventId)}
       />
 
       <View className="absolute bottom-12 w-full flex items-center justify-center">

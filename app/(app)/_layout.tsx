@@ -30,7 +30,7 @@ export default function AppLayout() {
                 options={{ title: '新しい予定', headerBackTitle: '戻る' }}
               />
               <Stack.Screen
-                name="schedule/update/[scheduleId]"
+                name="schedule/update/[scheduleEventId]"
                 options={{ title: '予定を編集', headerBackTitle: '戻る' }}
               />
               <Stack.Screen

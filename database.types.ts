@@ -42,7 +42,7 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: 'schedule_remainders_schedule_id_fkey';
+            foreignKeyName: 'schedule_reminders_schedule_id_fkey';
             columns: ['schedule_id'];
             isOneToOne: false;
             referencedRelation: 'schedules';
@@ -55,12 +55,13 @@ export type Database = {
           color: string;
           created_at: string;
           deleted_at: string | null;
-          description: string | null;
-          end_at: string;
+          end_date: string;
+          event_id: string;
           id: number;
           is_all_day: boolean;
           is_public: boolean;
-          start_at: string;
+          notes: string | null;
+          start_date: string;
           title: string;
           updated_at: string;
           user_id: string;
@@ -69,12 +70,13 @@ export type Database = {
           color?: string;
           created_at?: string;
           deleted_at?: string | null;
-          description?: string | null;
-          end_at: string;
+          end_date: string;
+          event_id: string;
           id?: number;
           is_all_day?: boolean;
           is_public?: boolean;
-          start_at: string;
+          notes?: string | null;
+          start_date: string;
           title: string;
           updated_at?: string;
           user_id?: string;
@@ -83,12 +85,13 @@ export type Database = {
           color?: string;
           created_at?: string;
           deleted_at?: string | null;
-          description?: string | null;
-          end_at?: string;
+          end_date?: string;
+          event_id?: string;
           id?: number;
           is_all_day?: boolean;
           is_public?: boolean;
-          start_at?: string;
+          notes?: string | null;
+          start_date?: string;
           title?: string;
           updated_at?: string;
           user_id?: string;
