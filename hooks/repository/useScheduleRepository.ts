@@ -8,7 +8,7 @@ import { ScheduleEntity } from '../model/useScheduleState';
 export function useScheduleRepository() {
   async function findManySchedule(
     userId: string,
-    calendarId: string,
+    calendarId: ScheduleEntity['calendarId'],
     startDate: Date,
     endDate: Date,
   ): Promise<ScheduleEntity[]> {
@@ -38,7 +38,7 @@ export function useScheduleRepository() {
   }
 
   async function createSchedule(
-    calendarId: string,
+    calendarId: ScheduleEntity['calendarId'],
     entity: Omit<ScheduleEntity, 'id' | 'eventId'>,
   ): Promise<
     Omit<ScheduleEntity, 'id' | 'eventId'> & { id: number; eventId: string }

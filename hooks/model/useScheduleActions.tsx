@@ -8,7 +8,7 @@ export function useScheduleActions(
     useScheduleRepository();
 
   async function upsertScheduleAction(
-    calendarId: string,
+    calendarId: ScheduleEntity['calendarId'],
     entity: ScheduleEntity,
   ): Promise<ScheduleEntity> {
     if (!entity.id || !entity.eventId) {

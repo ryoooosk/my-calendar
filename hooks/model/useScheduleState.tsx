@@ -1,7 +1,7 @@
 import { AuthContext } from '@/contexts/AuthContext';
 import { Users } from '@/database.types';
 import dayjs from 'dayjs';
-import { PermissionStatus } from 'expo-calendar';
+import { Calendar, PermissionStatus } from 'expo-calendar';
 import { useContext, useEffect, useState } from 'react';
 import { useCalendarRepository } from '../repository/useCalendarRepository';
 import { useScheduleRepository } from '../repository/useScheduleRepository';
@@ -10,7 +10,7 @@ export type ScheduleEntity = {
   id?: number;
   eventId?: string;
   userId: Users['id'];
-  calendarId: string;
+  calendarId: Calendar['id'];
   title: string;
   description: string | null;
   startAt: string;
@@ -25,7 +25,9 @@ export function useScheduleState() {
   const { requestPermission, findDefaultCalendar } = useCalendarRepository();
   const { findManySchedule } = useScheduleRepository();
 
-  const [calendarId, setCalendarId] = useState<string | null>(null);
+  const [calendarId, setCalendarId] = useState<
+    ScheduleEntity['calendarId'] | null
+  >(null);
   const [schedules, setSchedules] = useState<ScheduleEntity[]>([]);
 
   useEffect(() => {

@@ -7,7 +7,7 @@ import {
 import { createContext } from 'react';
 
 export const ScheduleContext = createContext<{
-  calendarId: string | null;
+  calendarId: ScheduleEntity['calendarId'] | null;
   schedules: ScheduleEntity[] | null;
   scheduleMap: Map<string, ScheduleEntity[]>;
   getSchedulesForDay: (date: string) => ScheduleEntity[];
@@ -15,7 +15,7 @@ export const ScheduleContext = createContext<{
     scheduleId: NonNullable<ScheduleEntity['eventId']>,
   ) => ScheduleEntity;
   upsertScheduleAction: (
-    calendarId: string,
+    calendarId: ScheduleEntity['calendarId'],
     schedule: ScheduleEntity,
   ) => Promise<ScheduleEntity>;
   deleteScheduleAction: (
