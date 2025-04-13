@@ -1,5 +1,4 @@
 import { Users } from '@/database.types';
-
 import { ScheduleEntity } from '@/hooks/model/useScheduleState';
 import dayjs, { Dayjs } from 'dayjs';
 import { useNavigation } from 'expo-router';
@@ -10,17 +9,17 @@ import UpsertScheduleFormContainerPresenter from './presenter';
 
 export default function UpsertScheduleFormContainer({
   user,
-  selectedDate,
   selectedSchedule,
+  selectedDate,
 }: {
   user: Users;
-  selectedDate: string | null;
   selectedSchedule: ScheduleEntity | null;
+  selectedDate?: string;
 }) {
   const navigation = useNavigation();
 
   const {
-    id,
+    eventId,
     title,
     setTitle,
     startDate,
@@ -61,18 +60,18 @@ export default function UpsertScheduleFormContainer({
       headerRight: () => (
         <TouchableOpacity onPress={handleSubmit}>
           <Text className="text-xl font-medium text-sky-600 tracking-wide">
-            {id ? '更新' : '作成'}
+            {eventId ? '更新' : '作成'}
           </Text>
         </TouchableOpacity>
       ),
     });
-  }, [navigation, handleSubmit, id]);
+  }, [navigation, handleSubmit, eventId]);
 
   return (
     <>
       <UpsertScheduleFormContainerPresenter
         {...{
-          isNew: !id,
+          isNew: !eventId,
           title,
           setTitle,
           startDate,

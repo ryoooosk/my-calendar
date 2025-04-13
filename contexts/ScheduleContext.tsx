@@ -4,32 +4,37 @@ import {
   ScheduleEntity,
   useScheduleState,
 } from '@/hooks/model/useScheduleState';
-import { createContext, useContext } from 'react';
-import { AuthContext } from './AuthContext';
+import { createContext } from 'react';
 
 export const ScheduleContext = createContext<{
+  calendarId: ScheduleEntity['calendarId'] | null;
   schedules: ScheduleEntity[] | null;
   scheduleMap: Map<string, ScheduleEntity[]>;
-  getTargetSchedule: (scheduleId: number) => ScheduleEntity;
   getSchedulesForDay: (date: string) => ScheduleEntity[];
-  upsertSchedule: (schedule: ScheduleEntity) => Promise<void>;
-  deleteSchedule: (
-    scheduleId: number,
-    reminderIdentifier?: string,
+  getTargetSchedule: (
+    scheduleId: NonNullable<ScheduleEntity['eventId']>,
+  ) => ScheduleEntity;
+  upsertScheduleAction: (
+    calendarId: ScheduleEntity['calendarId'],
+    schedule: ScheduleEntity,
+  ) => Promise<ScheduleEntity>;
+  deleteScheduleAction: (
+    eventId: NonNullable<ScheduleEntity['eventId']>,
   ) => Promise<void>;
 }>({
+  calendarId: null,
   schedules: [],
   scheduleMap: new Map(),
-  getTargetSchedule: (scheduleId: number) => {
+  getTargetSchedule: () => {
     throw new Error('getTargetSchedule function must be overridden');
   },
-  getSchedulesForDay: (date: string) => {
+  getSchedulesForDay: () => {
     throw new Error('getSchedulesForDay function must be overridden');
   },
-  upsertSchedule: (schedule: ScheduleEntity) => {
-    throw new Error('upsertSchedule function must be overridden');
+  upsertScheduleAction: () => {
+    throw new Error('createEventAction function must be overridden');
   },
-  deleteSchedule: (scheduleId: number, reminderIdentifier?: string) => {
+  deleteScheduleAction: () => {
     throw new Error('deleteSchedule function must be overridden');
   },
 });
@@ -37,26 +42,23 @@ export const ScheduleContext = createContext<{
 export const ScheduleProvider = ({
   children,
 }: { children: React.ReactNode }) => {
-  const { user } = useContext(AuthContext);
-  const { schedules, setSchedules, getTargetSchedule } = useScheduleState(
-    user?.id,
-  );
-  const { upsertSchedule, deleteSchedule } = useScheduleActions(
-    user?.id,
-    setSchedules,
-  );
+  const { calendarId, schedules, setSchedules, getTargetSchedule } =
+    useScheduleState();
+  const { upsertScheduleAction, deleteScheduleAction } =
+    useScheduleActions(setSchedules);
   const { scheduleMap, getSchedulesForDay } =
     useScheduleMapViewModel(schedules);
 
   return (
     <ScheduleContext.Provider
       value={{
+        calendarId,
         schedules,
         scheduleMap,
         getTargetSchedule,
         getSchedulesForDay,
-        upsertSchedule,
-        deleteSchedule,
+        upsertScheduleAction,
+        deleteScheduleAction,
       }}
     >
       {children}

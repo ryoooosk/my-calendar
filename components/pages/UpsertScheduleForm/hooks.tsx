@@ -11,35 +11,35 @@ import { Alert } from 'react-native';
 export const useUpsertScheduleForm = (
   selectedSchedule: ScheduleEntity | null,
   user: Users,
-  selectedDate: string | null,
+  selectedDate: string | undefined,
 ) => {
-  const { upsertSchedule } = useContext(ScheduleContext);
-  const [id, setId] = useState<number | undefined>(undefined);
-  const [title, setTitle] = useState('');
-  const [startDate, setStartDate] = useState(roundedDateInFiveMinute(dayjs()));
-  const [endDate, setEndDate] = useState(
+  const { calendarId, upsertScheduleAction } = useContext(ScheduleContext);
+  const [eventId, setEventId] = useState<ScheduleEntity['eventId']>(undefined);
+  const [title, setTitle] = useState<ScheduleEntity['title']>('');
+  const [startDate, setStartDate] = useState<dayjs.Dayjs>(
+    roundedDateInFiveMinute(dayjs()),
+  );
+  const [endDate, setEndDate] = useState<dayjs.Dayjs>(
     roundedDateInFiveMinute(dayjs().add(1, 'hour')),
   );
-  const [isAllDay, setIsAllDay] = useState(false);
-  const [color, setColor] = useState<string>(SCHEDULE_DEFAULT_SELECTED_COLOR);
-  const [reminderId, setReminderId] = useState<number | undefined>(undefined);
-  const [reminderIdentifier, setReminderIdentifier] = useState<
-    string | undefined
-  >(undefined);
-  const [reminderOffset, setReminderOffset] = useState<number | null>(null);
-  const [description, setDescription] = useState<string | null>(null);
+  const [isAllDay, setIsAllDay] = useState<ScheduleEntity['isAllDay']>(false);
+  const [color, setColor] = useState<ScheduleEntity['color']>(
+    SCHEDULE_DEFAULT_SELECTED_COLOR,
+  );
+  const [reminderOffset, setReminderOffset] =
+    useState<ScheduleEntity['reminderOffset']>(null);
+  const [description, setDescription] =
+    useState<ScheduleEntity['description']>(null);
 
   useEffect(() => {
     if (!selectedSchedule) return;
-    setId(selectedSchedule.id);
+    setEventId(selectedSchedule.eventId);
     setTitle(selectedSchedule.title);
     setStartDate(dayjs(selectedSchedule.startAt));
     setEndDate(dayjs(selectedSchedule.endAt));
     setIsAllDay(selectedSchedule.isAllDay);
     setDescription(selectedSchedule.description ?? '');
     setColor(selectedSchedule.color);
-    setReminderId(selectedSchedule.reminderId);
-    setReminderIdentifier(selectedSchedule.reminderIdentifier);
     setReminderOffset(selectedSchedule.reminderOffset ?? null);
   }, [selectedSchedule]);
 
@@ -65,25 +65,22 @@ export const useUpsertScheduleForm = (
     }
 
     try {
+      if (!calendarId) throw new Error('calendarId is null');
+
       const entity: ScheduleEntity = {
-        id,
+        id: selectedSchedule?.id,
+        eventId,
         userId: user.id,
+        calendarId,
         title,
-        startAt: !isAllDay
-          ? startDate.toDate().toISOString()
-          : startDate.startOf('day').toDate().toISOString(),
-        endAt: !isAllDay
-          ? endDate.toDate().toISOString()
-          : endDate.endOf('day').toDate().toISOString(),
-        isAllDay,
-        reminderId,
-        reminderIdentifier,
-        reminderOffset,
-        color,
         description,
-        isPublic: true,
+        startAt: startDate.toISOString(),
+        endAt: endDate.toISOString(),
+        isAllDay,
+        color,
+        reminderOffset,
       };
-      await upsertSchedule(entity);
+      await upsertScheduleAction(calendarId, entity);
       router.replace('/');
     } catch (e) {
       console.error(e);
@@ -91,21 +88,19 @@ export const useUpsertScheduleForm = (
     }
   }, [
     user,
-    id,
+    eventId,
     title,
     startDate,
     endDate,
     isAllDay,
     description,
-    reminderId,
-    reminderIdentifier,
     reminderOffset,
     color,
-    upsertSchedule,
+    upsertScheduleAction,
   ]);
 
   return {
-    id,
+    eventId,
     title,
     setTitle,
     startDate,

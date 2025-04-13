@@ -32,7 +32,7 @@ export default function CalendarDay(props: CalendarDayProps) {
       {/* TODO: 連日の予定の場合は日をまたいで表示する */}
       {schedules.map((schedule) => (
         <View
-          key={schedule.id}
+          key={schedule.eventId}
           className="w-full mb-[0.2rem] py-[0.15rem] px-[0.2rem] rounded-sm overflow-hidden"
           style={{ backgroundColor: schedule.color }}
         >

@@ -1,75 +1,70 @@
-import { SCHEDULE_SLATE } from '@/constants/ScheduleColors';
-import { useCallback, useEffect, useState } from 'react';
-import {
-  ScheduleRepository,
-  useScheduleRepository,
-} from '../repository/useScheduleRepository';
+import { AuthContext } from '@/contexts/AuthContext';
+import { Users } from '@/database.types';
+import dayjs from 'dayjs';
+import { Calendar, PermissionStatus } from 'expo-calendar';
+import { useContext, useEffect, useState } from 'react';
+import { useCalendarRepository } from '../repository/useCalendarRepository';
+import { useScheduleRepository } from '../repository/useScheduleRepository';
 
 export type ScheduleEntity = {
   id?: number;
-  userId: string;
+  eventId?: string;
+  userId: Users['id'];
+  calendarId: Calendar['id'];
   title: string;
   description: string | null;
   startAt: string;
   endAt: string;
   isAllDay: boolean;
   color: string;
-  isPublic: boolean;
-  reminderId?: number;
-  reminderIdentifier?: string;
   reminderOffset?: number | null;
 };
 
-export function useScheduleState(userId: string | undefined) {
-  const [schedules, setSchedules] = useState<ScheduleEntity[] | null>(null);
+export function useScheduleState() {
+  const { user } = useContext(AuthContext);
+  const { requestPermission, findDefaultCalendar } = useCalendarRepository();
+  const { findManySchedule } = useScheduleRepository();
 
-  const { fetchSchedules } = useScheduleRepository();
+  const [calendarId, setCalendarId] = useState<
+    ScheduleEntity['calendarId'] | null
+  >(null);
+  const [schedules, setSchedules] = useState<ScheduleEntity[]>([]);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!user) return;
 
-    fetchSchedules(userId).then((schedules) => {
-      const entities: ScheduleEntity[] = schedules.map(
-        (schedule: ScheduleRepository) => {
-          const entity: ScheduleEntity = {
-            id: schedule.id,
-            userId: schedule.user_id,
-            title: schedule.title,
-            description: schedule.description,
-            startAt: schedule.start_at,
-            endAt: schedule.end_at,
-            isAllDay: schedule.is_all_day,
-            color: schedule.color !== '' ? schedule.color : SCHEDULE_SLATE,
-            isPublic: schedule.is_public,
-            reminderId: schedule.schedule_reminders?.map((r) => r.id)[0],
-            reminderIdentifier: schedule.schedule_reminders?.map(
-              (r) => r.identifier,
-            )[0],
-            reminderOffset:
-              schedule.schedule_reminders?.map((r) => r.reminder_offset)[0] ??
-              null,
-          };
+    (async () => {
+      const status = await requestPermission();
+      if (status !== PermissionStatus.GRANTED) return;
 
-          return entity;
-        },
+      const calendar = await findDefaultCalendar();
+      if (!calendar) throw new Error('No default calendar found');
+
+      setCalendarId(calendar.id);
+      const oneYearAgo = dayjs().subtract(1, 'year').toDate();
+      const oneYearLater = dayjs().add(1, 'year').toDate();
+      const entities = await findManySchedule(
+        user?.id,
+        calendar.id,
+        oneYearAgo,
+        oneYearLater,
       );
-
       setSchedules(entities);
-    });
-  }, [userId, fetchSchedules]);
+    })();
+  }, [user]);
 
-  const getTargetSchedule = useCallback(
-    (scheduleId: number): ScheduleEntity => {
-      const targetSchedule = schedules?.find(
-        (schedule) => schedule.id === scheduleId,
-      );
-      if (!targetSchedule) throw new Error('Schedule not found');
-      return targetSchedule;
-    },
-    [schedules],
-  );
+  function getTargetSchedule(
+    eventId: NonNullable<ScheduleEntity['eventId']>,
+  ): ScheduleEntity {
+    const targetSchedule = schedules?.find(
+      (schedule) => schedule.eventId === eventId,
+    );
+    if (!targetSchedule) throw new Error('Schedule not found');
+    return targetSchedule;
+  }
 
   return {
+    calendarId,
     schedules,
     setSchedules,
     getTargetSchedule,

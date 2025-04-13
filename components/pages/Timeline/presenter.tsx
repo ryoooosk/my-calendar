@@ -40,7 +40,7 @@ export default function TimelinePresenter({
                 key={event.id}
                 className="p-1 rounded-md"
                 style={{ backgroundColor: event.color }}
-                onPress={() => router.push(`/schedule/update/${event.id}`)}
+                onPress={() => router.push(`/schedule/update/${event.eventId}`)}
               >
                 <Text className="px-3 tracking-wide font-medium text-base">
                   {event.title}

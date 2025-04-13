@@ -18,7 +18,7 @@ export default function TimelineContainer({ date }: { date: string }) {
       const isMultiDay = dayjs(schedule.startAt).isBefore(dayjs(date));
 
       return {
-        id: schedule.id?.toString(),
+        id: schedule.eventId?.toString(),
         start: isMultiDay ? dayjs(date).toISOString() : schedule.startAt,
         end: schedule.endAt,
         isMultiDay,
