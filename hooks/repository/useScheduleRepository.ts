@@ -100,12 +100,9 @@ export function useScheduleRepository() {
   }
 
   async function deleteSchedule(
-    id: ScheduleEntity['id'],
-    eventId: ScheduleEntity['eventId'],
+    eventId: string,
     option?: Calendar.RecurringEventOptions,
   ): Promise<void> {
-    if (!eventId) throw new Error('Event ID is required to delete schedule');
-
     try {
       await Calendar.deleteEventAsync(eventId, option);
       await supabase.from('schedules').delete().eq('event_id', eventId);
@@ -131,7 +128,7 @@ function convertEventToEntity(
 ): ScheduleEntity {
   const entity: ScheduleEntity = {
     eventId: event.id,
-    user_id: userId,
+    userId,
     calendarId: event.calendarId,
     title: event.title,
     description: event.notes,
@@ -153,7 +150,7 @@ function convertEntityToSchedule(entity: ScheduleEntity): InsertSchedules {
 
   const schedule: InsertSchedules = {
     event_id: entity.eventId,
-    user_id: entity.user_id,
+    user_id: entity.userId,
     title: entity.title,
     notes: entity.description,
     start_date: new Date(entity.startAt).toISOString(),

@@ -70,7 +70,7 @@ export const useUpsertScheduleForm = (
       const entity: ScheduleEntity = {
         id: selectedSchedule?.id,
         eventId,
-        user_id: user.id,
+        userId: user.id,
         calendarId,
         title,
         description,

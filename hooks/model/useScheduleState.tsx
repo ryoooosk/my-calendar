@@ -1,4 +1,5 @@
 import { AuthContext } from '@/contexts/AuthContext';
+import { Users } from '@/database.types';
 import dayjs from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
 import { useCalendarRepository } from '../repository/useCalendarRepository';
@@ -7,7 +8,7 @@ import { useScheduleRepository } from '../repository/useScheduleRepository';
 export type ScheduleEntity = {
   id?: number;
   eventId?: string;
-  user_id: string;
+  userId: Users['id'];
   calendarId: string;
   title: string;
   description: string | null;
@@ -49,7 +50,9 @@ export function useScheduleState() {
     })();
   }, [user]);
 
-  function getTargetSchedule(eventId: string): ScheduleEntity {
+  function getTargetSchedule(
+    eventId: NonNullable<ScheduleEntity['eventId']>,
+  ): ScheduleEntity {
     const targetSchedule = schedules?.find(
       (schedule) => schedule.eventId === eventId,
     );

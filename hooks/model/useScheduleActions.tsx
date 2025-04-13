@@ -41,10 +41,9 @@ export function useScheduleActions(
   }
 
   async function deleteScheduleAction(
-    id: ScheduleEntity['id'],
-    eventId: ScheduleEntity['eventId'],
+    eventId: NonNullable<ScheduleEntity['eventId']>,
   ): Promise<void> {
-    await deleteSchedule(id, eventId);
+    await deleteSchedule(eventId);
     setSchedules((prev) => {
       const newEvents = prev.filter((e) => e.eventId !== eventId);
       return newEvents;

@@ -28,7 +28,8 @@ export default function UpdateSchedulePage() {
       {
         text: '削除する',
         onPress: async () => {
-          await deleteScheduleAction(targetSchedule.id, targetSchedule.eventId);
+          if (!targetSchedule.eventId) throw new Error('Event ID is missing');
+          await deleteScheduleAction(targetSchedule.eventId);
           router.replace('/');
         },
       },

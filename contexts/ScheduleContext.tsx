@@ -11,14 +11,15 @@ export const ScheduleContext = createContext<{
   schedules: ScheduleEntity[] | null;
   scheduleMap: Map<string, ScheduleEntity[]>;
   getSchedulesForDay: (date: string) => ScheduleEntity[];
-  getTargetSchedule: (scheduleId: string) => ScheduleEntity;
+  getTargetSchedule: (
+    scheduleId: NonNullable<ScheduleEntity['eventId']>,
+  ) => ScheduleEntity;
   upsertScheduleAction: (
     calendarId: string,
     schedule: ScheduleEntity,
   ) => Promise<ScheduleEntity>;
   deleteScheduleAction: (
-    scheduleId: ScheduleEntity['id'],
-    eventId: ScheduleEntity['eventId'],
+    eventId: NonNullable<ScheduleEntity['eventId']>,
   ) => Promise<void>;
 }>({
   calendarId: null,
