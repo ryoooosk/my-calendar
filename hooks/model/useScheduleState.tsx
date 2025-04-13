@@ -1,6 +1,7 @@
 import { AuthContext } from '@/contexts/AuthContext';
 import { Users } from '@/database.types';
 import dayjs from 'dayjs';
+import { PermissionStatus } from 'expo-calendar';
 import { useContext, useEffect, useState } from 'react';
 import { useCalendarRepository } from '../repository/useCalendarRepository';
 import { useScheduleRepository } from '../repository/useScheduleRepository';
@@ -32,7 +33,7 @@ export function useScheduleState() {
 
     (async () => {
       const status = await requestPermission();
-      if (status !== 'granted') return;
+      if (status !== PermissionStatus.GRANTED) return;
 
       const calendar = await findDefaultCalendar();
       if (!calendar) throw new Error('No default calendar found');
