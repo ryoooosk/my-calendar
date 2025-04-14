@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 export default function ProfileEditPage() {
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1">
       <ProfileEditContainer />
     </View>
   );

@@ -1,6 +1,6 @@
+import { Text } from '@/components/ui/text';
 import { ScheduleEntity } from '@/hooks/model/useScheduleState';
 import { router } from 'expo-router';
-import { Text } from 'react-native';
 import { View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { DateData } from 'react-native-calendars';
@@ -37,7 +37,7 @@ export default function CalendarDay(props: CalendarDayProps) {
           style={{ backgroundColor: schedule.color }}
         >
           <Text
-            className="text-[0.85rem] tracking-wide font-bold"
+            className="text-[0.85rem] tracking-wide font-bold text-gray-800"
             numberOfLines={1}
             ellipsizeMode="clip"
           >

@@ -4,6 +4,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { AuthContext } from '@/contexts/AuthContext';
 import { useLocalSearchParams } from 'expo-router';
 import { useContext, useEffect, useState } from 'react';
+import { View } from 'react-native';
 
 export default function CreateSchedulePage() {
   const { user } = useContext(AuthContext);
@@ -19,10 +20,12 @@ export default function CreateSchedulePage() {
 
   if (!user) return <Spinner />;
   return (
-    <UpsertScheduleFormContainer
-      user={user}
-      selectedDate={date}
-      selectedSchedule={null}
-    />
+    <View className="flex-1 bg-gray-50 dark:bg-black">
+      <UpsertScheduleFormContainer
+        user={user}
+        selectedDate={date}
+        selectedSchedule={null}
+      />
+    </View>
   );
 }

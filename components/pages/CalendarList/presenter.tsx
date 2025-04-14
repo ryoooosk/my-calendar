@@ -27,7 +27,6 @@ export default function CalendarListPresenter({
         width: '100%',
         paddingLeft: 0,
         paddingRight: 0,
-        backgroundColor: colors.white,
       }}
       renderHeader={() => null}
       pagingEnabled={true}
@@ -49,7 +48,6 @@ export default function CalendarListPresenter({
         calendarBackground: 'transparent',
         textMonthFontSize: 18,
         textMonthFontWeight: 400,
-        textSectionTitleColor: colors.slate[800],
         textDayHeaderFontWeight: 500,
         textDayFontSize: 16,
         textDayFontWeight: 400,

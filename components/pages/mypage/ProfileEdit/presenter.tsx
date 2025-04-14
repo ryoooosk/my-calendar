@@ -9,10 +9,11 @@ import {
 } from '@/components/ui/form-control';
 import { Icon } from '@/components/ui/icon';
 import { Input, InputField } from '@/components/ui/input';
+import { Text } from '@/components/ui/text';
 import { Textarea, TextareaInput } from '@/components/ui/textarea';
 import { AlertCircleIcon, User } from 'lucide-react-native';
 import { useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 
 type ProfileEditPresenterProps = {
   imageUri: string | null;
@@ -48,9 +49,7 @@ export default function ProfileEditPresenter({
             <Icon as={User} size="xl" />
           )}
         </Avatar>
-        <Text className="mt-1 text-zinc-800 text-lg tracking-wider">
-          写真を変更
-        </Text>
+        <Text className="mt-1 text-lg tracking-wider">写真を変更</Text>
       </TouchableOpacity>
 
       <View className="gap-5 my-5 mx-5">

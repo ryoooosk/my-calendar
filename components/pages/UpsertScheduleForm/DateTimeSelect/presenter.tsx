@@ -5,9 +5,9 @@ import {
 } from '@/components/ui/form-control';
 import { Icon } from '@/components/ui/icon';
 import { Switch } from '@/components/ui/switch';
+import { Text } from '@/components/ui/text';
 import dayjs from 'dayjs';
 import { Clock2 } from 'lucide-react-native';
-import { Text } from 'react-native';
 import { TouchableOpacity, View } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import DateTimePicker, { DateType } from 'react-native-ui-datepicker';
@@ -43,7 +43,7 @@ export default function DateTimeSelectPresenter({
 }: DateTimeSelectPresenterProps) {
   return (
     <View>
-      <View className="flex flex-row items-center gap-6 px-4 py-3 bg-white">
+      <View className="flex flex-row items-center gap-6 px-4 py-3">
         <Icon size="xl" as={Clock2} />
 
         <View className="flex flex-1 h-28">
@@ -104,9 +104,7 @@ export default function DateTimeSelectPresenter({
 
         <FormControl className="flex items-center">
           <FormControlLabel>
-            <FormControlLabelText className="text-slate-600">
-              終日
-            </FormControlLabelText>
+            <FormControlLabelText>終日</FormControlLabelText>
           </FormControlLabel>
 
           <Switch
@@ -118,7 +116,7 @@ export default function DateTimeSelectPresenter({
       </View>
 
       {(isOpenStartDay || isOpenEndDay) && (
-        <View className="flex items-center p-2 bg-white">
+        <View className="flex items-center p-2">
           <DateTimePicker
             mode="single"
             date={isOpenStartDay ? startDate.toDate() : endDate.toDate()}
@@ -158,7 +156,7 @@ export default function DateTimeSelectPresenter({
         </View>
       )}
       {(isOpenStartTime || isOpenEndTime) && (
-        <View className="h-80 flex items-center justify-center bg-white">
+        <View className="h-80 flex items-center justify-center">
           <DatePicker
             date={isOpenStartTime ? startDate.toDate() : endDate.toDate()}
             mode="time"

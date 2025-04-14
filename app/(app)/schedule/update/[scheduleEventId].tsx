@@ -38,7 +38,7 @@ export default function UpdateSchedulePage() {
 
   if (!user || !getTargetSchedule) return <Spinner />;
   return (
-    <View className="flex-1 relative">
+    <View className="flex-1 relative bg-gray-50 dark:bg-black">
       <UpsertScheduleFormContainer
         user={user}
         selectedSchedule={getTargetSchedule(scheduleEventId)}

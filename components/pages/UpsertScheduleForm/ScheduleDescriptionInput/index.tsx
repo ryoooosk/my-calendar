@@ -18,7 +18,7 @@ export default function ScheduleDescriptionInput({
   setDescription,
 }: ScheduleDescriptionInputProps) {
   return (
-    <View className="flex flex-row items-center gap-4 px-4 py-2 mt-5 bg-white">
+    <View className="flex flex-row items-center gap-4 px-4 py-2 mt-5">
       <Icon size="xl" as={LetterText} />
 
       <FormControl className="flex-1">
