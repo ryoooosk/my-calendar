@@ -20,7 +20,7 @@ export default function CalendarDay(props: CalendarDayProps) {
 
   return (
     <TouchableOpacity
-      className={`w-full h-full border-[0.5px] border-gray-100 ${state === 'selected' && 'border-2 border-amber-500'}`}
+      className={`w-full h-full ${state === 'selected' && 'border-2 border-amber-500'}`}
       onPress={() => handlePressDay(date?.dateString)}
     >
       <Text
