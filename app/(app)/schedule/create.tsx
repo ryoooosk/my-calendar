@@ -9,7 +9,7 @@ export default function CreateSchedulePage() {
   const { user } = useContext(AuthContext);
   const { date: dateParams } = useLocalSearchParams();
 
-  const [date, setDate] = useState<string | null>(null);
+  const [date, setDate] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (!dateParams) return;

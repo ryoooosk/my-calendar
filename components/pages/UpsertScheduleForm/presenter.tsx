@@ -23,7 +23,7 @@ type UpsertScheduleFormContainerPresenterProps = {
   setIsAllDay: (isAllDay: boolean) => void;
   color: string;
   setColor: (color: string) => void;
-  reminderOffset: number | null;
+  reminderOffset: ScheduleEntity['reminderOffset'];
   setReminderOffset: (offset: number | null) => void;
   description: string | null;
   setDescription: (description: string) => void;

@@ -51,7 +51,7 @@ export default function UpsertScheduleFormContainer({
     );
     setIsAllDay(schedule.isAllDay);
     setColor(schedule.color);
-    setReminderOffset(schedule.reminderOffset ?? null);
+    setReminderOffset(schedule.reminderOffset);
     setDescription(schedule.description);
   };
 

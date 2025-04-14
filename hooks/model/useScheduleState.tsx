@@ -17,7 +17,7 @@ export type ScheduleEntity = {
   endAt: string;
   isAllDay: boolean;
   color: string;
-  reminderOffset?: number | null;
+  reminderOffset?: number;
 };
 
 export function useScheduleState() {

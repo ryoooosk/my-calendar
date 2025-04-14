@@ -27,7 +27,7 @@ export const useUpsertScheduleForm = (
     SCHEDULE_DEFAULT_SELECTED_COLOR,
   );
   const [reminderOffset, setReminderOffset] =
-    useState<ScheduleEntity['reminderOffset']>(null);
+    useState<ScheduleEntity['reminderOffset']>(undefined);
   const [description, setDescription] =
     useState<ScheduleEntity['description']>(null);
 
@@ -40,7 +40,7 @@ export const useUpsertScheduleForm = (
     setIsAllDay(selectedSchedule.isAllDay);
     setDescription(selectedSchedule.description ?? '');
     setColor(selectedSchedule.color);
-    setReminderOffset(selectedSchedule.reminderOffset ?? null);
+    setReminderOffset(selectedSchedule.reminderOffset);
   }, [selectedSchedule]);
 
   useEffect(() => {

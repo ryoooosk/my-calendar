@@ -5,6 +5,7 @@ import {
   MenuItemLabel,
   MenuSeparator,
 } from '@/components/ui/menu';
+import { ScheduleEntity } from '@/hooks/model/useScheduleState';
 import { convertMinuteToDuration } from '@/utils/convertMinuteToDuration';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
@@ -19,7 +20,7 @@ export default function ScheduleRemainderSelect({
   reminderOffset,
   setRemainderOffset,
 }: {
-  reminderOffset: number | null;
+  reminderOffset: ScheduleEntity['reminderOffset'];
   setRemainderOffset: (offset: number | null) => void;
 }) {
   const defaultOffsetMinutes = [30, 60, 1440, 10080];
