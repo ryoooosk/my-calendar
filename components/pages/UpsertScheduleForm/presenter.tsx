@@ -24,7 +24,7 @@ type UpsertScheduleFormContainerPresenterProps = {
   color: string;
   setColor: (color: string) => void;
   reminderOffset: ScheduleEntity['reminderOffset'];
-  setReminderOffset: (offset: number | null) => void;
+  setReminderOffset: React.Dispatch<React.SetStateAction<number | undefined>>;
   description: string | null;
   setDescription: (description: string) => void;
   isOpenScheduleHistory: boolean;

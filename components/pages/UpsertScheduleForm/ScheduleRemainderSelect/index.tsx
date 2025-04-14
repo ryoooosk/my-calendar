@@ -21,7 +21,7 @@ export default function ScheduleRemainderSelect({
   setRemainderOffset,
 }: {
   reminderOffset: ScheduleEntity['reminderOffset'];
-  setRemainderOffset: (offset: number | null) => void;
+  setRemainderOffset: React.Dispatch<React.SetStateAction<number | undefined>>;
 }) {
   const defaultOffsetMinutes = [30, 60, 1440, 10080];
 
@@ -57,7 +57,7 @@ export default function ScheduleRemainderSelect({
         <MenuItem
           className="mb-3 bg-white rounded-t-xl"
           textValue="なし"
-          onPress={() => setRemainderOffset(null)}
+          onPress={() => setRemainderOffset(undefined)}
         >
           <MenuItemLabel className="text-lg">なし</MenuItemLabel>
         </MenuItem>
