@@ -27,13 +27,13 @@ export default function MyPagePresenter({
 
         <VStack className="flex gap-1">
           <Heading size="xl">{user?.display_name}</Heading>
-          <Text className="text-gray-600">@{user?.user_name}</Text>
+          <Text className="text-gray-500">@{user?.user_name}</Text>
         </VStack>
       </HStack>
 
       <View className="min-h-7 mx-1">
         {user?.biography && (
-          <Text size="lg" className="text-gray-950 tracking-wide">
+          <Text size="lg" className="tracking-wide">
             {user?.biography}
           </Text>
         )}

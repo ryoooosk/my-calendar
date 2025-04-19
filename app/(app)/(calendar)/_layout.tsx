@@ -47,7 +47,7 @@ export default function CalendarLayout() {
   }, [currentDate]);
 
   return (
-    <SafeAreaView className="relative flex-1 bg-white">
+    <SafeAreaView className="relative flex-1">
       <CalendarHeader
         date={visibleMonth}
         avatarUri={user?.avatar_url ?? null}

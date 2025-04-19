@@ -1,9 +1,10 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button, ButtonIcon } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
+import { Text } from '@/components/ui/text';
 import { router } from 'expo-router';
 import { ChevronLeft, Menu, User } from 'lucide-react-native';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 export default function CalendarHeader({
   date,
@@ -21,9 +22,9 @@ export default function CalendarHeader({
           }}
         >
           {canGoBack ? (
-            <ButtonIcon className="w-9 h-9 color-slate-700" as={ChevronLeft} />
+            <ButtonIcon className="w-9 h-9" as={ChevronLeft} />
           ) : (
-            <ButtonIcon className="w-8 h-8 color-slate-700" as={Menu} />
+            <ButtonIcon className="w-8 h-8" as={Menu} />
           )}
         </Button>
         <Text className="text-2xl font-medium">{date}</Text>

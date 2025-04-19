@@ -10,7 +10,7 @@ export default function SelectScheduleColorContainer({
   setSelectedColor,
 }: { selectedColor: string; setSelectedColor: (color: string) => void }) {
   return (
-    <View className="flex flex-row items-center gap-6 px-4 py-3 bg-white">
+    <View className="flex flex-row items-center gap-6 px-4 py-3">
       <Icon size="xl" as={Palette} />
 
       <View className="flex flex-row flex-1 gap-3 ml-3">

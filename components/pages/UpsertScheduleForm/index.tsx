@@ -68,30 +68,28 @@ export default function UpsertScheduleFormContainer({
   }, [navigation, handleSubmit, eventId]);
 
   return (
-    <>
-      <UpsertScheduleFormContainerPresenter
-        {...{
-          isNew: !eventId,
-          title,
-          setTitle,
-          startDate,
-          setStartDate,
-          endDate,
-          setEndDate,
-          isAllDay,
-          setIsAllDay,
-          color,
-          setColor,
-          reminderOffset,
-          setReminderOffset,
-          description,
-          setDescription,
-          isOpenScheduleHistory,
-          handleOpenScheduleHistory: (isOpen: boolean) =>
-            setIsOpenScheduleHistory(isOpen),
-          applyTemplateSchedule,
-        }}
-      />
-    </>
+    <UpsertScheduleFormContainerPresenter
+      {...{
+        isNew: !eventId,
+        title,
+        setTitle,
+        startDate,
+        setStartDate,
+        endDate,
+        setEndDate,
+        isAllDay,
+        setIsAllDay,
+        color,
+        setColor,
+        reminderOffset,
+        setReminderOffset,
+        description,
+        setDescription,
+        isOpenScheduleHistory,
+        handleOpenScheduleHistory: (isOpen: boolean) =>
+          setIsOpenScheduleHistory(isOpen),
+        applyTemplateSchedule,
+      }}
+    />
   );
 }

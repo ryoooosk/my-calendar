@@ -3,7 +3,8 @@ import { ScheduleContext } from '@/contexts/ScheduleContext';
 import { ScheduleEntity } from '@/hooks/model/useScheduleState';
 import dayjs from 'dayjs';
 import { useContext } from 'react';
-import { FlatList, Text, TouchableOpacity } from 'react-native';
+import { FlatList, TouchableOpacity } from 'react-native';
+import { Text } from '../ui/text';
 
 export default function ScheduleHistory({
   selectSchedule,

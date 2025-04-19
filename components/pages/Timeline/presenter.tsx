@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { Timeline } from 'react-native-calendars';
 import { Event } from 'react-native-calendars/src/timeline/EventBlock';
 import colors from 'tailwindcss/colors';
 import 'dayjs/locale/ja';
+import { Text } from '@/components/ui/text';
 import { ScheduleEntity } from '@/hooks/model/useScheduleState';
 
 export default function TimelinePresenter({
@@ -17,12 +18,12 @@ export default function TimelinePresenter({
 
   return (
     <>
-      <View className="flex flex-row items-center py-3 bg-white border-b border-gray-300">
+      <View className="flex flex-row items-center py-3 bg-gray-50 dark:bg-black border-b border-gray-300">
         <View
           className="flex flex-col items-center"
           style={{ width: TIME_LINE_LEFT_INSET }}
         >
-          <Text className="text-gray-700 text-base">
+          <Text className="text-base">
             {dayjs(date).locale('ja').format('dd')}
           </Text>
           <Text className="text-xl font-medium tracking-widest">
@@ -42,13 +43,13 @@ export default function TimelinePresenter({
                 style={{ backgroundColor: event.color }}
                 onPress={() => router.push(`/schedule/update/${event.eventId}`)}
               >
-                <Text className="px-3 tracking-wide font-medium text-base">
+                <Text className="px-3 tracking-wide font-medium text-base text-gray-700">
                   {event.title}
                 </Text>
               </TouchableOpacity>
             ))
           ) : (
-            <Text className="ml-2 text-lg text-gray-800 tracking-wide">
+            <Text className="ml-2 text-lg font-medium tracking-wide">
               予定がありません
             </Text>
           )}
